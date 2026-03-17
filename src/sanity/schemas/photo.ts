@@ -64,13 +64,14 @@ export default defineType({
     select: {
       photoTitle: "title",
       alt: "alt",
-      subtitle: "category.title",
+      catFr: "category.title.fr",
+      catEn: "category.title.en",
       media: "image",
     },
-    prepare({ photoTitle, alt, subtitle, media }) {
+    prepare({ photoTitle, alt, catFr, catEn, media }) {
       return {
         title: photoTitle || alt || "Sans titre",
-        subtitle,
+        subtitle: catFr || catEn || "",
         media,
       };
     },
