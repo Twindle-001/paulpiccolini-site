@@ -4,22 +4,28 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
-import { printsQuery } from "@/sanity/queries";
-import type { SanityPrint } from "@/sanity/types";
+import { printsQuery, homePageQuery } from "@/sanity/queries";
+import type { SanityPrint, SanityHomePage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localize";
 
 export default function PrintsPage() {
   const [prints, setPrints] = useState<SanityPrint[]>([]);
+  const [homePage, setHomePage] = useState<SanityHomePage | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useLanguage();
 
   useEffect(() => {
-    async function fetchPrints() {
-      const data = await client.fetch<SanityPrint[]>(printsQuery);
-      setPrints(data);
+    async function fetchData() {
+      const [printsData, homeData] = await Promise.all([
+        client.fetch<SanityPrint[]>(printsQuery),
+        client.fetch<SanityHomePage>(homePageQuery),
+      ]);
+      setPrints(printsData);
+      setHomePage(homeData);
       setIsLoading(false);
     }
-    fetchPrints();
+    fetchData();
   }, []);
 
   if (isLoading) {
@@ -32,12 +38,14 @@ export default function PrintsPage() {
       <section className="flex h-[40vh] items-center justify-center bg-brand-dark">
         <div className="text-center">
           <p className="section-subheading mb-4 text-brand-muted">
-            {locale === "en" ? "Art Prints" : "Tirages d'Art"}
+            {localize(homePage?.printsSubheading, locale) ||
+              (locale === "en" ? "Art Prints" : "Tirages d'Art")}
           </p>
           <h1 className="font-heading text-5xl tracking-wider text-white md:text-6xl">
-            {locale === "en"
-              ? "Fine Art Prints Collection"
-              : "Tirages d'Art - Singulart"}
+            {localize(homePage?.printsHeading, locale) ||
+              (locale === "en"
+                ? "Fine Art Prints Collection"
+                : "Tirages d'Art - Singulart")}
           </h1>
           <p className="mt-4 text-sm text-brand-light/60">
             {locale === "en"

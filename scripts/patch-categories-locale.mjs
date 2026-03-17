@@ -27,6 +27,7 @@ const client = createClient({
 const categoryTranslations = {
   paris: { fr: "Paris", en: "Paris" },
   voyage: { fr: "Voyage", en: "Travel" },
+  travel: { fr: "Voyage", en: "Travel" },
   portrait: { fr: "Portrait", en: "Portrait" },
 };
 
@@ -56,7 +57,7 @@ async function patchCategories() {
       .patch(cat._id)
       .set({
         title: {
-          _type: "localeString",
+
           fr: translation.fr,
           en: translation.en,
         },
