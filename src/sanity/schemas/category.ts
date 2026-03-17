@@ -6,17 +6,14 @@ export default defineType({
   title: "Catégorie",
   type: "document",
   fields: [
-    defineField({
-      name: "title",
-      title: "Titre",
-      type: "string",
-      validation: (Rule) => Rule.required(),
+    createLocaleField("title", "Titre", "string", {
+      description: "Nom de la catégorie en FR et EN (ex: Voyage / Travel)",
     }),
     defineField({
       name: "slug",
       title: "Slug (URL)",
       type: "slug",
-      options: { source: "title", maxLength: 96 },
+      options: { source: "title.fr", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
     createLocaleField("description", "Description", "text", {
@@ -54,6 +51,9 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "title", media: "coverImage" },
+    select: { titleFr: "title.fr", titleEn: "title.en", media: "coverImage" },
+    prepare({ titleFr, titleEn, media }) {
+      return { title: titleFr || titleEn || "Sans titre", media };
+    },
   },
 });

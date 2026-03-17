@@ -27,6 +27,7 @@ export interface SanityHomePage {
   aboutHeading?: LocaleField<string>;
   aboutText?: LocaleField<any[]>;
   profileImage?: SanityImageSource;
+  portfolioSubheading?: LocaleField<string>;
   portfolioHeading?: LocaleField<string>;
   servicesHeading?: LocaleField<string>;
   servicesIntro?: LocaleField<string>;
@@ -35,6 +36,7 @@ export interface SanityHomePage {
   servicesOnRequestHeading?: LocaleField<string>;
   servicesOnRequestText?: LocaleField<string>;
   servicesOnRequestButton?: LocaleField<string>;
+  printsSubheading?: LocaleField<string>;
   printsHeading?: LocaleField<string>;
   printsLink?: string;
 }
@@ -75,7 +77,7 @@ export interface SanityContactPage {
 // Gallery & Categories
 export interface SanityCategory {
   _id: string;
-  title: string;
+  title: LocaleField<string>;
   slug: string;
   description?: LocaleField<string>;
   coverImage?: SanityImageSource;

@@ -19,6 +19,7 @@ export const homePageQuery = groq`
     aboutHeading,
     aboutText,
     profileImage,
+    portfolioSubheading,
     portfolioHeading,
     servicesHeading,
     servicesIntro,
@@ -27,6 +28,7 @@ export const homePageQuery = groq`
     servicesOnRequestHeading,
     servicesOnRequestText,
     servicesOnRequestButton,
+    printsSubheading,
     printsHeading,
     printsLink
   }

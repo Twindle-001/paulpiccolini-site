@@ -35,9 +35,12 @@ export async function generateMetadata({
   const desc = typeof category.description === "string"
     ? category.description
     : category.description?.fr || category.description?.en || "";
+  const titleStr = typeof category.title === "string"
+    ? category.title
+    : category.title?.fr || category.title?.en || "Category";
   return {
-    title: category.title,
-    description: desc || `${category.title} photography by Paul Piccolini`,
+    title: titleStr,
+    description: desc || `${titleStr} photography by Paul Piccolini`,
   };
 }
 
@@ -63,7 +66,7 @@ export default async function CategoryPage({
         {category.coverImage ? (
           <Image
             src={urlFor(category.coverImage).width(1920).height(1080).url()}
-            alt={category.title}
+            alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
             fill
             className="object-cover"
             priority
@@ -76,7 +79,7 @@ export default async function CategoryPage({
         <div className="relative z-10 text-center">
           <p className="section-subheading mb-4 text-white/50">Portfolio</p>
           <h1 className="font-heading text-6xl tracking-wider text-white md:text-7xl">
-            {category.title}
+            <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
         </div>
       </section>

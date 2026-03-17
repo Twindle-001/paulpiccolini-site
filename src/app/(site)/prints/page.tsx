@@ -37,7 +37,7 @@ export default function PrintsPage() {
           <h1 className="font-heading text-5xl tracking-wider text-white md:text-6xl">
             {locale === "en"
               ? "Fine Art Prints Collection"
-              : "Tirage d'Art - Singulart"}
+              : "Tirages d'Art - Singulart"}
           </h1>
           <p className="mt-4 text-sm text-brand-light/60">
             {locale === "en"

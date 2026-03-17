@@ -7,11 +7,13 @@ import { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { urlFor } from "@/sanity/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { localize } from "@/lib/localize";
+import type { LocaleField } from "@/sanity/types";
 
 interface NavbarProps {
   siteName?: string;
   logo?: SanityImageSource;
-  categories?: { title: string; slug: string }[];
+  categories?: { title: string | LocaleField<string>; slug: string }[];
 }
 
 export default function Navbar({
@@ -27,7 +29,10 @@ export default function Navbar({
   const links = [
     { label: "HOME", href: "/" },
     ...categories.map((cat) => ({
-      label: cat.title.toUpperCase(),
+      label: (typeof cat.title === "string"
+        ? cat.title
+        : String(localize(cat.title, locale))
+      ).toUpperCase(),
       href: `/${cat.slug}`,
     })),
     { label: "SERVICES", href: "/services" },

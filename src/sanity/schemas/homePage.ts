@@ -26,6 +26,12 @@ export default defineType({
       description: "Image affichée dans la section À propos",
     }),
     createLocaleField(
+      "portfolioSubheading",
+      "Sous-titre section Portfolio",
+      "string",
+      { description: "Petit texte au-dessus du titre (ex: Portfolio / Mon travail)" }
+    ),
+    createLocaleField(
       "portfolioHeading",
       "Titre section Portfolio",
       "string",
@@ -77,10 +83,16 @@ export default defineType({
       { description: "Ex: Me contacter / Contact me" }
     ),
     createLocaleField(
+      "printsSubheading",
+      "Sous-titre section Tirages d'Art",
+      "string",
+      { description: "Petit texte au-dessus du titre (ex: Tirages d'Art / Art Prints)" }
+    ),
+    createLocaleField(
       "printsHeading",
       "Titre section Tirages d'Art",
       "string",
-      { description: "Exemple: Tirage d'Art - Singulart" }
+      { description: "Titre principal (ex: Collection Singulart)" }
     ),
     defineField({
       name: "printsLink",

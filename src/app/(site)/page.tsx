@@ -125,7 +125,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
             <p className="section-subheading mb-4">
-              Portfolio
+              {localize(homePage?.portfolioSubheading, locale) || "Portfolio"}
             </p>
             <h2 className="section-heading">
               {localize(homePage?.portfolioHeading, locale) ||
@@ -143,7 +143,7 @@ export default function HomePage() {
                 {cat.coverImage ? (
                   <Image
                     src={urlFor(cat.coverImage).width(800).height(1067).url()}
-                    alt={cat.title}
+                    alt={typeof cat.title === "string" ? cat.title : (localize(cat.title, locale) as string)}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -155,7 +155,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <h3 className="font-heading text-3xl tracking-wider text-white">
-                      {cat.title}
+                      {typeof cat.title === "string" ? cat.title : localize(cat.title, locale)}
                     </h3>
                     <span className="mt-3 inline-block border-b border-white/40 pb-1 text-xs uppercase tracking-menu text-white/70 transition-all duration-300 group-hover:border-white group-hover:text-white">
                       {locale === "en" ? "Discover" : "Découvrir"}
@@ -245,13 +245,14 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-16 text-center">
               <p className="section-subheading mb-4">
-                {locale === "en" ? "Art Prints" : "Tirages d'Art"}
+                {localize(homePage?.printsSubheading, locale) ||
+                  (locale === "en" ? "Art Prints" : "Tirages d'Art")}
               </p>
               <h2 className="section-heading">
                 {localize(homePage?.printsHeading, locale) ||
                   (locale === "en"
                     ? "Fine Art Prints Collection"
-                    : "Tirage d'Art - Singulart")}
+                    : "Tirages d'Art - Singulart")}
               </h2>
               <p className="mt-4 text-sm text-brand-light/60 mx-auto max-w-2xl">
                 {locale === "en"
