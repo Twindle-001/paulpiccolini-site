@@ -23,7 +23,7 @@ import type {
 } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { localize, getLocalizedArray } from "@/lib/localize";
-import { useScrollRevealItems } from "@/hooks/useScrollReveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function HomePage() {
   const [data, setData] = useState<{
@@ -39,8 +39,8 @@ export default function HomePage() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useLanguage();
-  const { setRef: setCatRef, visibleItems: visibleCats } = useScrollRevealItems(3);
-  const { setRef: setPrintRef, visibleItems: visiblePrints } = useScrollRevealItems(6);
+  const { ref: catGridRef, isVisible: catGridVisible } = useScrollReveal<HTMLDivElement>();
+  const { ref: printGridRef, isVisible: printGridVisible } = useScrollReveal<HTMLDivElement>();
 
   useEffect(() => {
     async function fetchData() {
@@ -144,17 +144,17 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <div ref={catGridRef} className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {categories.map((cat, i) => (
               <Link
                 key={cat._id}
-                ref={setCatRef(i) as React.Ref<HTMLAnchorElement>}
                 href={`/${cat.slug}`}
                 className={`group relative aspect-[3/4] overflow-hidden rounded-sm transition-all duration-700 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1 ${
-                  visibleCats.has(i)
+                  catGridVisible
                     ? "opacity-100 translate-y-0 scale-100"
                     : "opacity-0 translate-y-8 scale-[0.97]"
                 }`}
+                style={{ transitionDelay: catGridVisible ? `${i * 150}ms` : "0ms" }}
               >
                 {cat.coverImage ? (
                   <Image
@@ -277,19 +277,19 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div ref={printGridRef} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {prints.slice(0, 6).map((print, i) => (
                 <a
                   key={print._id}
-                  ref={setPrintRef(i)}
                   href={print.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`group relative overflow-hidden rounded border border-white/10 hover:border-brand-accent/50 transition-all duration-700 hover:shadow-xl hover:shadow-brand-accent/10 hover:-translate-y-1 ${
-                    visiblePrints.has(i)
+                    printGridVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-8"
                   }`}
+                  style={{ transitionDelay: printGridVisible ? `${i * 120}ms` : "0ms" }}
                 >
                   {print.image && (
                     <div className="relative aspect-square overflow-hidden bg-brand-darker">
