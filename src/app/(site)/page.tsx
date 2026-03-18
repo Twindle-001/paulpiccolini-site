@@ -51,9 +51,14 @@ export default function HomePage() {
     });
   }, [isLoading]);
 
-  // Scroll-based highlight: toggle .in-view class on cards when they enter the center of the viewport
+  // Scroll-based highlight: MOBILE ONLY — toggle .in-view class on cards when centered in viewport
+  // On desktop, hover effects are sufficient so we skip this.
   useEffect(() => {
     if (isLoading) return;
+
+    // Only activate on mobile/tablet (no hover capability)
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+    if (!isTouchDevice) return;
 
     const cards = document.querySelectorAll(".scroll-highlight, .scroll-highlight-print");
     if (cards.length === 0) return;

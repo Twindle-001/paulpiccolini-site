@@ -88,8 +88,8 @@
   transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, border-color 0.4s ease-out;
 }
 .scroll-highlight.in-view {
-  transform: translateY(-4px) scale(1.02) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px) scale(1.03) !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
 }
 /* For print cards with border */
 .scroll-highlight-print {
@@ -97,9 +97,9 @@
   transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, border-color 0.4s ease-out;
 }
 .scroll-highlight-print.in-view {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 30px rgba(201, 169, 110, 0.15);
-  border-color: rgba(201, 169, 110, 0.5);
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 40px rgba(201, 169, 110, 0.2);
+  border-color: rgba(201, 169, 110, 0.6);
 }
 
 /* Smooth image loading */
