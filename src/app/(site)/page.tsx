@@ -38,6 +38,34 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useLanguage();
 
+  // Scroll-based highlight: toggle .in-view class on cards when they enter the center of the viewport
+  useEffect(() => {
+    if (isLoading) return;
+
+    const cards = document.querySelectorAll(".scroll-highlight, .scroll-highlight-print");
+    if (cards.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          } else {
+            entry.target.classList.remove("in-view");
+          }
+        });
+      },
+      {
+        // Trigger when card is in the middle ~60% of the viewport
+        rootMargin: "-20% 0px -20% 0px",
+        threshold: 0.3,
+      }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [isLoading]);
+
   useEffect(() => {
     async function fetchData() {
       const [settings, homePage, heroSlides, categories, prints] =
@@ -145,7 +173,7 @@ export default function HomePage() {
               <Link
                 key={cat._id}
                 href={`/${cat.slug}`}
-                className="card-reveal group relative aspect-[3/4] overflow-hidden rounded-sm transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1"
+                className="card-reveal scroll-highlight group relative aspect-[3/4] overflow-hidden rounded-sm"
                 style={{ animationDelay: `${i * 150}ms` }}
               >
                 {cat.coverImage ? (
@@ -276,7 +304,7 @@ export default function HomePage() {
                   href={print.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="card-reveal group relative overflow-hidden rounded border border-white/10 hover:border-brand-accent/50 transition-shadow duration-500 hover:shadow-xl hover:shadow-brand-accent/10 hover:-translate-y-1"
+                  className="card-reveal scroll-highlight-print group relative overflow-hidden rounded border border-white/10"
                   style={{ animationDelay: `${i * 120}ms` }}
                 >
                   {print.image && (

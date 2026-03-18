@@ -82,6 +82,24 @@
   animation: cardReveal 0.7s ease-out both;
 }
 
+/* Scroll-based highlight: cards lift & glow when centered in viewport */
+.scroll-highlight {
+  transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, border-color 0.4s ease-out;
+}
+.scroll-highlight.in-view {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+/* For print cards with border */
+.scroll-highlight-print {
+  transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, border-color 0.4s ease-out;
+}
+.scroll-highlight-print.in-view {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(201, 169, 110, 0.15);
+  border-color: rgba(201, 169, 110, 0.5);
+}
+
 /* Smooth image loading */
 img {
   transition: opacity 0.5s ease;
