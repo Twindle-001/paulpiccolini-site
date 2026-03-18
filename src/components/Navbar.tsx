@@ -112,7 +112,7 @@ export default function Navbar({
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-white"
+              className="md:hidden p-3 -mr-2 text-white"
               aria-label="Menu"
             >
               <div className="space-y-1.5">
@@ -142,16 +142,16 @@ export default function Navbar({
             isOpen ? "max-h-96 pb-6" : "max-h-0"
           }`}
         >
-          <div className="flex flex-col items-center gap-1 pt-2">
+          <div className="flex flex-col items-center gap-0 pt-2">
             {links.map((link, i) => (
               <Link
                 key={`m-${i}-${link.label}`}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`nav-link px-6 py-3 text-xs tracking-menu transition-colors ${
+                className={`w-full text-center px-6 py-4 text-sm tracking-menu transition-all duration-200 ${
                   pathname === link.href
-                    ? "text-white border-b border-brand-accent"
-                    : "text-brand-light/60 hover:text-white"
+                    ? "text-white bg-white/5 font-medium"
+                    : "text-brand-light/60 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {link.label}

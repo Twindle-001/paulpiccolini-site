@@ -130,7 +130,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
           {slides[current]?.link && (
             <Link
               href={slides[current].link!}
-              className="btn-primary mt-10 inline-block border-white/30 text-white hover:bg-white hover:text-brand-darker"
+              className="btn-primary-hero mt-10 inline-block"
             >
               {locale === "en" ? "Discover" : "Découvrir"}
             </Link>

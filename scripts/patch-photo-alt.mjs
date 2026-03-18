@@ -86,7 +86,7 @@ async function main() {
 
   console.log("📷 Fetching all photos...");
   const photos = await client.fetch(
-    `*[_type == "photo"]{ _id, title, alt, "catTitle": category->title, "filename": image.asset->originalFilename }`
+    `*[_type == "photo"]{ _id, title, alt, "catTitle": category->title.fr, "filename": image.asset->originalFilename }`
   );
 
   if (!photos || photos.length === 0) {
@@ -127,23 +127,11 @@ async function main() {
     // Generate alt text
     const generatedAlt = generateAltText(catTitle, descriptionLabel);
 
-    // Generate title if missing
-    const generatedTitle = !hasTitle ? generateTitle(filename) : null;
-
     console.log(`  🔄 "${filename}"`);
     console.log(`     → alt: "${generatedAlt}"`);
-    if (generatedTitle) {
-      console.log(`     → title: "${generatedTitle}"`);
-    }
 
-    // Prepare patch object
-    const patchData = { alt: generatedAlt };
-    if (generatedTitle) {
-      patchData.title = generatedTitle;
-    }
-
-    // Patch the photo
-    await client.patch(photoId).set(patchData).commit();
+    // Patch only the alt field (never touch title)
+    await client.patch(photoId).set({ alt: generatedAlt }).commit();
     patchedCount++;
   }
 

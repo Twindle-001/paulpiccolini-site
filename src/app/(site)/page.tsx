@@ -103,7 +103,7 @@ export default function HomePage() {
                   ? "Your Photographer in Paris"
                   : "Votre Photographe à Paris")}
             </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-brand-light/70">
+            <div className="space-y-4 text-sm leading-relaxed text-brand-light/80">
               {homePage?.aboutText ? (
                 <PortableText
                   value={getLocalizedArray(homePage.aboutText, locale)}
@@ -115,6 +115,14 @@ export default function HomePage() {
                     : "Je suis Paul Piccolini, photographe professionnel basé à Paris. Bienvenue dans mon portfolio."}
                 </p>
               )}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link href="/services" className="btn-accent">
+                {locale === "en" ? "Book a Shoot" : "Réserver un shooting"}
+              </Link>
+              <Link href="/contact" className="btn-primary">
+                {locale === "en" ? "Contact me" : "Me contacter"}
+              </Link>
             </div>
           </div>
         </div>
@@ -133,12 +141,12 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
             {categories.map((cat) => (
               <Link
                 key={cat._id}
                 href={`/${cat.slug}`}
-                className="group relative aspect-[3/4] overflow-hidden"
+                className="group relative aspect-[3/4] overflow-hidden rounded-sm transition-all duration-500 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1"
               >
                 {cat.coverImage ? (
                   <Image
@@ -146,18 +154,18 @@ export default function HomePage() {
                     alt={typeof cat.title === "string" ? cat.title : (localize(cat.title, locale) as string)}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-brand-dark" />
                 )}
-                <div className="absolute inset-0 bg-black/30 transition-colors duration-500 group-hover:bg-black/50" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/10 transition-all duration-500 group-hover:from-black/70 group-hover:via-black/30" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <h3 className="font-heading text-3xl tracking-wider text-white">
+                  <div className="text-center transition-transform duration-500 group-hover:-translate-y-2">
+                    <h3 className="font-heading text-3xl tracking-wider text-white drop-shadow-lg md:text-4xl">
                       {typeof cat.title === "string" ? cat.title : localize(cat.title, locale)}
                     </h3>
-                    <span className="mt-3 inline-block border-b border-white/40 pb-1 text-xs uppercase tracking-menu text-white/70 transition-all duration-300 group-hover:border-white group-hover:text-white">
+                    <span className="mt-4 inline-block border border-white/40 px-6 py-2 text-xs uppercase tracking-menu text-white/90 transition-all duration-300 group-hover:border-white group-hover:bg-white/10 group-hover:text-white group-hover:backdrop-blur-sm">
                       {locale === "en" ? "Discover" : "Découvrir"}
                     </span>
                   </div>
@@ -200,9 +208,9 @@ export default function HomePage() {
               </p>
               <Link
                 href="/services"
-                className="mt-4 inline-block text-xs uppercase tracking-menu text-brand-accent"
+                className="mt-4 inline-flex items-center gap-2 text-sm uppercase tracking-menu text-brand-accent font-medium transition-all duration-300 hover:text-white hover:gap-3"
               >
-                {locale === "en" ? "See prices" : "Voir les tarifs"} &rarr;
+                {locale === "en" ? "See prices" : "Voir les tarifs"} <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
               </Link>
             </div>
           </div>
@@ -261,14 +269,14 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {prints.slice(0, 6).map((print) => (
                 <a
                   key={print._id}
                   href={print.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative overflow-hidden rounded border border-white/10 hover:border-brand-accent/50 transition-all duration-300"
+                  className="group relative overflow-hidden rounded border border-white/10 hover:border-brand-accent/50 transition-all duration-500 hover:shadow-xl hover:shadow-brand-accent/10 hover:-translate-y-1"
                 >
                   {print.image && (
                     <div className="relative aspect-square overflow-hidden bg-brand-darker">
