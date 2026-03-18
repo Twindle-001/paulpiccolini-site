@@ -38,6 +38,19 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useLanguage();
 
+  // Once card-reveal animations finish, remove the class so its fill-mode
+  // no longer locks the transform property (which would block scroll-highlight).
+  useEffect(() => {
+    if (isLoading) return;
+
+    const cards = document.querySelectorAll(".card-reveal");
+    cards.forEach((card) => {
+      card.addEventListener("animationend", () => {
+        card.classList.remove("card-reveal");
+      }, { once: true });
+    });
+  }, [isLoading]);
+
   // Scroll-based highlight: toggle .in-view class on cards when they enter the center of the viewport
   useEffect(() => {
     if (isLoading) return;
