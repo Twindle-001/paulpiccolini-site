@@ -66,6 +66,22 @@
   }
 }
 
+/* Card reveal animation */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card-reveal {
+  animation: cardReveal 0.7s ease-out both;
+}
+
 /* Smooth image loading */
 img {
   transition: opacity 0.5s ease;
