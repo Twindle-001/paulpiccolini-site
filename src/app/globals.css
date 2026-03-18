@@ -98,14 +98,14 @@
 }
 .scroll-highlight-print.in-view {
   transform: translateY(-6px) !important;
-  box-shadow: 0 20px 40px rgba(201, 169, 110, 0.2);
+  box-shadow: 0 10px 20px rgba(201, 169, 110, 0.08);
   border-color: rgba(201, 169, 110, 0.6) !important;
 }
 /* Desktop hover: golden border + lift on print cards */
 @media (hover: hover) {
   .scroll-highlight-print:hover {
     transform: translateY(-4px) !important;
-    box-shadow: 0 15px 30px rgba(201, 169, 110, 0.15);
+    box-shadow: 0 8px 16px rgba(201, 169, 110, 0.06);
     border-color: rgba(201, 169, 110, 0.5) !important;
   }
 }
