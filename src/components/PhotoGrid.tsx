@@ -98,16 +98,16 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
         </div>
       )}
 
-      {/* Grid — 2 columns on mobile for overview, masonry 2-3 columns on desktop */}
-      {/* Mobile: uniform 2-col grid | Desktop (sm+): masonry columns */}
-      <div className="grid grid-cols-2 gap-3 sm:hidden">
+      {/* Grid — 2-col on mobile, masonry on desktop */}
+      <div className="grid grid-cols-2 gap-2 sm:block sm:columns-2 sm:gap-4 lg:columns-3">
         {filtered.map((photo, i) => (
           <div
             key={photo._id}
-            className="group relative cursor-pointer overflow-hidden"
+            className="group relative cursor-pointer overflow-hidden sm:mb-4 sm:break-inside-avoid"
             onClick={() => setLightbox(i)}
           >
-            <div className="relative aspect-[3/4] w-full">
+            {/* Mobile: fixed aspect ratio | Desktop: natural proportions */}
+            <div className="relative aspect-[3/4] sm:hidden">
               <Image
                 src={urlFor(photo.image).width(800).height(1067).url()}
                 alt={getAlt(photo)}
@@ -116,25 +116,12 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
                 sizes="50vw"
               />
             </div>
-            <div className="absolute inset-0 bg-black/0 transition-all duration-500 group-hover:bg-black/20" />
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop: masonry layout */}
-      <div className="hidden sm:block columns-2 gap-4 lg:columns-3">
-        {filtered.map((photo, i) => (
-          <div
-            key={photo._id}
-            className="group relative mb-4 cursor-pointer overflow-hidden break-inside-avoid"
-            onClick={() => setLightbox(i)}
-          >
             <Image
               src={urlFor(photo.image).width(800).url()}
               alt={getAlt(photo)}
               width={800}
               height={600}
-              className="w-full transition-transform duration-700 group-hover:scale-105"
+              className="hidden sm:block w-full transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 1024px) 50vw, 33vw"
             />
             <div
