@@ -76,22 +76,18 @@ export default async function CategoryPage({
           <div className="absolute inset-0 bg-brand-dark" />
         )}
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 text-center px-6">
-          <p className="section-subheading mb-2 sm:mb-4 text-white/50 text-[10px] sm:text-sm">Portfolio</p>
-          <h1 className="font-heading text-3xl tracking-wider text-white sm:text-5xl md:text-6xl lg:text-7xl">
+        <div className="relative z-10 w-full text-center px-6">
+          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-2 sm:mb-4">Portfolio</p>
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
+          {category.description && (
+            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
+              <LocaleString field={typeof category.description === "string" ? { fr: category.description, en: category.description } : category.description} />
+            </p>
+          )}
         </div>
       </section>
-
-      {/* Description */}
-      {category.description && (
-        <section className="mx-auto max-w-3xl px-6 py-8 sm:py-16 text-center">
-          <p className="text-sm leading-relaxed text-brand-light/70">
-            <LocaleString field={typeof category.description === "string" ? { fr: category.description, en: category.description } : category.description} />
-          </p>
-        </section>
-      )}
 
       {/* Gallery */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-16 sm:pb-24">

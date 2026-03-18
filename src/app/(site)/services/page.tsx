@@ -59,16 +59,16 @@ export default function ServicesPage() {
         )}
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 w-full text-center px-6">
-          <p className="section-subheading mb-2 sm:mb-4 text-white/50 text-[10px] sm:text-sm">
+          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-2 sm:mb-4">
             {locale === "en" ? "Services" : "Services"}
           </p>
-          <h1 className="font-heading text-3xl tracking-wider text-white sm:text-5xl md:text-6xl">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
             {localize(servicesPage?.heading, locale) ||
               (locale === "en"
                 ? "Paris Photoshoots"
                 : "Photoshoots à Paris")}
           </h1>
-          <p className="mt-4 text-sm text-white/60 max-w-lg mx-auto">
+          <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
             {localize(servicesPage?.intro, locale) ||
               (locale === "en"
                 ? "Gift yourself or others a photoshoot in the most iconic places of Paris."

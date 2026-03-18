@@ -88,7 +88,7 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[30vh] sm:h-[40vh] items-center justify-center bg-brand-dark">
+      <section className="relative flex h-[35vh] sm:h-[50vh] items-center justify-center bg-brand-dark">
         {contactData?.bannerImage && (
           <>
             <Image
@@ -103,12 +103,15 @@ export default function ContactPage() {
           </>
         )}
         <div className="relative z-10 w-full text-center px-6">
-          <p className="section-subheading mb-2 sm:mb-4 text-brand-muted text-[10px] sm:text-sm">
+          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-2 sm:mb-4">
             {heroSub}
           </p>
-          <h1 className="font-heading text-3xl tracking-wider text-white sm:text-5xl md:text-6xl">
+          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
             {heroTitle}
           </h1>
+          <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
+            {intro}
+          </p>
         </div>
       </section>
 
