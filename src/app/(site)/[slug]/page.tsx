@@ -62,7 +62,7 @@ export default async function CategoryPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[60vh] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[35vh] sm:h-[60vh] items-center justify-center overflow-hidden">
         {category.coverImage ? (
           <Image
             src={urlFor(category.coverImage).width(1920).height(1080).url()}
