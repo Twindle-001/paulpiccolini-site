@@ -77,12 +77,12 @@ export default async function CategoryPage({
         )}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 w-full text-center px-6">
-          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-2 sm:mb-4">Portfolio</p>
+          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
           {category.description && (
-            <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
+            <p className="mt-2 sm:mt-4 text-[11px] sm:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
               <LocaleString field={typeof category.description === "string" ? { fr: category.description, en: category.description } : category.description} />
             </p>
           )}
@@ -90,7 +90,7 @@ export default async function CategoryPage({
       </section>
 
       {/* Gallery */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-16 sm:pb-24">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 sm:pt-12 pb-16 sm:pb-24">
         {photos.length > 0 ? (
           <PhotoGrid photos={photos} subcategories={subcategories} />
         ) : (
