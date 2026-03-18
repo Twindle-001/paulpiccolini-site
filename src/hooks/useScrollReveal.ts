@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 /**
  * Hook that detects when an element enters the viewport.
@@ -21,7 +21,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.unobserve(el); // once visible, stop observing
+          observer.unobserve(el);
         }
       },
       { threshold, rootMargin: "0px 0px -50px 0px" }
@@ -36,16 +36,29 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 
 /**
  * Hook for individual items within a grid — adds staggered delay.
- * Observes each item independently.
+ * Uses callback refs so observers attach as soon as elements mount.
  */
-export function useScrollRevealItems(count: number, threshold = 0.2) {
+export function useScrollRevealItems(count: number, threshold = 0.15) {
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
-  const refs = useRef<(HTMLElement | null)[]>([]);
+  const observersRef = useRef<Map<number, IntersectionObserver>>(new Map());
 
+  // Cleanup on unmount
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    return () => {
+      observersRef.current.forEach((obs) => obs.disconnect());
+      observersRef.current.clear();
+    };
+  }, []);
 
-    refs.current.forEach((el, index) => {
+  const setRef = useCallback(
+    (index: number) => (el: HTMLElement | null) => {
+      // Clean up old observer for this index
+      const existing = observersRef.current.get(index);
+      if (existing) {
+        existing.disconnect();
+        observersRef.current.delete(index);
+      }
+
       if (!el) return;
 
       const observer = new IntersectionObserver(
@@ -53,24 +66,24 @@ export function useScrollRevealItems(count: number, threshold = 0.2) {
           if (entry.isIntersecting) {
             // Stagger: delay each item slightly
             setTimeout(() => {
-              setVisibleItems((prev) => new Set(prev).add(index));
-            }, index * 100);
+              setVisibleItems((prev) => {
+                const next = new Set(prev);
+                next.add(index);
+                return next;
+              });
+            }, index * 120);
             observer.unobserve(el);
+            observersRef.current.delete(index);
           }
         },
-        { threshold, rootMargin: "0px 0px -30px 0px" }
+        { threshold, rootMargin: "0px 0px -20px 0px" }
       );
 
       observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, [count, threshold]);
-
-  const setRef = (index: number) => (el: HTMLElement | null) => {
-    refs.current[index] = el;
-  };
+      observersRef.current.set(index, observer);
+    },
+    [threshold]
+  );
 
   return { setRef, visibleItems };
 }

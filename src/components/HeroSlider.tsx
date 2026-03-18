@@ -64,8 +64,8 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       const dx = e.changedTouches[0].clientX - touchStart.current.x;
       const dy = e.changedTouches[0].clientY - touchStart.current.y;
       const dt = Date.now() - touchStart.current.t;
-      // Trigger on short fast swipes (30px) or longer deliberate ones (50px)
-      const threshold = dt < 300 ? 30 : 50;
+      // Very responsive: 15px for quick flicks, 25px for slow drags
+      const threshold = dt < 250 ? 15 : 25;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
         if (dx < 0) goNext();
         else goPrev();
