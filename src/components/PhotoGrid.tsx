@@ -71,22 +71,22 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     <>
       {/* Subcategory tabs — only shown when subcategories exist */}
       {hasSubcategories && (
-        <div className="mb-12 flex flex-wrap justify-center gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1">
+        <div className="mb-6 sm:mb-12 flex flex-wrap justify-center gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1">
           <button
             onClick={() => setActiveCategory("all")}
-            className={`rounded-md px-5 py-2.5 text-xs uppercase tracking-menu transition-all duration-300 ${
+            className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 ${
               activeCategory === "all"
                 ? "bg-brand-accent/20 text-brand-accent"
                 : "text-brand-muted hover:bg-white/5 hover:text-white"
             }`}
           >
-            {locale === "en" ? "All photos" : "Toutes les photos"}
+            {locale === "en" ? "All" : "Tout"}
           </button>
           {validSubcategories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-md px-5 py-2.5 text-xs uppercase tracking-menu transition-all duration-300 ${
+              className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 ${
                 activeCategory === cat
                   ? "bg-brand-accent/20 text-brand-accent"
                   : "text-brand-muted hover:bg-white/5 hover:text-white"
