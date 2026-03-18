@@ -35,9 +35,9 @@ export default function PrintsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="flex h-[35vh] sm:h-[50vh] items-center justify-center bg-brand-dark">
-        <div className="w-full text-center px-6">
-          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-2 sm:mb-4">
+      <section className="flex h-[40vh] sm:h-[50vh] items-center justify-center bg-brand-dark">
+        <div className="w-full text-center px-6 pt-10 sm:pt-0">
+          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
             {localize(homePage?.printsSubheading, locale) ||
               (locale === "en" ? "Art Prints" : "Tirages d'Art")}
           </p>
@@ -47,7 +47,7 @@ export default function PrintsPage() {
                 ? "Fine Art Prints Collection"
                 : "Tirages d'Art - Singulart")}
           </h1>
-          <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
+          <p className="mt-2 sm:mt-4 text-[11px] sm:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
             {locale === "en"
               ? "High-quality art prints from my photographic collections"
               : "Tirages d'art de haute qualité de mes collections photographiques"}

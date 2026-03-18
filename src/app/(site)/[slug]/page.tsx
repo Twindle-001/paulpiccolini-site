@@ -62,7 +62,7 @@ export default async function CategoryPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[35vh] sm:h-[60vh] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[40vh] sm:h-[60vh] items-center justify-center overflow-hidden">
         {category.coverImage ? (
           <Image
             src={urlFor(category.coverImage).width(1920).height(1080).url()}
@@ -76,7 +76,7 @@ export default async function CategoryPage({
           <div className="absolute inset-0 bg-brand-dark" />
         )}
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 w-full text-center px-6">
+        <div className="relative z-10 w-full text-center px-6 pt-10 sm:pt-0">
           <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
