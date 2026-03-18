@@ -102,11 +102,11 @@ export default function ContactPage() {
             <div className="absolute inset-0 bg-black/50" />
           </>
         )}
-        <div className="relative z-10 text-center">
-          <p className="section-subheading mb-4 text-brand-muted">
+        <div className="relative z-10 w-full text-center px-6">
+          <p className="section-subheading mb-2 sm:mb-4 text-brand-muted text-[10px] sm:text-sm">
             {heroSub}
           </p>
-          <h1 className="font-heading text-5xl tracking-wider text-white md:text-6xl">
+          <h1 className="font-heading text-3xl tracking-wider text-white sm:text-5xl md:text-6xl">
             {heroTitle}
           </h1>
         </div>

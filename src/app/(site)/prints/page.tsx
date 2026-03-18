@@ -36,12 +36,12 @@ export default function PrintsPage() {
     <>
       {/* Hero */}
       <section className="flex h-[30vh] sm:h-[40vh] items-center justify-center bg-brand-dark">
-        <div className="text-center px-8">
-          <p className="section-subheading mb-4 text-brand-muted">
+        <div className="w-full text-center px-6">
+          <p className="section-subheading mb-2 sm:mb-4 text-brand-muted text-[10px] sm:text-sm">
             {localize(homePage?.printsSubheading, locale) ||
               (locale === "en" ? "Art Prints" : "Tirages d'Art")}
           </p>
-          <h1 className="font-heading text-4xl tracking-wider text-white sm:text-5xl md:text-6xl">
+          <h1 className="font-heading text-3xl tracking-wider text-white sm:text-5xl md:text-6xl">
             {localize(homePage?.printsHeading, locale) ||
               (locale === "en"
                 ? "Fine Art Prints Collection"
