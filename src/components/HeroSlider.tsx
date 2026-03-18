@@ -17,15 +17,16 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { locale } = useLanguage();
 
-  // Swipe support
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  // Swipe support — lower threshold for easier mobile swiping
+  const touchStart = useRef<{ x: number; y: number; t: number } | null>(null);
+  const [swipeOffset, setSwipeOffset] = useState(0);
 
   const goTo = useCallback(
     (index: number) => {
       if (isTransitioning) return;
       setIsTransitioning(true);
       setCurrent(index);
-      setTimeout(() => setIsTransitioning(false), 1000);
+      setTimeout(() => setIsTransitioning(false), 800);
     },
     [isTransitioning]
   );
@@ -39,16 +40,33 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   }, [current, goTo, slides.length]);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      t: Date.now(),
+    };
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const dx = e.touches[0].clientX - touchStart.current.x;
+    const dy = e.touches[0].clientY - touchStart.current.y;
+    // Only apply horizontal offset if swipe is mostly horizontal
+    if (Math.abs(dx) > Math.abs(dy)) {
+      setSwipeOffset(dx * 0.3); // damped visual feedback
+    }
   }, []);
 
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
+      setSwipeOffset(0);
       if (!touchStart.current) return;
       const dx = e.changedTouches[0].clientX - touchStart.current.x;
       const dy = e.changedTouches[0].clientY - touchStart.current.y;
-      // Only trigger if horizontal swipe is dominant and long enough
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      const dt = Date.now() - touchStart.current.t;
+      // Trigger on short fast swipes (30px) or longer deliberate ones (50px)
+      const threshold = dt < 300 ? 30 : 50;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
         if (dx < 0) goNext();
         else goPrev();
       }
@@ -84,8 +102,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   return (
     <section
-      className="relative h-screen w-full overflow-hidden"
+      className="relative h-screen w-full overflow-hidden touch-pan-y"
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Slides */}
@@ -113,8 +132,11 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
       ))}
 
       {/* Content overlay */}
-      <div className="relative z-10 flex h-full items-center justify-center">
-        <div className="text-center">
+      <div
+        className="relative z-10 flex h-full items-center justify-center transition-transform duration-100"
+        style={{ transform: `translateX(${swipeOffset}px)` }}
+      >
+        <div className="text-center px-8">
           <p
             className="mb-4 text-sm uppercase tracking-[0.3em] text-white/60 transition-all duration-700"
             key={`sub-${current}`}

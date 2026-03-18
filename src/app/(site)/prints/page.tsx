@@ -36,18 +36,18 @@ export default function PrintsPage() {
     <>
       {/* Hero */}
       <section className="flex h-[40vh] items-center justify-center bg-brand-dark">
-        <div className="text-center">
+        <div className="text-center px-8">
           <p className="section-subheading mb-4 text-brand-muted">
             {localize(homePage?.printsSubheading, locale) ||
               (locale === "en" ? "Art Prints" : "Tirages d'Art")}
           </p>
-          <h1 className="font-heading text-5xl tracking-wider text-white md:text-6xl">
+          <h1 className="font-heading text-4xl tracking-wider text-white sm:text-5xl md:text-6xl">
             {localize(homePage?.printsHeading, locale) ||
               (locale === "en"
                 ? "Fine Art Prints Collection"
                 : "Tirages d'Art - Singulart")}
           </h1>
-          <p className="mt-4 text-sm text-brand-light/60">
+          <p className="mt-4 text-sm text-brand-light/60 max-w-lg mx-auto">
             {locale === "en"
               ? "High-quality art prints from my photographic collections"
               : "Tirages d'art de haute qualité de mes collections photographiques"}
