@@ -98,8 +98,31 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
         </div>
       )}
 
-      {/* Grid */}
-      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
+      {/* Grid — 2 columns on mobile for overview, masonry 2-3 columns on desktop */}
+      {/* Mobile: uniform 2-col grid | Desktop (sm+): masonry columns */}
+      <div className="grid grid-cols-2 gap-3 sm:hidden">
+        {filtered.map((photo, i) => (
+          <div
+            key={photo._id}
+            className="group relative cursor-pointer overflow-hidden"
+            onClick={() => setLightbox(i)}
+          >
+            <div className="relative aspect-[3/4] w-full">
+              <Image
+                src={urlFor(photo.image).width(800).height(1067).url()}
+                alt={getAlt(photo)}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="50vw"
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/0 transition-all duration-500 group-hover:bg-black/20" />
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: masonry layout */}
+      <div className="hidden sm:block columns-2 gap-4 lg:columns-3">
         {filtered.map((photo, i) => (
           <div
             key={photo._id}
@@ -112,13 +135,12 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
               width={800}
               height={600}
               className="w-full transition-transform duration-700 group-hover:scale-105"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 1024px) 50vw, 33vw"
             />
             <div
               className="absolute inset-0 bg-black/0 transition-all duration-500
                           group-hover:bg-black/20"
             />
-            {/* Title overlay — only shown if the photo has a title */}
             {photo.title && (
               <div
                 className="absolute bottom-0 left-0 right-0 translate-y-full
