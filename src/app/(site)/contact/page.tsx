@@ -88,7 +88,7 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center bg-brand-dark">
+      <section className="relative flex h-[30vh] sm:h-[40vh] items-center justify-center bg-brand-dark">
         {contactData?.bannerImage && (
           <>
             <Image

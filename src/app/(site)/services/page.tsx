@@ -41,7 +41,7 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[50vh] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[35vh] sm:h-[50vh] items-center justify-center overflow-hidden">
         {servicesPage?.bannerImage ? (
           <Image
             src={urlFor(servicesPage.bannerImage)

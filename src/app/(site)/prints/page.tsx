@@ -35,7 +35,7 @@ export default function PrintsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="flex h-[40vh] items-center justify-center bg-brand-dark">
+      <section className="flex h-[30vh] sm:h-[40vh] items-center justify-center bg-brand-dark">
         <div className="text-center px-8">
           <p className="section-subheading mb-4 text-brand-muted">
             {localize(homePage?.printsSubheading, locale) ||
