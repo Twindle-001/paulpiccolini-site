@@ -101,6 +101,14 @@
   box-shadow: 0 20px 40px rgba(201, 169, 110, 0.2);
   border-color: rgba(201, 169, 110, 0.6);
 }
+/* Desktop hover: golden border on print cards */
+@media (hover: hover) {
+  .scroll-highlight-print:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(201, 169, 110, 0.15);
+    border-color: rgba(201, 169, 110, 0.5);
+  }
+}
 
 /* Smooth image loading */
 img {
