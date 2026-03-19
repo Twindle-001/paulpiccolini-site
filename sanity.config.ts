@@ -133,7 +133,6 @@ const deskStructure = (S: any) =>
                       .title("Blog")
                       .icon(() => "📝")
                       .child(S.documentTypeList("blogPost").title("Articles")),
-                  ]);
             ])
         ),
     ]);
