@@ -46,6 +46,8 @@ export default function ServicesPage() {
           <Image
             src={urlFor(servicesPage.bannerImage)
               .width(1920)
+              .height(600)
+              .fit("crop")
               .url()}
             alt="Services"
             fill
