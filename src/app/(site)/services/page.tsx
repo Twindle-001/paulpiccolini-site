@@ -86,7 +86,7 @@ export default function ServicesPage() {
 
       {/* Pricing Cards */}
       <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {services.map((plan) => (
             <div
               key={plan._id}
