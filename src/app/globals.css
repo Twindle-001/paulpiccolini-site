@@ -61,7 +61,6 @@
     @apply inline-flex items-center gap-2 bg-brand-accent
            px-8 py-3.5 text-xs uppercase tracking-menu text-brand-darker font-semibold
            transition-all duration-300 hover:bg-brand-accent/90
-           hover:shadow-lg hover:shadow-brand-accent/25
            active:scale-95;
   }
 }

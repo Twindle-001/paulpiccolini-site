@@ -352,21 +352,17 @@ export default function HomePage() {
               ))}
             </div>
 
-            {homePage?.printsLink && (
-              <div className="mt-12 text-center">
-                <a
-                  href={homePage.printsLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-accent inline-block"
-                >
-                  {locale === "en"
-                    ? "View All Prints"
-                    : "Voir tous les tirages"}{" "}
-                  &rarr;
-                </a>
-              </div>
-            )}
+            <div className="mt-12 text-center">
+              <Link
+                href="/prints"
+                className="btn-accent inline-block"
+              >
+                {locale === "en"
+                  ? "View All Prints"
+                  : "Voir tous les tirages"}{" "}
+                &rarr;
+              </Link>
+            </div>
           </div>
         </section>
       )}

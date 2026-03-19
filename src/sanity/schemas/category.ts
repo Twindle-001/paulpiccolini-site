@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { createLocaleField } from "./localeFields";
+import { BannerDesktopPreview, BannerMobilePreview } from "../components/BannerPreview";
 
 export default defineType({
   name: "category",
@@ -35,6 +36,7 @@ export default defineType({
       options: { hotspot: true },
       description:
         "Image bannière pour ordinateur (format panoramique recommandé). Utilise coverImage si non rempli.",
+      components: { input: BannerDesktopPreview },
     }),
     defineField({
       name: "bannerImageMobile",
@@ -43,6 +45,7 @@ export default defineType({
       options: { hotspot: true },
       description:
         "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
+      components: { input: BannerMobilePreview },
     }),
     defineField({
       name: "order",
