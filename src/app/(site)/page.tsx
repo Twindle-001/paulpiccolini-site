@@ -51,7 +51,7 @@ export default function HomePage() {
     });
   }, [isLoading]);
 
-  // Scroll-based highlight: MOBILE ONLY — toggle .in-view class on cards when centered in viewport
+  // Scroll-based highlight: MOBILE ONLY â toggle .in-view class on cards when centered in viewport
   // On desktop, hover effects are sufficient so we skip this.
   useEffect(() => {
     if (isLoading) return;
@@ -140,14 +140,8 @@ export default function HomePage() {
           {/* Text */}
           <div>
             <p className="section-subheading mb-4">
-              {locale === "en" ? "About" : "À propos"}
+              {locale === "en" ? "About" : "Ã propos"}
             </p>
-            <h2 className="section-heading mb-8">
-              {localize(homePage?.aboutHeading, locale) ||
-                (locale === "en"
-                  ? "Your Photographer in Paris"
-                  : "Votre Photographe à Paris")}
-            </h2>
             <div className="space-y-4 text-sm leading-relaxed text-brand-light/80">
               {homePage?.aboutText ? (
                 <PortableText
@@ -157,13 +151,13 @@ export default function HomePage() {
                 <p>
                   {locale === "en"
                     ? "I am Paul Piccolini, a professional photographer based in Paris. Welcome to my portfolio."
-                    : "Je suis Paul Piccolini, photographe professionnel basé à Paris. Bienvenue dans mon portfolio."}
+                    : "Je suis Paul Piccolini, photographe professionnel basÃ© Ã  Paris. Bienvenue dans mon portfolio."}
                 </p>
               )}
             </div>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/services" className="btn-accent">
-                {locale === "en" ? "Book a Shoot" : "Réserver un shooting"}
+                {locale === "en" ? "Book a Shoot" : "RÃ©server un shooting"}
               </Link>
               <Link href="/contact" className="btn-primary">
                 {locale === "en" ? "Contact me" : "Me contacter"}
@@ -173,7 +167,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Portfolio Preview — dynamic categories */}
+      {/* Portfolio Preview â dynamic categories */}
       <section className="bg-brand-dark py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
@@ -182,7 +176,7 @@ export default function HomePage() {
             </p>
             <h2 className="section-heading">
               {localize(homePage?.portfolioHeading, locale) ||
-                (locale === "en" ? "Explore My Work" : "Découvrez mon travail")}
+                (locale === "en" ? "Explore My Work" : "DÃ©couvrez mon travail")}
             </h2>
           </div>
 
@@ -212,7 +206,7 @@ export default function HomePage() {
                       {typeof cat.title === "string" ? cat.title : localize(cat.title, locale)}
                     </h3>
                     <span className="mt-4 inline-block border border-white/40 px-6 py-2 text-xs uppercase tracking-menu text-white/90 transition-all duration-300 group-hover:border-white group-hover:bg-white/10 group-hover:text-white group-hover:backdrop-blur-sm">
-                      {locale === "en" ? "Discover" : "Découvrir"}
+                      {locale === "en" ? "Discover" : "DÃ©couvrir"}
                     </span>
                   </div>
                 </div>
@@ -244,13 +238,13 @@ export default function HomePage() {
                 {localize(homePage?.servicesHeading, locale) ||
                   (locale === "en"
                     ? "Paris Photoshoots"
-                    : "Photoshoots à Paris")}
+                    : "Photoshoots Ã  Paris")}
               </h3>
               <p className="mt-2 text-sm text-white/60">
                 {localize(homePage?.servicesIntro, locale) ||
                   (locale === "en"
                     ? "Gift yourself or others a photoshoot in the most iconic places of Paris."
-                    : "Offrez-vous ou offrez à quelqu'un un photoshoot dans les lieux les plus emblématiques de Paris.")}
+                    : "Offrez-vous ou offrez Ã  quelqu'un un photoshoot dans les lieux les plus emblÃ©matiques de Paris.")}
               </p>
               <Link
                 href="/services"
@@ -283,7 +277,7 @@ export default function HomePage() {
               {localize(homePage?.servicesOnRequestText, locale) ||
                 (locale === "en"
                   ? "Interior, events or other requests... Send me a request by email explaining your project."
-                  : "Intérieur, événements ou autres demandes... Envoyez-moi une demande par email en expliquant votre projet.")}
+                  : "IntÃ©rieur, Ã©vÃ©nements ou autres demandes... Envoyez-moi une demande par email en expliquant votre projet.")}
             </p>
             <Link href="/contact" className="relative z-10 btn-primary mt-8 self-start">
               {localize(homePage?.servicesOnRequestButton, locale) ||
@@ -311,7 +305,7 @@ export default function HomePage() {
               <p className="mt-4 text-sm text-brand-light/60 mx-auto max-w-2xl">
                 {locale === "en"
                   ? "Explore and acquire high-quality art prints from my photographic collections."
-                  : "Découvrez et acquérez des tirages d'art de haute qualité de mes collections photographiques."}
+                  : "DÃ©couvrez et acquÃ©rez des tirages d'art de haute qualitÃ© de mes collections photographiques."}
               </p>
             </div>
 
