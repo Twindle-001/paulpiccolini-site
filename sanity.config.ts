@@ -14,107 +14,128 @@ const deskStructure = (S: any) =>
     .items([
       // ─── Configuration ─────────────────────────────────
       S.listItem()
-        .title("Configuration Générale")
-        .icon(() => "⚙️")
-        .child(
-          S.document()
-            .schemaType("siteSettings")
-            .documentId("siteSettings")
-            .title("Configuration Générale")
-        ),
-      S.divider(),
-
-      // ─── Pages (bannières, titres, textes) ─────────────
-      S.listItem()
-        .title("Pages du site")
-        .icon(() => "📄")
+        .title("Site")
         .child(
           S.list()
-            .title("Pages du site — Bannières, titres & textes")
+            .title("Site")
             .items([
-              S.listItem()
-                .title("Page d'Accueil")
-                .icon(() => "🏠")
-                .child(
-                  S.document()
-                    .schemaType("homePage")
-                    .documentId("homePage")
-                    .title("Page d'Accueil")
-                ),
-              S.listItem()
-                .title("Page Services")
-                .icon(() => "📸")
-                .child(
-                  S.document()
-                    .schemaType("servicesPage")
-                    .documentId("servicesPage")
-                    .title("Page Services — Bannière, titres & textes")
-                ),
-              S.listItem()
-                .title("Page Tirages d'Art")
-                .icon(() => "🖨️")
-                .child(
-                  S.document()
-                    .schemaType("printsPage")
-                    .documentId("printsPage")
-                    .title("Page Tirages — Bannière, titres & textes")
-                ),
-              S.listItem()
-                .title("Page Contact")
-                .icon(() => "✉️")
-                .child(
-                  S.document()
-                    .schemaType("contactPage")
-                    .documentId("contactPage")
-                    .title("Page Contact — Bannière, titres & textes")
-                ),
+                    S.listItem()
+                      .title("Configuration Générale")
+                      .icon(() => "⚙️")
+                      .child(
+                        S.document()
+                          .schemaType("siteSettings")
+                          .documentId("siteSettings")
+                          .title("Configuration Générale")
+                      ),
+                    S.listItem()
+                      .title("Pages du site")
+                      .icon(() => "📄")
+                      .child(
+                        S.list()
+                          .title("Pages du site — Bannières, titres & textes")
+                          .items([
+                            S.listItem()
+                              .title("Page d'Accueil")
+                              .icon(() => "🏠")
+                              .child(
+                                S.document()
+                                  .schemaType("homePage")
+                                  .documentId("homePage")
+                                  .title("Page d'Accueil")
+                              ),
+                            S.listItem()
+                              .title("Page Services")
+                              .icon(() => "📸")
+                              .child(
+                                S.document()
+                                  .schemaType("servicesPage")
+                                  .documentId("servicesPage")
+                                  .title("Page Services — Bannière, titres & textes")
+                              ),
+                            S.listItem()
+                              .title("Page Tirages d'Art")
+                              .icon(() => "🖨️")
+                              .child(
+                                S.document()
+                                  .schemaType("printsPage")
+                                  .documentId("printsPage")
+                                  .title("Page Tirages — Bannière, titres & textes")
+                              ),
+                            S.listItem()
+                              .title("Page Contact")
+                              .icon(() => "✉️")
+                              .child(
+                                S.document()
+                                  .schemaType("contactPage")
+                                  .documentId("contactPage")
+                                  .title("Page Contact — Bannière, titres & textes")
+                              ),
+                          ])
+                      ),
+                    S.listItem()
+                      .title("Slides Hero (Accueil)")
+                      .icon(() => "🖼️")
+                      .child(S.documentTypeList("heroSlide").title("Slides Hero")),
             ])
         ),
-      S.divider(),
-
-      // ─── Portfolio ─────────────────────────────────────
       S.listItem()
-        .title("Catégories Portfolio")
-        .icon(() => "📁")
+        .title("Portfolio")
         .child(
-          S.documentTypeList("category")
-            .title("Catégories — Bannière & description")
+          S.list()
+            .title("Portfolio")
+            .items([
+                    S.listItem()
+                      .title("Catégories Portfolio")
+                      .icon(() => "📁")
+                      .child(
+                        S.documentTypeList("category")
+                          .title("Catégories — Bannière & description")
+                      ),
+                    S.listItem()
+                      .title("Photos")
+                      .icon(() => "📷")
+                      .child(
+                        S.documentTypeList("category")
+                          .title("Photos par catégorie")
+                          .child((categoryId: string) =>
+                            S.documentList()
+                              .title("Photos")
+                              .filter('_type == "photo" && category._ref == $categoryId')
+                              .params({ categoryId })
+                          )
+                      ),
+            ])
         ),
       S.listItem()
-        .title("Photos")
-        .icon(() => "📷")
+        .title("Boutique")
         .child(
-          S.documentTypeList("category")
-            .title("Photos par catégorie")
-            .child((categoryId: string) =>
-              S.documentList()
-                .title("Photos")
-                .filter('_type == "photo" && category._ref == $categoryId')
-                .params({ categoryId })
-            )
+          S.list()
+            .title("Boutique")
+            .items([
+                    S.listItem()
+                      .title("Forfaits / Tarifs")
+                      .icon(() => "💰")
+                      .child(S.documentTypeList("service").title("Forfaits")),
+                    S.listItem()
+                      .title("Tirages d'Art (produits)")
+                      .icon(() => "🎨")
+                      .child(S.documentTypeList("print").title("Tirages")),
+            ])
         ),
       S.listItem()
-        .title("Slides Hero (Accueil)")
-        .icon(() => "🖼️")
-        .child(S.documentTypeList("heroSlide").title("Slides Hero")),
-      S.divider(),
-
-      // ─── Services & Produits ───────────────────────────
-      S.listItem()
-        .title("Forfaits / Tarifs")
-        .icon(() => "💰")
-        .child(S.documentTypeList("service").title("Forfaits")),
-      S.listItem()
-        .title("Tirages d'Art (produits)")
-        .icon(() => "🎨")
-        .child(S.documentTypeList("print").title("Tirages")),
-      S.divider(),
-
-      // ─── Blog ──────────────────────────────────────────
-      S.listItem()
-        .title("Blog")
-        .icon(() => "📝")
-        .child(S.documentTypeList("blogPost").title("Articles")),
+        .title("Contenu")
+        .child(
+          S.list()
+            .title("Contenu")
+            .items([
+                    S.listItem()
+                      .title("Blog")
+                      .icon(() => "📝")
+                      .child(S.documentTypeList("blogPost").title("Articles")),
+                  ]);
+            ])
+        ),
     ]);
 
 export default defineConfig({
