@@ -65,27 +65,24 @@ export default async function CategoryPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[40vh] sm:h-auto sm:aspect-[3.2/1] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[40vh] sm:h-auto items-center justify-center overflow-hidden">
         {(() => {
           const desktopImg = category.bannerImage || category.coverImage;
           const mobileImg = category.bannerImageMobile || desktopImg;
+          const altText = typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category");
           if (!desktopImg) return <div className="absolute inset-0 bg-brand-dark" />;
           return (
             <>
-              {/* Desktop banner */}
-              <Image
-                src={urlFor(desktopImg).width(1920).quality(85).url()}
-                alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
-                fill
-                className="object-cover hidden sm:block"
-                style={{ objectPosition: getHotspot(desktopImg) }}
-                priority
-                sizes="100vw"
+              {/* Desktop: fixed crop, scales proportionally — cadrage ne change jamais */}
+              <img
+                src={urlFor(desktopImg).width(1920).height(400).fit("crop").quality(85).url()}
+                alt={altText}
+                className="hidden sm:block w-full h-auto"
               />
-              {/* Mobile banner */}
+              {/* Mobile: fills 40vh container with hotspot positioning */}
               <Image
                 src={urlFor(mobileImg).width(800).quality(85).url()}
-                alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
+                alt={altText}
                 fill
                 className="object-cover sm:hidden"
                 style={{ objectPosition: getHotspot(mobileImg) }}
@@ -96,8 +93,9 @@ export default async function CategoryPage({
           );
         })()}
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 w-full text-center px-6 pt-10 sm:pt-0">
-          <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="w-full text-center px-6 pt-10 sm:pt-0">
+            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
           <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
@@ -106,6 +104,7 @@ export default async function CategoryPage({
               <LocaleString field={typeof category.description === "string" ? { fr: category.description, en: category.description } : category.description} />
             </p>
           )}
+          </div>
         </div>
       </section>
 

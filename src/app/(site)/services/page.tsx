@@ -41,17 +41,13 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[40vh] sm:h-auto sm:aspect-[3.2/1] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[40vh] sm:h-auto items-center justify-center overflow-hidden">
         {servicesPage?.bannerImage ? (
           <>
-            <Image
-              src={urlFor(servicesPage.bannerImage).width(1920).quality(85).url()}
+            <img
+              src={urlFor(servicesPage.bannerImage).width(1920).height(400).fit("crop").quality(85).url()}
               alt="Services"
-              fill
-              className="object-cover hidden sm:block"
-              style={{ objectPosition: getHotspot(servicesPage.bannerImage) }}
-              priority
-              sizes="100vw"
+              className="hidden sm:block w-full h-auto"
             />
             <Image
               src={urlFor(servicesPage.bannerImageMobile || servicesPage.bannerImage).width(800).quality(85).url()}
@@ -67,22 +63,24 @@ export default function ServicesPage() {
           <div className="absolute inset-0 bg-brand-dark" />
         )}
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 w-full text-center px-6 pt-10 sm:pt-0">
-          <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
-            {locale === "en" ? "Services" : "Services"}
-          </p>
-          <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
-            {localize(servicesPage?.heading, locale) ||
-              (locale === "en"
-                ? "Paris Photoshoots"
-                : "Photoshoots à Paris")}
-          </h1>
-          <p className="mt-2 sm:mt-4 text-sm sm:text-[11px] md:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
-            {localize(servicesPage?.intro, locale) ||
-              (locale === "en"
-                ? "Gift yourself or others a photoshoot in the most iconic places of Paris."
-                : "Offrez-vous ou offrez à quelqu'un un photoshoot dans les lieux les plus emblématiques de Paris.")}
-          </p>
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="w-full text-center px-6 pt-10 sm:pt-0">
+            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
+              {locale === "en" ? "Services" : "Services"}
+            </p>
+            <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
+              {localize(servicesPage?.heading, locale) ||
+                (locale === "en"
+                  ? "Paris Photoshoots"
+                  : "Photoshoots à Paris")}
+            </h1>
+            <p className="mt-2 sm:mt-4 text-sm sm:text-[11px] md:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
+              {localize(servicesPage?.intro, locale) ||
+                (locale === "en"
+                  ? "Gift yourself or others a photoshoot in the most iconic places of Paris."
+                  : "Offrez-vous ou offrez à quelqu'un un photoshoot dans les lieux les plus emblématiques de Paris.")}
+            </p>
+          </div>
         </div>
       </section>
 
