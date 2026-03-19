@@ -12,7 +12,7 @@ const deskStructure = (S: any) =>
   S.list()
     .title("Backoffice")
     .items([
-      // Configuration
+      // ─── Configuration ─────────────────────────────────
       S.listItem()
         .title("Configuration Générale")
         .icon(() => "⚙️")
@@ -23,44 +23,63 @@ const deskStructure = (S: any) =>
             .title("Configuration Générale")
         ),
       S.divider(),
-      // Pages
+
+      // ─── Pages (bannières, titres, textes) ─────────────
       S.listItem()
-        .title("Page d'Accueil")
-        .icon(() => "🏠")
+        .title("Pages du site")
+        .icon(() => "📄")
         .child(
-          S.document()
-            .schemaType("homePage")
-            .documentId("homePage")
-            .title("Page d'Accueil")
-        ),
-      S.listItem()
-        .title("Page Services")
-        .icon(() => "📸")
-        .child(
-          S.document()
-            .schemaType("servicesPage")
-            .documentId("servicesPage")
-            .title("Page Services")
-        ),
-      S.listItem()
-        .title("Page Contact")
-        .icon(() => "✉️")
-        .child(
-          S.document()
-            .schemaType("contactPage")
-            .documentId("contactPage")
-            .title("Page Contact")
+          S.list()
+            .title("Pages du site — Bannières, titres & textes")
+            .items([
+              S.listItem()
+                .title("Page d'Accueil")
+                .icon(() => "🏠")
+                .child(
+                  S.document()
+                    .schemaType("homePage")
+                    .documentId("homePage")
+                    .title("Page d'Accueil")
+                ),
+              S.listItem()
+                .title("Page Services")
+                .icon(() => "📸")
+                .child(
+                  S.document()
+                    .schemaType("servicesPage")
+                    .documentId("servicesPage")
+                    .title("Page Services — Bannière, titres & textes")
+                ),
+              S.listItem()
+                .title("Page Tirages d'Art")
+                .icon(() => "🖨️")
+                .child(
+                  S.document()
+                    .schemaType("printsPage")
+                    .documentId("printsPage")
+                    .title("Page Tirages — Bannière, titres & textes")
+                ),
+              S.listItem()
+                .title("Page Contact")
+                .icon(() => "✉️")
+                .child(
+                  S.document()
+                    .schemaType("contactPage")
+                    .documentId("contactPage")
+                    .title("Page Contact — Bannière, titres & textes")
+                ),
+            ])
         ),
       S.divider(),
-      // Gallery Management
+
+      // ─── Portfolio ─────────────────────────────────────
       S.listItem()
-        .title("Slides Hero (Accueil)")
-        .icon(() => "🖼️")
-        .child(S.documentTypeList("heroSlide").title("Slides Hero")),
-      S.listItem()
-        .title("Catégories")
+        .title("Catégories Portfolio")
         .icon(() => "📁")
-        .child(S.documentTypeList("category").title("Catégories")),
+        .child(
+          S.documentTypeList("category")
+            .title("Catégories — Bannière & description")
+        ),
       S.listItem()
         .title("Photos")
         .icon(() => "📷")
@@ -74,22 +93,28 @@ const deskStructure = (S: any) =>
                 .params({ categoryId })
             )
         ),
+      S.listItem()
+        .title("Slides Hero (Accueil)")
+        .icon(() => "🖼️")
+        .child(S.documentTypeList("heroSlide").title("Slides Hero")),
       S.divider(),
-      // Services & Products
+
+      // ─── Services & Produits ───────────────────────────
       S.listItem()
         .title("Forfaits / Tarifs")
         .icon(() => "💰")
         .child(S.documentTypeList("service").title("Forfaits")),
+      S.listItem()
+        .title("Tirages d'Art (produits)")
+        .icon(() => "🎨")
+        .child(S.documentTypeList("print").title("Tirages")),
       S.divider(),
-      // Content
+
+      // ─── Blog ──────────────────────────────────────────
       S.listItem()
         .title("Blog")
         .icon(() => "📝")
         .child(S.documentTypeList("blogPost").title("Articles")),
-      S.listItem()
-        .title("Tirages d'Art")
-        .icon(() => "🖨️")
-        .child(S.documentTypeList("print").title("Tirages")),
     ]);
 
 export default defineConfig({

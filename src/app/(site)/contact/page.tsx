@@ -92,7 +92,7 @@ export default function ContactPage() {
         {contactData?.bannerImage && (
           <>
             <Image
-              src={urlFor(contactData.bannerImage).width(1920).height(800).url()}
+              src={urlFor(contactData.bannerImage).width(1920).height(1080).fit("crop").url()}
               alt={heroTitle}
               fill
               className="object-cover"
