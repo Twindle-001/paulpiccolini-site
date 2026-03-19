@@ -2,8 +2,8 @@ import { type ObjectInputProps, useClient } from "sanity";
 import imageUrlBuilder from "@sanity/image-url";
 
 /**
- * Unified Banner Preview â single image upload with dual desktop + mobile preview.
- * Shows how the banner will render on desktop (1920x400) and mobile (3:4 ratio).
+ * Unified Banner Preview Ã¢ÂÂ single image upload with dual desktop + mobile preview.
+ * Shows how the banner will render on desktop (1920x400) and mobile (16:9 ratio).
  * Uses the Sanity hotspot to control mobile crop positioning.
  */
 export function UnifiedBannerPreview(props: ObjectInputProps) {
@@ -79,7 +79,7 @@ export function UnifiedBannerPreview(props: ObjectInputProps) {
           </div>
 
           {/* Mobile Preview */}
-          <div style={{ flex: "0 0 auto", width: 160 }}>
+          <div style={{ flex: "0 0 auto", width: 280 }}>
             <div
               style={{
                 fontSize: 11,
@@ -90,7 +90,7 @@ export function UnifiedBannerPreview(props: ObjectInputProps) {
                 marginBottom: 6,
               }}
             >
-              Rendu Mobile (3:4)
+              Rendu Mobile (16:9)
             </div>
             <div
               style={{
@@ -104,7 +104,7 @@ export function UnifiedBannerPreview(props: ObjectInputProps) {
                 style={{
                   position: "relative",
                   width: "100%",
-                  paddingTop: "133%",
+                  paddingTop: "56.25%",
                 }}
               >
                 <img
