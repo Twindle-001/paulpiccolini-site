@@ -116,9 +116,6 @@ export default function ContactPage() {
             <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
               {heroTitle}
             </h1>
-            <p className="mt-2 sm:mt-4 text-sm sm:text-[11px] md:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
-              {intro}
-            </p>
           </div>
         </div>
       </section>
