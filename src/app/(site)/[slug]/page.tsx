@@ -67,14 +67,26 @@ export default async function CategoryPage({
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-[60vh] items-center justify-center overflow-hidden">
         {(category.bannerImage || category.coverImage) ? (
-          <Image
-            src={urlFor(category.bannerImage || category.coverImage).width(1920).height(600).fit("crop").url()}
-            alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
+          <>
+            {/* Desktop banner — panoramic crop */}
+            <Image
+              src={urlFor(category.bannerImage || category.coverImage).width(1920).height(600).fit("crop").url()}
+              alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
+              fill
+              className="object-cover hidden sm:block"
+              priority
+              sizes="100vw"
+            />
+            {/* Mobile banner — taller crop (3:4) */}
+            <Image
+              src={urlFor(category.bannerImageMobile || category.bannerImage || category.coverImage).width(800).height(1000).fit("crop").url()}
+              alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
+              fill
+              className="object-cover sm:hidden"
+              priority
+              sizes="100vw"
+            />
+          </>
         ) : (
           <div className="absolute inset-0 bg-brand-dark" />
         )}

@@ -15,9 +15,17 @@ export default defineType({
     }),
     defineField({
       name: "bannerImage",
-      title: "Image bannière hero",
+      title: "Bannière Desktop",
       type: "image",
       options: { hotspot: true },
+      description: "Image bannière pour ordinateur (format panoramique recommandé)",
+    }),
+    defineField({
+      name: "bannerImageMobile",
+      title: "Bannière Mobile",
+      type: "image",
+      options: { hotspot: true },
+      description: "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
     }),
     defineField({
       name: "philosophyItems",

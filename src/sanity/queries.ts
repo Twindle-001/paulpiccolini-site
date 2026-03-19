@@ -40,6 +40,7 @@ export const servicesPageQuery = groq`
     heading,
     intro,
     bannerImage,
+    bannerImageMobile,
     philosophyItems[] {
       image,
       heading,
@@ -61,6 +62,7 @@ export const servicesPageQuery = groq`
 export const contactPageQuery = groq`
   *[_type == "contactPage"][0] {
     bannerImage,
+    bannerImageMobile,
     heroSubtitle,
     heroTitle,
     intro,
@@ -104,6 +106,7 @@ export const categoryBySlugQuery = groq`
     description,
     coverImage,
     bannerImage,
+    bannerImageMobile,
     order
   }
 `;
@@ -192,6 +195,7 @@ export const printsQuery = groq`
 export const printsPageQuery = groq`
   *[_type == "printsPage"][0] {
     bannerImage,
+    bannerImageMobile,
     heading,
     subheading,
     description,

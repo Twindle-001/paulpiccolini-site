@@ -77,11 +77,21 @@ export default function PrintsPage() {
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center overflow-hidden">
         {pageData?.bannerImage ? (
           <>
+            {/* Desktop banner */}
             <Image
               src={urlFor(pageData.bannerImage).width(1920).height(600).fit("crop").url()}
               alt={String(heading)}
               fill
-              className="object-cover"
+              className="object-cover hidden sm:block"
+              priority
+              sizes="100vw"
+            />
+            {/* Mobile banner */}
+            <Image
+              src={urlFor(pageData.bannerImageMobile || pageData.bannerImage).width(800).height(1000).fit("crop").url()}
+              alt={String(heading)}
+              fill
+              className="object-cover sm:hidden"
               priority
               sizes="100vw"
             />

@@ -43,18 +43,26 @@ export default function ServicesPage() {
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center overflow-hidden">
         {servicesPage?.bannerImage ? (
-          <Image
-            src={urlFor(servicesPage.bannerImage)
-              .width(1920)
-              .height(600)
-              .fit("crop")
-              .url()}
-            alt="Services"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
+          <>
+            {/* Desktop banner */}
+            <Image
+              src={urlFor(servicesPage.bannerImage).width(1920).height(600).fit("crop").url()}
+              alt="Services"
+              fill
+              className="object-cover hidden sm:block"
+              priority
+              sizes="100vw"
+            />
+            {/* Mobile banner */}
+            <Image
+              src={urlFor(servicesPage.bannerImageMobile || servicesPage.bannerImage).width(800).height(1000).fit("crop").url()}
+              alt="Services"
+              fill
+              className="object-cover sm:hidden"
+              priority
+              sizes="100vw"
+            />
+          </>
         ) : (
           <div className="absolute inset-0 bg-brand-dark" />
         )}

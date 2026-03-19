@@ -91,11 +91,21 @@ export default function ContactPage() {
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center bg-brand-dark">
         {contactData?.bannerImage && (
           <>
+            {/* Desktop banner */}
             <Image
               src={urlFor(contactData.bannerImage).width(1920).height(600).fit("crop").url()}
               alt={heroTitle}
               fill
-              className="object-cover"
+              className="object-cover hidden sm:block"
+              sizes="100vw"
+              priority
+            />
+            {/* Mobile banner */}
+            <Image
+              src={urlFor(contactData.bannerImageMobile || contactData.bannerImage).width(800).height(1000).fit("crop").url()}
+              alt={heroTitle}
+              fill
+              className="object-cover sm:hidden"
               sizes="100vw"
               priority
             />

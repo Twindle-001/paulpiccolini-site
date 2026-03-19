@@ -46,6 +46,7 @@ export interface SanityServicesPage {
   heading?: LocaleField<string>;
   intro?: LocaleField<string>;
   bannerImage?: SanityImageSource;
+  bannerImageMobile?: SanityImageSource;
   philosophyItems?: Array<{
     image?: SanityImageSource;
     heading?: LocaleField<string>;
@@ -65,6 +66,7 @@ export interface SanityServicesPage {
 export interface SanityContactPage {
   _id?: string;
   bannerImage?: SanityImageSource;
+  bannerImageMobile?: SanityImageSource;
   heroSubtitle?: LocaleField<string>;
   heroTitle?: LocaleField<string>;
   intro?: LocaleField<string>;
@@ -82,6 +84,7 @@ export interface SanityCategory {
   description?: LocaleField<string>;
   coverImage?: SanityImageSource;
   bannerImage?: SanityImageSource;
+  bannerImageMobile?: SanityImageSource;
   order?: number;
 }
 
@@ -144,6 +147,7 @@ export interface SanityPrint {
 
 export interface SanityPrintsPage {
   bannerImage?: SanityImageSource;
+  bannerImageMobile?: SanityImageSource;
   heading?: LocaleField;
   subheading?: LocaleField;
   description?: LocaleField;

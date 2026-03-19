@@ -30,11 +30,19 @@ export default defineType({
     }),
     defineField({
       name: "bannerImage",
-      title: "Image bannière hero (optionnel)",
+      title: "Bannière Desktop",
       type: "image",
       options: { hotspot: true },
       description:
-        "Image spécifique pour le hero de la page. Utilise coverImage si non rempli.",
+        "Image bannière pour ordinateur (format panoramique recommandé). Utilise coverImage si non rempli.",
+    }),
+    defineField({
+      name: "bannerImageMobile",
+      title: "Bannière Mobile",
+      type: "image",
+      options: { hotspot: true },
+      description:
+        "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
     }),
     defineField({
       name: "order",
