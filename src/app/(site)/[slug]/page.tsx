@@ -95,7 +95,7 @@ export default async function CategoryPage({
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
+            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
           <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
