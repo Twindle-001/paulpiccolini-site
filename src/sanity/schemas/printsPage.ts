@@ -1,6 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { createLocaleField } from "./localeFields";
-import { BannerDesktopPreview, BannerMobilePreview } from "../components/BannerPreview";
+import { UnifiedBannerPreview } from "../components/BannerPreview";
 
 export default defineType({
   name: "printsPage",
@@ -9,33 +9,27 @@ export default defineType({
   fields: [
     defineField({
       name: "bannerImage",
-      title: "Bannière Desktop",
+      title: "Banniere (Desktop + Mobile)",
       type: "image",
       options: { hotspot: true },
-      description: "Image bannière pour ordinateur (format panoramique recommandé)",
-      components: { input: BannerDesktopPreview },
+      description:
+        "Image banniere unique pour desktop et mobile. Utilisez le hotspot pour ajuster le cadrage mobile.",
+      components: { input: UnifiedBannerPreview },
     }),
-    defineField({
-      name: "bannerImageMobile",
-      title: "Bannière Mobile",
-      type: "image",
-      options: { hotspot: true },
-      description: "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
-      components: { input: BannerMobilePreview },
-    }),
-    createLocaleField("heading", "Titre bannière", "string", {
+    createLocaleField("heading", "Titre banniere", "string", {
       description: "Ex: Tirages d'Art - Singulart",
     }),
-    createLocaleField("subheading", "Sous-titre bannière", "string", {
+    createLocaleField("subheading", "Sous-titre banniere", "string", {
       description: "Ex: Tirages d'Art / Art Prints",
     }),
-    createLocaleField("description", "Description bannière", "text", {
-      description: "Texte descriptif affiché sous le titre dans la bannière",
+    createLocaleField("description", "Description banniere", "text", {
+      description:
+        "Texte descriptif affiche sous le titre dans la banniere",
       rows: 3,
     }),
     createLocaleField("introText", "Texte d'introduction", "text", {
       description:
-        "Texte d'introduction affiché entre la bannière et la grille de tirages",
+        "Texte d'introduction affiche entre la banniere et la grille de tirages",
       rows: 4,
     }),
     createLocaleField("ctaHeading", "Titre CTA final", "string"),
