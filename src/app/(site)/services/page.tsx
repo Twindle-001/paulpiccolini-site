@@ -160,7 +160,7 @@ export default function ServicesPage() {
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-16 text-center">
               <h2 className="section-heading">
-                {locale === "en" ? "Why Choose Me" : "Pourquoi me choisir"}
+                {locale === "en" ? "My Approach" : "Mon approche"}
               </h2>
             </div>
 
