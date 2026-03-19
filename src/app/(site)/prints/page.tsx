@@ -78,7 +78,7 @@ export default function PrintsPage() {
         {pageData?.bannerImage ? (
           <>
             <Image
-              src={urlFor(pageData.bannerImage).width(1920).height(1080).fit("crop").url()}
+              src={urlFor(pageData.bannerImage).width(1920).url()}
               alt={String(heading)}
               fill
               className="object-cover"

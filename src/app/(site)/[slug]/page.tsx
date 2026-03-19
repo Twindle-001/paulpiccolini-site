@@ -68,7 +68,7 @@ export default async function CategoryPage({
       <section className="relative flex h-[40vh] sm:h-[60vh] items-center justify-center overflow-hidden">
         {(category.bannerImage || category.coverImage) ? (
           <Image
-            src={urlFor(category.bannerImage || category.coverImage).width(1920).height(1080).fit("crop").url()}
+            src={urlFor(category.bannerImage || category.coverImage).width(1920).url()}
             alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
             fill
             className="object-cover"
