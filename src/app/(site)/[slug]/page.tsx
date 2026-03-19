@@ -65,7 +65,7 @@ export default async function CategoryPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[40vh] sm:h-[60vh] items-center justify-center overflow-hidden">
+      <section className="relative flex h-[40vh] sm:h-auto sm:aspect-[3.2/1] items-center justify-center overflow-hidden">
         {(() => {
           const desktopImg = category.bannerImage || category.coverImage;
           const mobileImg = category.bannerImageMobile || desktopImg;
