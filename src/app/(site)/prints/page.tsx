@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, getHotspot } from "@/sanity/image";
 import { printsQuery, printsPageQuery } from "@/sanity/queries";
 import type { SanityPrint, SanityPrintsPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -77,21 +77,21 @@ export default function PrintsPage() {
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center overflow-hidden">
         {pageData?.bannerImage ? (
           <>
-            {/* Desktop banner */}
             <Image
-              src={urlFor(pageData.bannerImage).width(1920).height(600).fit("crop").url()}
+              src={urlFor(pageData.bannerImage).width(1920).quality(85).url()}
               alt={String(heading)}
               fill
               className="object-cover hidden sm:block"
+              style={{ objectPosition: getHotspot(pageData.bannerImage) }}
               priority
               sizes="100vw"
             />
-            {/* Mobile banner */}
             <Image
-              src={urlFor(pageData.bannerImageMobile || pageData.bannerImage).width(800).height(1000).fit("crop").url()}
+              src={urlFor(pageData.bannerImageMobile || pageData.bannerImage).width(800).quality(85).url()}
               alt={String(heading)}
               fill
               className="object-cover sm:hidden"
+              style={{ objectPosition: getHotspot(pageData.bannerImageMobile || pageData.bannerImage) }}
               priority
               sizes="100vw"
             />

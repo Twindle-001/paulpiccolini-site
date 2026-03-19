@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, getHotspot } from "@/sanity/image";
 import { servicesQuery, servicesPageQuery } from "@/sanity/queries";
 import type { SanityService, SanityServicesPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -44,21 +44,21 @@ export default function ServicesPage() {
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center overflow-hidden">
         {servicesPage?.bannerImage ? (
           <>
-            {/* Desktop banner */}
             <Image
-              src={urlFor(servicesPage.bannerImage).width(1920).height(600).fit("crop").url()}
+              src={urlFor(servicesPage.bannerImage).width(1920).quality(85).url()}
               alt="Services"
               fill
               className="object-cover hidden sm:block"
+              style={{ objectPosition: getHotspot(servicesPage.bannerImage) }}
               priority
               sizes="100vw"
             />
-            {/* Mobile banner */}
             <Image
-              src={urlFor(servicesPage.bannerImageMobile || servicesPage.bannerImage).width(800).height(1000).fit("crop").url()}
+              src={urlFor(servicesPage.bannerImageMobile || servicesPage.bannerImage).width(800).quality(85).url()}
               alt="Services"
               fill
               className="object-cover sm:hidden"
+              style={{ objectPosition: getHotspot(servicesPage.bannerImageMobile || servicesPage.bannerImage) }}
               priority
               sizes="100vw"
             />

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, getHotspot } from "@/sanity/image";
 import { contactPageQuery } from "@/sanity/queries";
 import type { SanityContactPage } from "@/sanity/types";
 import { localize } from "@/lib/localize";
@@ -91,21 +91,21 @@ export default function ContactPage() {
       <section className="relative flex h-[40vh] sm:h-[50vh] items-center justify-center bg-brand-dark">
         {contactData?.bannerImage && (
           <>
-            {/* Desktop banner */}
             <Image
-              src={urlFor(contactData.bannerImage).width(1920).height(600).fit("crop").url()}
+              src={urlFor(contactData.bannerImage).width(1920).quality(85).url()}
               alt={heroTitle}
               fill
               className="object-cover hidden sm:block"
+              style={{ objectPosition: getHotspot(contactData.bannerImage) }}
               sizes="100vw"
               priority
             />
-            {/* Mobile banner */}
             <Image
-              src={urlFor(contactData.bannerImageMobile || contactData.bannerImage).width(800).height(1000).fit("crop").url()}
+              src={urlFor(contactData.bannerImageMobile || contactData.bannerImage).width(800).quality(85).url()}
               alt={heroTitle}
               fill
               className="object-cover sm:hidden"
+              style={{ objectPosition: getHotspot(contactData.bannerImageMobile || contactData.bannerImage) }}
               sizes="100vw"
               priority
             />

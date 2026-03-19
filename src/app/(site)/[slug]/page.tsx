@@ -3,7 +3,7 @@ import Image from "next/image";
 import PhotoGrid from "@/components/PhotoGrid";
 import { LocaleString, T } from "@/components/LocaleText";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, getHotspot } from "@/sanity/image";
 import {
   categoryBySlugQuery,
   photosByCategoryQuery,
@@ -66,30 +66,35 @@ export default async function CategoryPage({
     <>
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-[60vh] items-center justify-center overflow-hidden">
-        {(category.bannerImage || category.coverImage) ? (
-          <>
-            {/* Desktop banner — panoramic crop */}
-            <Image
-              src={urlFor(category.bannerImage || category.coverImage).width(1920).height(600).fit("crop").url()}
-              alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
-              fill
-              className="object-cover hidden sm:block"
-              priority
-              sizes="100vw"
-            />
-            {/* Mobile banner — taller crop (3:4) */}
-            <Image
-              src={urlFor(category.bannerImageMobile || category.bannerImage || category.coverImage).width(800).height(1000).fit("crop").url()}
-              alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
-              fill
-              className="object-cover sm:hidden"
-              priority
-              sizes="100vw"
-            />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-brand-dark" />
-        )}
+        {(() => {
+          const desktopImg = category.bannerImage || category.coverImage;
+          const mobileImg = category.bannerImageMobile || desktopImg;
+          if (!desktopImg) return <div className="absolute inset-0 bg-brand-dark" />;
+          return (
+            <>
+              {/* Desktop banner */}
+              <Image
+                src={urlFor(desktopImg).width(1920).quality(85).url()}
+                alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
+                fill
+                className="object-cover hidden sm:block"
+                style={{ objectPosition: getHotspot(desktopImg) }}
+                priority
+                sizes="100vw"
+              />
+              {/* Mobile banner */}
+              <Image
+                src={urlFor(mobileImg).width(800).quality(85).url()}
+                alt={typeof category.title === "string" ? category.title : (category.title?.fr || category.title?.en || "Category")}
+                fill
+                className="object-cover sm:hidden"
+                style={{ objectPosition: getHotspot(mobileImg) }}
+                priority
+                sizes="100vw"
+              />
+            </>
+          );
+        })()}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 w-full text-center px-6 pt-10 sm:pt-0">
           <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
