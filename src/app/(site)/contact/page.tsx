@@ -110,7 +110,7 @@ export default function ContactPage() {
         )}
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
+            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
               {heroSub}
             </p>
             <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
