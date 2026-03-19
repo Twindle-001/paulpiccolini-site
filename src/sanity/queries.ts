@@ -188,3 +188,15 @@ export const printsQuery = groq`
     order
   }
 `;
+
+export const printsPageQuery = groq`
+  *[_type == "printsPage"][0] {
+    bannerImage,
+    heading,
+    subheading,
+    description,
+    introText,
+    ctaHeading,
+    ctaText
+  }
+`;

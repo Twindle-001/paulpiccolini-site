@@ -59,16 +59,16 @@ export default function ServicesPage() {
         )}
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 w-full text-center px-6 pt-10 sm:pt-0">
-          <p className="text-[10px] sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
+          <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
             {locale === "en" ? "Services" : "Services"}
           </p>
-          <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl tracking-wider text-white">
+          <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
             {localize(servicesPage?.heading, locale) ||
               (locale === "en"
                 ? "Paris Photoshoots"
                 : "Photoshoots à Paris")}
           </h1>
-          <p className="mt-2 sm:mt-4 text-[11px] sm:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
+          <p className="mt-2 sm:mt-4 text-sm sm:text-[11px] md:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
             {localize(servicesPage?.intro, locale) ||
               (locale === "en"
                 ? "Gift yourself or others a photoshoot in the most iconic places of Paris."
@@ -91,7 +91,7 @@ export default function ServicesPage() {
             >
               {plan.popular && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-accent px-4 py-1 text-[10px] uppercase tracking-wider text-brand-darker font-semibold">
-                  {locale === "en" ? "Popular" : "Populaire"}
+                  {locale === "en" ? "Best Deal" : "Meilleur choix"}
                 </span>
               )}
 

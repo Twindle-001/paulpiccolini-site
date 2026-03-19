@@ -37,11 +37,15 @@ export function LanguageProvider({
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem("locale", newLocale);
-    // Update URL param
+    // Remove any ?lang= param from URL to keep canonical URLs clean for SEO
     const params = new URLSearchParams(window.location.search);
-    params.set("lang", newLocale);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, "", newUrl);
+    if (params.has("lang")) {
+      params.delete("lang");
+      const newUrl = params.toString()
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+      window.history.replaceState({}, "", newUrl);
+    }
   };
 
   const toggleLanguage = () => {

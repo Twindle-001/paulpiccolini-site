@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Blog de Paul Piccolini, photographe à Paris. Conseils photo, récits de voyage et coulisses de mes shootings.",
+  alternates: {
+    canonical: "/blog",
+  },
   openGraph: {
     title: "Blog | Paul Piccolini Photography",
     description: "Blog photo : conseils, voyages et coulisses.",

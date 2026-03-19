@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Contactez Paul Piccolini, photographe professionnel à Paris. Demande de shooting photo, tirages d'art ou projet sur mesure. Réponse sous 24h.",
+  alternates: {
+    canonical: "/contact",
+  },
   openGraph: {
     title: "Contact | Paul Piccolini Photography",
     description:

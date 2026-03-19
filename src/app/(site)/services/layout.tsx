@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Services - Shooting Photo à Paris",
   description:
     "Offrez-vous un shooting photo professionnel à Paris. Portraits, couples, familles dans les lieux les plus emblématiques de la capitale. Tarifs et forfaits disponibles.",
+  alternates: {
+    canonical: "/services",
+  },
   openGraph: {
     title: "Shooting Photo à Paris | Paul Piccolini",
     description:

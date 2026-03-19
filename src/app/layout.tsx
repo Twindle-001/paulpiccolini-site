@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     },
   ],
   metadataBase: new URL("https://paulpiccolini.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",

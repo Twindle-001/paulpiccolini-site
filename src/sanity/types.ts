@@ -141,3 +141,13 @@ export interface SanityPrint {
   externalLink: string;
   order?: number;
 }
+
+export interface SanityPrintsPage {
+  bannerImage?: SanityImageSource;
+  heading?: LocaleField;
+  subheading?: LocaleField;
+  description?: LocaleField;
+  introText?: LocaleField;
+  ctaHeading?: LocaleField;
+  ctaText?: LocaleField;
+}

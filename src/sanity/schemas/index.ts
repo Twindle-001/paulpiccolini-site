@@ -8,12 +8,14 @@ import servicesPage from "./servicesPage";
 import contactPage from "./contactPage";
 import blogPost from "./blogPost";
 import print from "./print";
+import printsPage from "./printsPage";
 
 export const schemaTypes = [
   siteSettings,
   homePage,
   servicesPage,
   contactPage,
+  printsPage,
   heroSlide,
   category,
   photo,
