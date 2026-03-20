@@ -165,7 +165,7 @@ return (
               </ul>
 
               <Link
-                href="/contact"
+                href={`/contact?pack=${encodeURIComponent(String(localize(plan.name, locale)))}`}
                 className="btn-primary text-center"
               >
                 {locale === "en" ? "Book now" : "Réserver"}
