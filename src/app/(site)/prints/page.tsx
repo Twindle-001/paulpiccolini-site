@@ -184,6 +184,9 @@ export default function PrintsPage() {
               ? "Contact me to discuss custom print options or framing services."
               : "Contactez-moi pour discuter des options d'impression personnalisées ou des services d'encadrement.")}
         </p>
+            <Link href="/contact" className="btn-accent mt-8 inline-block">
+              {locale === "en" ? "Contact me" : "Me contacter"}
+            </Link>
       </section>
     </>
   );
