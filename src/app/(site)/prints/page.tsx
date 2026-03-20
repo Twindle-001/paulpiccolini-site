@@ -7,6 +7,7 @@ import { urlFor, getHotspot } from "@/sanity/image";
 import { printsQuery, printsPageQuery } from "@/sanity/queries";
 import type { SanityPrint, SanityPrintsPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 import { localize } from "@/lib/localize";
 
 export default function PrintsPage() {
