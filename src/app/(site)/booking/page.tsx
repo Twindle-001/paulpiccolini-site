@@ -20,10 +20,15 @@ export default function BookingPage() {
     client.fetch<SanityService[]>(servicesQuery).then((data) => {
       setServices(data.sort((a, b) => (a.order || 0) - (b.order || 0)));
       setIsLoading(false);
+
       const params = new URLSearchParams(window.location.search);
       const packParam = params.get("pack");
       if (packParam) {
-        const match = data.find((s) => localize(s.name, locale)?.toLowerCase() === packParam.toLowerCase());
+        const match = data.find(
+          (s) =>
+            localize(s.name, locale)?.toLowerCase() ===
+            packParam.toLowerCase()
+        );
         if (match) setSelectedPack(match._id);
       }
     });
@@ -35,53 +40,98 @@ export default function BookingPage() {
     const fd = new FormData(e.currentTarget);
     const svc = services.find((s) => s._id === fd.get("formula"));
     const svcName = svc ? localize(svc.name, locale) || "" : "";
+
     try {
-      const res = await fetch("https://formsubmit.co/ajax/paul.piccolini@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ _subject: `Demande de r\u00e9servation \u2013 ${svcName}`, Formule: `${svcName} (${svc?.currency||""} ${svc?.price||""})`, "Date souhait\u00e9e": fd.get("date"), "Dur\u00e9e": fd.get("duration"), Lieu: fd.get("location"), "Nombre de personnes": fd.get("people"), "Pr\u00e9nom": fd.get("firstName"), Nom: fd.get("lastName"), Email: fd.get("email"), "T\u00e9l\u00e9phone": fd.get("phone")||"Non fourni", Message: fd.get("message")||"Aucun" }),
-      });
+      const res = await fetch(
+        "https://formsubmit.co/ajax/paul.piccolini@gmail.com",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            _subject: `Demande de r\u00e9servation \u2013 ${svcName}`,
+            Formule: `${svcName} (${svc?.currency || ""} ${svc?.price || ""})`,
+            "Date souhait\u00e9e": fd.get("date"),
+            "Nombre de personnes": fd.get("people"),
+            "Pr\u00e9nom": fd.get("firstName"),
+            Nom: fd.get("lastName"),
+            Email: fd.get("email"),
+            "T\u00e9l\u00e9phone": fd.get("phone") || "Non fourni",
+            Message: fd.get("message") || "Aucun",
+          }),
+        }
+      );
       const data = await res.json();
       setStatus(data.success ? "sent" : "error");
-    } catch { setStatus("error"); }
+    } catch {
+      setStatus("error");
+    }
   }
 
   const t = {
     title: locale === "en" ? "Booking" : "R\u00e9servation",
-    subtitle: locale === "en" ? "Fill out the form below to request a photo session. I\u2019ll get back to you within 24 hours." : "Remplissez le formulaire ci-dessous pour demander une s\u00e9ance photo. Je vous r\u00e9pondrai sous 24 heures.",
+    subtitle:
+      locale === "en"
+        ? "Fill out the form below to request a photo session. I\u2019ll get back to you within 24 hours."
+        : "Remplissez le formulaire ci-dessous pour demander une s\u00e9ance photo. Je vous r\u00e9pondrai sous 24 heures.",
     formule: locale === "en" ? "Package" : "Formule",
-    selectFormule: locale === "en" ? "Select a package" : "S\u00e9lectionner une formule",
+    selectFormule:
+      locale === "en" ? "Select a package" : "S\u00e9lectionner une formule",
     date: locale === "en" ? "Preferred date" : "Date souhait\u00e9e",
-    duration: locale === "en" ? "Duration" : "Dur\u00e9e souhait\u00e9e",
     selectOpt: locale === "en" ? "Select" : "S\u00e9lectionner",
-    location: locale === "en" ? "Location" : "Lieu",
-    locationPh: locale === "en" ? "Paris, Studio, Outdoor..." : "Paris, Studio, Ext\u00e9rieur...",
-    people: locale === "en" ? "Number of people" : "Nombre de personnes",
+    people:
+      locale === "en" ? "Number of people" : "Nombre de personnes",
+    coupleNote:
+      locale === "en"
+        ? "Couple session: +50\u20ac supplement"
+        : "S\u00e9ance en couple : +50\u20ac de suppl\u00e9ment",
     firstName: locale === "en" ? "First name" : "Pr\u00e9nom",
     lastName: locale === "en" ? "Last name" : "Nom",
     email: "Email",
-    phone: locale === "en" ? "Phone (optional)" : "T\u00e9l\u00e9phone (optionnel)",
-    message: locale === "en" ? "Message / Additional details" : "Message / D\u00e9tails suppl\u00e9mentaires",
-    submit: locale === "en" ? "Send my request" : "Envoyer ma demande",
+    phone:
+      locale === "en"
+        ? "Phone (optional)"
+        : "T\u00e9l\u00e9phone (optionnel)",
+    message:
+      locale === "en"
+        ? "Message / Additional details"
+        : "Message / D\u00e9tails suppl\u00e9mentaires",
+    submit:
+      locale === "en" ? "Send my request" : "Envoyer ma demande",
     sending: locale === "en" ? "Sending..." : "Envoi en cours...",
-    sent: locale === "en" ? "Your request has been sent! I\u2019ll get back to you within 24 hours." : "Votre demande a bien \u00e9t\u00e9 envoy\u00e9e ! Je vous r\u00e9pondrai sous 24 heures.",
-    error: locale === "en" ? "An error occurred. Please try again or email me at paul.piccolini@gmail.com" : "Une erreur est survenue. R\u00e9essayez ou envoyez-moi un email \u00e0 paul.piccolini@gmail.com",
+    sent:
+      locale === "en"
+        ? "Your request has been sent! I\u2019ll get back to you within 24 hours."
+        : "Votre demande a bien \u00e9t\u00e9 envoy\u00e9e ! Je vous r\u00e9pondrai sous 24 heures.",
+    error:
+      locale === "en"
+        ? "An error occurred. Please try again or email me at paul.piccolini@gmail.com"
+        : "Une erreur est survenue. R\u00e9essayez ou envoyez-moi un email \u00e0 paul.piccolini@gmail.com",
   };
 
-  const durations = [
-    { v: "1h", l: "1h" }, { v: "2h", l: "2h" },
-    { v: "half", l: locale === "en" ? "Half day" : "Demi-journ\u00e9e" },
-    { v: "full", l: locale === "en" ? "Full day" : "Journ\u00e9e compl\u00e8te" },
-  ];
   const peopleOpts = [
     { v: "1", l: locale === "en" ? "1 person" : "1 personne" },
-    { v: "2", l: locale === "en" ? "2 people (couple)" : "2 personnes (couple)" },
-    { v: "3-5", l: locale === "en" ? "3-5 people" : "3-5 personnes" },
-    { v: "6+", l: locale === "en" ? "6+ people" : "6+ personnes" },
+    {
+      v: "2-couple",
+      l: locale === "en" ? "2 people (couple) +50\u20ac" : "2 personnes (couple) +50\u20ac",
+    },
+    {
+      v: "3-5",
+      l: locale === "en" ? "3-5 people" : "3-5 personnes",
+    },
+    {
+      v: "6+",
+      l: locale === "en" ? "6+ people" : "6+ personnes",
+    },
   ];
-  const inputCls = "w-full border-b border-white/10 bg-transparent px-0 py-3 text-sm text-white outline-none transition-colors focus:border-brand-accent";
+
+  const inputCls =
+    "w-full border-b border-white/10 bg-transparent px-0 py-3 text-sm text-white outline-none transition-colors focus:border-brand-accent";
   const selectCls = inputCls + " appearance-none cursor-pointer";
-  const labelCls = "mb-2 block text-xs uppercase tracking-menu text-brand-muted";
+  const labelCls =
+    "mb-2 block text-xs uppercase tracking-menu text-brand-muted";
 
   if (isLoading) {
     return (
@@ -132,7 +182,7 @@ export default function BookingPage() {
           caret-color: #e5e5e5 !important;
         }
       `}</style>
-      <main className="min-h-screen bg-brand-dark px-6 py-20">
+      <main className="min-h-screen bg-brand-dark px-6 pb-20 pt-32">
         <div className="mx-auto max-w-2xl">
           <div className="mb-12 text-center">
             <h1 className="mb-4 font-heading text-4xl text-white">
@@ -184,43 +234,6 @@ export default function BookingPage() {
                 />
               </div>
               <div>
-                <label htmlFor="duration" className={labelCls}>
-                  {t.duration}
-                </label>
-                <select
-                  id="duration"
-                  name="duration"
-                  required
-                  defaultValue=""
-                  className={selectCls}
-                >
-                  <option value="" disabled className="bg-brand-dark">
-                    {t.selectOpt}
-                  </option>
-                  {durations.map((d) => (
-                    <option key={d.v} value={d.v} className="bg-brand-dark">
-                      {d.l}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div>
-                <label htmlFor="location" className={labelCls}>
-                  {t.location}
-                </label>
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  required
-                  placeholder={t.locationPh}
-                  className={inputCls + " placeholder:text-white/20"}
-                />
-              </div>
-              <div>
                 <label htmlFor="people" className={labelCls}>
                   {t.people}
                 </label>
@@ -240,6 +253,7 @@ export default function BookingPage() {
                     </option>
                   ))}
                 </select>
+                <p className="mt-2 text-xs text-brand-accent/70">{t.coupleNote}</p>
               </div>
             </div>
 
