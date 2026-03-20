@@ -34,22 +34,19 @@ export default function ContactPage() {
     setStatus("sending");
 
     const formData = new FormData(e.currentTarget);
+    const firstName = formData.get("firstName") || "";
+    const lastName = formData.get("lastName") || "";
+    const email = formData.get("email") || "";
+    const phone = formData.get("phone") || "";
+    const message = formData.get("message") || "";
+    const subject = formData.get("_subject") || "Nouveau message depuis paulpiccolini.com";
 
-    try {
-      const res = await fetch("https://formspree.io/f/xwpkgjvl", {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
-      });
+    const body = `Pr\u00e9nom: ${firstName}\nNom: ${lastName}\nEmail: ${email}\nT\u00e9l\u00e9phone: ${phone}\n\nMessage:\n${message}`;
 
-      if (res.ok) {
-        setStatus("sent");
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
-    }
+    const mailtoUrl = `mailto:paul.piccolini@gmail.com?subject=${encodeURIComponent(String(subject))}&body=${encodeURIComponent(String(body))}`;
+
+    window.location.href = mailtoUrl;
+    setStatus("sent");
   }
 
   // Editable texts with fallbacks
