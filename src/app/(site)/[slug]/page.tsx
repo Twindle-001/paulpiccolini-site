@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import PhotoGrid from "@/components/PhotoGrid";
 import { LocaleString, T } from "@/components/LocaleText";
 import { client } from "@/sanity/client";
@@ -118,6 +119,21 @@ export default async function CategoryPage({
           </p>
         )}
       </section>
+
+      {/* CTA Portrait → Services */}
+      {slug === "portrait" && (
+        <section className="bg-brand-dark px-6 pb-20 pt-8 text-center">
+          <p className="mx-auto max-w-lg text-sm text-brand-light/60 leading-relaxed">
+            <T
+              fr="Envie d\u2019une s\u00e9ance photo portrait ? D\u00e9couvrez mes formules et r\u00e9servez votre cr\u00e9neau."
+              en="Want a portrait photo session? Check out my packages and book your slot."
+            />
+          </p>
+          <Link href="/services" className="btn-accent mt-6 inline-block">
+            <T fr="Voir les offres" en="View packages" />
+          </Link>
+        </section>
+      )}
     </>
   );
 }
