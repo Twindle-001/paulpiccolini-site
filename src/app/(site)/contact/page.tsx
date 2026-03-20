@@ -41,12 +41,28 @@ export default function ContactPage() {
     const message = formData.get("message") || "";
     const subject = formData.get("_subject") || "Nouveau message depuis paulpiccolini.com";
 
-    const body = `Pr\u00e9nom: ${firstName}\nNom: ${lastName}\nEmail: ${email}\nT\u00e9l\u00e9phone: ${phone}\n\nMessage:\n${message}`;
-
-    const mailtoUrl = `mailto:paul.piccolini@gmail.com?subject=${encodeURIComponent(String(subject))}&body=${encodeURIComponent(String(body))}`;
-
-    window.location.href = mailtoUrl;
-    setStatus("sent");
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/paul.piccolini@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: subject,
+          "Prénom": firstName,
+          "Nom": lastName,
+          "Email": email,
+          "Téléphone": phone,
+          "Message": message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("sent");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   }
 
   // Editable texts with fallbacks
@@ -90,6 +106,18 @@ export default function ContactPage() {
 
   return (
     <>
+      <style>{`
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important;
+          -webkit-text-fill-color: #e5e5e5 !important;
+          caret-color: #e5e5e5 !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
+      `}</style>
+      
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-auto items-center justify-center bg-brand-dark overflow-hidden">
         {contactData?.bannerImage && (
