@@ -206,7 +206,7 @@ export default function ServicesPage() {
               </h2>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
               {servicesPage.organizationSteps
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
                 .map((step, i) => (
