@@ -6,6 +6,7 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "@/sanity/schemas";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
 import { bulkUploadPlugin } from "@/sanity/bulkUploadTool";
+import { shuffleOrderPlugin } from "@/sanity/shuffleOrderTool";
 
 // Custom desk structure — 4 groups: Site, Portfolio, Boutique, Contenu
 const deskStructure = (S: any) =>
@@ -164,5 +165,6 @@ export default defineConfig({
     }),
     visionTool({ defaultApiVersion: apiVersion }),
     bulkUploadPlugin(),
+    shuffleOrderPlugin(),
   ],
 });
