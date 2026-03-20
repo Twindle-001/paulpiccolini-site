@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { type StringInputProps, set, unset, useClient } from "sanity";
+import { type StringInputProps, set, unset, useClient, useFormValue } from "sanity";
 import { Box, Button, Card, Flex, Stack, Text, TextInput } from "@sanity/ui";
 
 export default function SubcategoryInput(props: StringInputProps) {
@@ -11,17 +11,27 @@ export default function SubcategoryInput(props: StringInputProps) {
   const [inputValue, setInputValue] = useState(value || "");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Get the category ref from the current document
+  const categoryRef = useFormValue(["category", "_ref"]) as string | undefined;
+
   useEffect(() => {
+    if (!categoryRef) {
+      setExistingSubs([]);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
     client
       .fetch<string[]>(
-        `array::unique(*[_type == "photo" && defined(subcategory) && subcategory != ""].subcategory) | order(@ asc)`
+        `array::unique(*[_type == "photo" && category._ref == $catId && defined(subcategory) && subcategory != ""].subcategory) | order(@ asc)`,
+        { catId: categoryRef }
       )
       .then((results) => {
         setExistingSubs(results || []);
       })
       .catch((err) => console.error("Erreur chargement sous-catégories:", err))
       .finally(() => setIsLoading(false));
-  }, [client]);
+  }, [client, categoryRef]);
 
   const handleSelect = useCallback(
     (sub: string) => {
