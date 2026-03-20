@@ -101,28 +101,16 @@ return (
               {localize(servicesPage?.heading, locale) ||
                 (locale === "en"
                   ? "Paris Photoshoots"
-                  : "Photoshoots Ã  Paris")}
+                  : "Photoshoots à Paris")}
             </h1>
             <p className="mt-2 sm:mt-4 text-sm sm:text-[11px] md:text-sm text-white/60 max-w-lg mx-auto leading-relaxed">
               {localize(servicesPage?.intro, locale) ||
                 (locale === "en"
                   ? "Gift yourself or others a photoshoot in the most iconic places of Paris."
-                  : "Offrez-vous ou offrez Ã  quelqu'un un photoshoot dans les lieux les plus emblÃ©matiques de Paris.")}
+                  : "Offrez-vous ou offrez à quelqu'un un photoshoot dans les lieux les plus emblématiques de Paris.")}
             </p>
           </div>
-        </div
-
-                {/* CTA to Portrait Portfolio */}
-                <div className="mt-12 text-center">
-                  <Link
-                    href="/portfolio/portrait"
-                    className="btn-accent inline-block"
-                  >
-                    {locale === "en"
-                      ? "View my portrait portfolio"
-                      : "Voir mon portfolio portrait"}
-                  </Link>
-                </div>>
+        </div>
       </section>
 
       {/* Pricing Cards */}
@@ -175,7 +163,7 @@ return (
                 href="/contact"
                 className="btn-primary text-center"
               >
-                {locale === "en" ? "Book now" : "RÃ©server"}
+                {locale === "en" ? "Book now" : "Réserver"}
               </Link>
             </div>
           ))}
@@ -223,6 +211,18 @@ return (
                 ))}
             </div>
           </div>
+
+                {/* CTA to Portrait Portfolio */}
+                <div className="mt-12 text-center">
+                  <Link
+                    href="/portfolio/portrait"
+                    className="btn-accent inline-block"
+                  >
+                    {locale === "en"
+                      ? "View my portrait portfolio"
+                      : "Voir mon portfolio portrait"}
+                  </Link>
+                </div>
         </section>
       )}
 
@@ -235,7 +235,7 @@ return (
                 {localize(servicesPage.organizationHeading, locale) ||
                   (locale === "en"
                     ? "How It Works"
-                    : "Comment Ã§a marche")}
+                    : "Comment ça marche")}
               </h2>
             </div>
 
@@ -267,13 +267,13 @@ return (
           {localize(servicesPage?.ctaHeading, locale) ||
             (locale === "en"
               ? "Didn't find what you wanted?"
-              : "Vous n'avez pas trouvÃ© ce que vous cherchiez ?")}
+              : "Vous n'avez pas trouvé ce que vous cherchiez ?")}
         </h2>
         <p className="mt-4 text-sm text-brand-light/60">
           {localize(servicesPage?.ctaText, locale) ||
             (locale === "en"
               ? "Contact me to discuss your custom project. I'll be happy to find the best solution for your needs."
-              : "Contactez-moi pour discuter de votre projet personnalisÃ©. Je serai heureux de trouver la meilleure solution pour vos besoins.")}
+              : "Contactez-moi pour discuter de votre projet personnalisé. Je serai heureux de trouver la meilleure solution pour vos besoins.")}
         </p>
         <Link href="/contact" className="btn-accent mt-8 inline-block">
           {locale === "en" ? "Get in touch" : "Me contacter"}
