@@ -79,11 +79,6 @@ const deskStructure = (S: any) =>
                           '_type == "photo" && category._ref == $categoryId'
                         )
                         .params({ categoryId })
-                        .initialValueTemplates([
-                          S.initialValueTemplateItem("photo-by-category", {
-                            categoryId,
-                          }),
-                        ])
                     )
                 ),
             ])
@@ -162,19 +157,7 @@ export default defineConfig({
   projectId,
   dataset,
   schema: {
-    types: schemaTypes,
-    templates: (prev) => [
-      ...prev,
-      {
-        id: "photo-by-category",
-        title: "Photo par catégorie",
-        schemaType: "photo",
-        parameters: [{ name: "categoryId", type: "string" }],
-        value: ({ categoryId }) => ({
-          category: { _type: "reference", _ref: categoryId },
-        }),
-      },
-    ],
+    types: schemaTypes
   },
   plugins: [
     structureTool({
