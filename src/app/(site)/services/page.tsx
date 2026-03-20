@@ -215,12 +215,12 @@ return (
                 {/* CTA to Portrait Portfolio */}
                 <div className="mt-12 text-center">
                   <Link
-                    href="/portfolio/portrait"
+                    href="/portrait"
                     className="btn-accent inline-block"
                   >
                     {locale === "en"
-                      ? "View my portrait portfolio"
-                      : "Voir mon portfolio portrait"}
+                      ? "View my portraits"
+                      : "Voir mes portraits"}
                   </Link>
                 </div>
         </section>
