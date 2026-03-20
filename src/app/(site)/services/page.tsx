@@ -38,7 +38,31 @@ export default function ServicesPage() {
 
   const { services, servicesPage } = data;
 
-  return (
+  
+  // Scroll highlight for pricing cards (mobile)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const cards = document.querySelectorAll(".scroll-highlight-service");
+    if (!cards.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.borderColor = "var(--color-brand-accent, #c9a96e)";
+            entry.target.style.transform = "scale(1.02)";
+          } else {
+            entry.target.style.borderColor = "";
+            entry.target.style.transform = "";
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+
+return (
     <>
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-auto items-center justify-center overflow-hidden">
@@ -86,21 +110,12 @@ export default function ServicesPage() {
 
       {/* Pricing Cards */}
       <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
           {services.map((plan) => (
             <div
               key={plan._id}
-              className={`relative flex flex-col rounded border p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 ${
-                plan.popular
-                  ? "border-brand-accent bg-brand-dark"
-                  : "border-white/10 bg-brand-dark/50"
-              }`}
+              className="scroll-highlight-service relative flex flex-col rounded border border-white/10 bg-brand-dark/50 p-6 md:p-8 transition-all duration-300 hover:border-brand-accent"
             >
-              {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-accent px-4 py-1 text-[10px] uppercase tracking-wider text-brand-darker font-semibold">
-                  {locale === "en" ? "Best Deal" : "Meilleur choix"}
-                </span>
-              )}
 
               <h3 className="font-heading text-2xl text-white">
                 {localize(plan.name, locale)}
@@ -141,11 +156,7 @@ export default function ServicesPage() {
 
               <Link
                 href="/contact"
-                className={
-                  plan.popular
-                    ? "btn-accent text-center"
-                    : "btn-primary text-center"
-                }
+                className="btn-primary text-center"
               >
                 {locale === "en" ? "Book now" : "Réserver"}
               </Link>
