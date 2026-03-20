@@ -35,17 +35,15 @@ export default function ServicesPage() {
   // Scroll highlight for pricing cards (mobile)
   useEffect(() => {
     if (typeof window === "undefined" || window.innerWidth >= 768) return;
-    const cards = document.querySelectorAll(".scroll-highlight-service");
+    const cards = document.querySelectorAll(".scroll-highlight-print");
     if (!cards.length) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.style.borderColor = "var(--color-brand-accent, #c9a96e)";
-            entry.target.style.transform = "scale(1.02)";
+            entry.target.classList.add("in-view");
           } else {
-            entry.target.style.borderColor = "";
-            entry.target.style.transform = "";
+            entry.target.classList.remove("in-view");
           }
         });
       },
@@ -114,7 +112,7 @@ return (
           {services.map((plan) => (
             <div
               key={plan._id}
-              className="scroll-highlight-service relative flex flex-col rounded border border-white/10 bg-brand-dark/50 p-6 md:p-8 transition-all duration-300 hover:border-brand-accent"
+              className="scroll-highlight-print group relative flex flex-col rounded border border-white/10 bg-brand-dark/50 p-6 md:p-8 hover:-translate-y-1.5 hover:border-brand-accent hover:shadow-[0_10px_20px_rgba(201,169,110,0.08)]"
             >
 
               <h3 className="font-heading text-2xl text-white">
