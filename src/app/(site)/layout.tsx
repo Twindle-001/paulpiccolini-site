@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { client } from "@/sanity/client";
 import { siteSettingsQuery, categoriesQuery } from "@/sanity/queries";
 import type { SanitySettings, SanityCategory } from "@/sanity/types";
+import ImageProtection from "@/components/ImageProtection";
 
 export const revalidate = 60;
 
@@ -43,6 +44,7 @@ export default async function SiteLayout({
 
   return (
     <Providers>
+        <ImageProtection />
       <JsonLd data={photographerSchema} />
       <Navbar
         siteName={settings?.name}
