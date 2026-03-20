@@ -34,7 +34,7 @@ export default function ServicesPage() {
 
   // Scroll highlight for pricing cards (mobile)
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || window.innerWidth >= 768) return;
     const cards = document.querySelectorAll(".scroll-highlight-service");
     if (!cards.length) return;
     const observer = new IntersectionObserver(
