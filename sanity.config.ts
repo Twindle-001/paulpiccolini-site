@@ -1,12 +1,9 @@
 "use client";
-
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "@/sanity/schemas";
 import { apiVersion, dataset, projectId } from "@/sanity/env";
-import { bulkUploadPlugin } from "@/sanity/bulkUploadTool";
-import { shuffleOrderPlugin } from "@/sanity/shuffleOrderTool";
 
 // Custom desk structure — 4 groups: Site, Portfolio, Boutique, Contenu
 const deskStructure = (S: any) =>
@@ -46,9 +43,7 @@ const deskStructure = (S: any) =>
                 ),
             ])
         ),
-
       S.divider(),
-
       S.listItem()
         .title("Portfolio")
         .icon(() => "📷")
@@ -81,9 +76,7 @@ const deskStructure = (S: any) =>
                 ),
             ])
         ),
-
       S.divider(),
-
       S.listItem()
         .title("Boutique")
         .icon(() => "💰")
@@ -101,9 +94,7 @@ const deskStructure = (S: any) =>
                 .child(S.documentTypeList("print").title("Tirages")),
             ])
         ),
-
       S.divider(),
-
       S.listItem()
         .title("Contenu")
         .icon(() => "📝")
@@ -160,7 +151,5 @@ export default defineConfig({
       structure: deskStructure,
     }),
     visionTool({ defaultApiVersion: apiVersion }),
-    bulkUploadPlugin(),
-    shuffleOrderPlugin(),
   ],
 });
