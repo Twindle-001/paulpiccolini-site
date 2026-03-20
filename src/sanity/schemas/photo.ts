@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import SubcategoryInput from "../components/SubcategoryInput";
 
 export default defineType({
   name: "photo",
@@ -24,24 +23,21 @@ export default defineType({
       title: "Texte SEO (alt)",
       type: "string",
       description:
-        "Description pour le référencement et l'accessibilité. Si vide, le titre sera utilisé automatiquement.",
+        "Description pour le r\u00e9f\u00e9rencement et l'accessibilit\u00e9. Si vide, le titre sera utilis\u00e9 automatiquement.",
     }),
     defineField({
       name: "category",
-      title: "Catégorie",
+      title: "Cat\u00e9gorie",
       type: "reference",
       to: [{ type: "category" }],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "subcategory",
-      title: "Sous-catégorie",
+      title: "Sous-cat\u00e9gorie",
       type: "string",
       description:
-        "Ex: monuments, street, landscape... (utilisé pour les filtres dans la galerie)",
-      components: {
-        input: SubcategoryInput,
-      },
+        "Ex: monuments, street, landscape... (utilis\u00e9 pour les filtres dans la galerie)",
     }),
     defineField({
       name: "order",
