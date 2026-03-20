@@ -1,346 +1,417 @@
-/**
- * Bulk Photo Upload Tool for Sanity Studio
- *
- * Allows uploading multiple photos at once into a selected category,
- * with optional subcategory. Photos can be edited individually later.
- */
+"use client";
 
-import { definePlugin } from "sanity";
-import { useState, useCallback, useEffect } from "react";
-import { useClient } from "sanity";
+import React, { useCallback, useEffect, useState } from "react";
+import { definePlugin, useClient } from "sanity";
 import {
   Card,
   Stack,
   Text,
   Button,
   Select,
-  TextInput,
   Flex,
   Spinner,
+  Box,
+  Badge,
+  TextInput,
 } from "@sanity/ui";
 
 interface Category {
   _id: string;
-  title: string;
+  title: { fr?: string; en?: string };
 }
 
 interface UploadItem {
   file: File;
-  status: "pending" | "uploading" | "done" | "error";
+  status: "pending" | "uploading" | "success" | "error";
   preview: string;
   docId?: string;
+  error?: string;
 }
 
-function BulkUploadComponent() {
+const BulkUploadComponent = () => {
   const client = useClient({ apiVersion: "2024-01-01" });
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [subcategory, setSubcategory] = useState("");
-  const [files, setFiles] = useState<UploadItem[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [done, setDone] = useState(false);
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [existingSubcategories, setExistingSubcategories] = useState<string[]>(
+    []
+  );
+  const [uploadItems, setUploadItems] = useState<UploadItem[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [successCount, setSuccessCount] = useState(0);
+  const [subcategoriesLoading, setSubcategoriesLoading] = useState(false);
 
-  // Fetch categories on mount
   useEffect(() => {
-    client
-      .fetch<Category[]>(
-        '*[_type == "category"] | order(order asc) { _id, title }'
-      )
-      .then(setCategories);
+    const fetchCategories = async () => {
+      try {
+        const docs = await client.fetch<Category[]>(
+          `*[_type == "category"] | order(title.fr asc)`
+        );
+        setCategories(docs);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
   }, [client]);
 
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (!selectedCategory) {
+        setExistingSubcategories([]);
+        setSelectedSubcategory("");
+        return;
+      }
+      try {
+        setSubcategoriesLoading(true);
+        const subcategories = await client.fetch<string[]>(
+          `array::unique(*[_type == "photo" && category._ref == $categoryId && defined(subcategory) && subcategory != ""].subcategory) | order(@ asc)`,
+          { categoryId: selectedCategory }
+        );
+        setExistingSubcategories(subcategories || []);
+      } catch (error) {
+        console.error("Error fetching subcategories:", error);
+      } finally {
+        setSubcategoriesLoading(false);
+      }
+    };
+    fetchSubcategories();
+  }, [selectedCategory, client]);
+
   const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) return;
-      const newFiles: UploadItem[] = Array.from(e.target.files).map(
-        (file) => ({
-          file,
-          status: "pending" as const,
-          preview: URL.createObjectURL(file),
-        })
-      );
-      setFiles((prev) => [...prev, ...newFiles]);
-      setDone(false);
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.currentTarget.files;
+      if (!files) return;
+      const newItems: UploadItem[] = Array.from(files).map((file) => ({
+        file,
+        status: "pending" as const,
+        preview: URL.createObjectURL(file),
+      }));
+      setUploadItems(newItems);
+      setUploadProgress(0);
+      setSuccessCount(0);
     },
     []
   );
 
-  const removeFile = useCallback((index: number) => {
-    setFiles((prev) => {
-      const updated = [...prev];
-      URL.revokeObjectURL(updated[index].preview);
-      updated.splice(index, 1);
-      return updated;
-    });
-  }, []);
-
-  const handleUpload = useCallback(async () => {
-    if (!selectedCategory || files.length === 0) return;
-
-    setUploading(true);
-    setDone(false);
-
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].status === "done") continue;
-
-      setFiles((prev) => {
-        const updated = [...prev];
-        updated[i] = { ...updated[i], status: "uploading" };
-        return updated;
-      });
-
-      try {
-        // 1. Upload the image asset
-        const asset = await client.assets.upload("image", files[i].file, {
-          filename: files[i].file.name,
+  const uploadInBatches = useCallback(
+    async (items: UploadItem[], batchSize: number = 3) => {
+      const BATCH_DELAY = 500;
+      for (let i = 0; i < items.length; i += batchSize) {
+        const batch = items.slice(i, i + batchSize);
+        const batchPromises = batch.map(async (item) => {
+          setUploadItems((prev) =>
+            prev.map((u) =>
+              u.file === item.file ? { ...u, status: "uploading" as const } : u
+            )
+          );
+          try {
+            const imageAsset = await client.assets.upload("image", item.file);
+            const photoDoc: Record<string, unknown> = {
+              _type: "photo",
+              image: {
+                _type: "image",
+                asset: { _type: "reference", _ref: imageAsset._id },
+              },
+              category: { _type: "reference", _ref: selectedCategory },
+              order: Date.now() + Math.random(),
+            };
+            if (selectedSubcategory) {
+              photoDoc.subcategory = selectedSubcategory;
+            }
+            const createdDoc = await client.create(photoDoc);
+            setUploadItems((prev) =>
+              prev.map((u) =>
+                u.file === item.file
+                  ? { ...u, status: "success" as const, docId: createdDoc._id }
+                  : u
+              )
+            );
+            setSuccessCount((prev) => prev + 1);
+            setUploadProgress((prev) => prev + 1);
+          } catch (error) {
+            const errorMessage =
+              error instanceof Error ? error.message : "Erreur inconnue";
+            setUploadItems((prev) =>
+              prev.map((u) =>
+                u.file === item.file
+                  ? { ...u, status: "error" as const, error: errorMessage }
+                  : u
+              )
+            );
+            setUploadProgress((prev) => prev + 1);
+          }
         });
-
-        // 2. Create the photo document
-        const doc = await client.create({
-          _type: "photo",
-          image: {
-            _type: "image",
-            asset: { _type: "reference", _ref: asset._id },
-          },
-          category: { _type: "reference", _ref: selectedCategory },
-          ...(subcategory ? { subcategory } : {}),
-          order: i,
-        });
-
-        setFiles((prev) => {
-          const updated = [...prev];
-          updated[i] = { ...updated[i], status: "done", docId: doc._id };
-          return updated;
-        });
-      } catch (err) {
-        console.error("Upload error:", err);
-        setFiles((prev) => {
-          const updated = [...prev];
-          updated[i] = { ...updated[i], status: "error" };
-          return updated;
-        });
+        await Promise.all(batchPromises);
+        if (i + batchSize < items.length) {
+          await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY));
+        }
       }
+    },
+    [client, selectedCategory, selectedSubcategory]
+  );
+
+  const handleUpload = async () => {
+    if (!selectedCategory || uploadItems.length === 0) {
+      alert("Sélectionnez une catégorie et des photos");
+      return;
     }
+    setIsUploading(true);
+    await uploadInBatches(uploadItems);
+    setIsUploading(false);
+  };
 
-    setUploading(false);
-    setDone(true);
-  }, [client, files, selectedCategory, subcategory]);
+  const getCategoryTitle = (cat: Category): string => {
+    return cat.title?.fr || cat.title?.en || "Sans titre";
+  };
 
-  const reset = useCallback(() => {
-    files.forEach((f) => URL.revokeObjectURL(f.preview));
-    setFiles([]);
-    setDone(false);
-    setSubcategory("");
-  }, [files]);
+  const filteredSubcategories = selectedSubcategory
+    ? existingSubcategories.filter((s) =>
+        s.toLowerCase().includes(selectedSubcategory.toLowerCase())
+      )
+    : existingSubcategories;
 
-  const doneCount = files.filter((f) => f.status === "done").length;
-  const errorCount = files.filter((f) => f.status === "error").length;
+  const totalPhotos = uploadItems.length;
+  const progressPercent =
+    totalPhotos > 0 ? Math.round((uploadProgress / totalPhotos) * 100) : 0;
 
   return (
-    <Card padding={5} sizing="border" style={{ overflow: "auto" }}>
-      <Card
-        padding={4}
-        style={{ maxWidth: 900, margin: "0 auto" }}
-        radius={3}
-      >
-        <Stack space={5}>
-          <Text size={4} weight="bold">
-            Upload en masse de photos
+    <Card>
+      <Stack space={4} padding={4}>
+        <Box>
+          <Text as="h2" size={1} weight="bold">
+            Import en masse
           </Text>
-          <Text size={1} muted>
-            Sélectionnez une catégorie, ajoutez vos photos, et elles seront
-            toutes créées d&apos;un coup. Vous pourrez les éditer
-            individuellement ensuite (titre, texte SEO, sous-catégorie, etc.).
-          </Text>
-
-          {/* Category selector */}
-          <Stack space={3}>
-            <Text size={1} weight="semibold">
+        </Box>
+        <Stack space={3}>
+          <Box>
+            <Text size={0} weight="semibold" as="label">
               Catégorie *
             </Text>
             <Select
               value={selectedCategory}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSelectedCategory(e.currentTarget.value)
-              }
+              onChange={(e) => setSelectedCategory(e.currentTarget.value)}
+              disabled={isUploading}
             >
-              <option value="">-- Choisir une catégorie --</option>
+              <option value="">-- Sélectionner une catégorie --</option>
               {categories.map((cat) => (
                 <option key={cat._id} value={cat._id}>
-                  {cat.title}
+                  {getCategoryTitle(cat)}
                 </option>
               ))}
             </Select>
-          </Stack>
-
-          {/* Subcategory (optional) */}
-          <Stack space={3}>
-            <Text size={1} weight="semibold">
-              Sous-catégorie (optionnel)
-            </Text>
-            <TextInput
-              value={subcategory}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSubcategory(e.currentTarget.value)
-              }
-              placeholder="Ex: Monuments, Street, Nuit..."
-            />
-          </Stack>
-
-          {/* File input */}
-          <Stack space={3}>
-            <Text size={1} weight="semibold">
-              Photos
+          </Box>
+          {selectedCategory && (
+            <Box>
+              <Stack space={2}>
+                <Text size={0} weight="semibold" as="label">
+                  Sous-catégorie (optionnel)
+                </Text>
+                <TextInput
+                  value={selectedSubcategory}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSelectedSubcategory(e.currentTarget.value)
+                  }
+                  placeholder="Taper ou sélectionner une sous-catégorie..."
+                  disabled={isUploading}
+                  fontSize={1}
+                />
+                {subcategoriesLoading && (
+                  <Text size={0} muted>
+                    Chargement...
+                  </Text>
+                )}
+                {!subcategoriesLoading && filteredSubcategories.length > 0 && (
+                  <Card padding={2} radius={2} tone="transparent">
+                    <Stack space={2}>
+                      <Text size={0} muted>
+                        Sous-catégories existantes :
+                      </Text>
+                      <Flex wrap="wrap" gap={2}>
+                        {filteredSubcategories.map((sub) => (
+                          <Button
+                            key={sub}
+                            text={sub}
+                            mode={selectedSubcategory === sub ? "default" : "ghost"}
+                            tone={selectedSubcategory === sub ? "primary" : "default"}
+                            fontSize={1}
+                            padding={2}
+                            onClick={() => setSelectedSubcategory(sub)}
+                            disabled={isUploading}
+                            style={{ cursor: "pointer" }}
+                          />
+                        ))}
+                      </Flex>
+                    </Stack>
+                  </Card>
+                )}
+                {selectedSubcategory && (
+                  <Flex align="center" gap={2}>
+                    <Text size={0} muted>
+                      Sélection : <strong>{selectedSubcategory}</strong>
+                    </Text>
+                    <Button
+                      text="\u2715"
+                      mode="bleed"
+                      tone="critical"
+                      fontSize={0}
+                      padding={1}
+                      onClick={() => setSelectedSubcategory("")}
+                      disabled={isUploading}
+                    />
+                  </Flex>
+                )}
+              </Stack>
+            </Box>
+          )}
+          <Box>
+            <Text size={0} weight="semibold" as="label" htmlFor="fileInput">
+              Fichiers
             </Text>
             <input
+              id="fileInput"
               type="file"
-              accept="image/*"
               multiple
+              accept="image/*"
               onChange={handleFileChange}
-              disabled={uploading}
-              style={{ fontSize: 14 }}
+              disabled={isUploading}
+              style={{ width: "100%", marginTop: "8px" }}
             />
-          </Stack>
-
-          {/* Preview grid */}
-          {files.length > 0 && (
-            <div
+          </Box>
+        </Stack>
+        {uploadItems.length > 0 && (
+          <Box>
+            <Text size={0} weight="semibold" muted>
+              Aperçu des photos ({uploadItems.length})
+            </Text>
+            <Box
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-                gap: 8,
+                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+                gap: "12px",
+                marginTop: "12px",
               }}
             >
-              {files.map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    position: "relative",
-                    borderRadius: 4,
-                    overflow: "hidden",
-                    border:
-                      item.status === "done"
-                        ? "2px solid #4caf50"
-                        : item.status === "error"
-                          ? "2px solid #f44336"
-                          : item.status === "uploading"
-                            ? "2px solid #ff9800"
-                            : "2px solid transparent",
-                  }}
-                >
+              {uploadItems.map((item, idx) => (
+                <Box key={idx} style={{ position: "relative" }}>
                   <img
                     src={item.preview}
-                    alt=""
+                    alt={`Preview ${idx}`}
                     style={{
                       width: "100%",
-                      height: 120,
+                      height: "200px",
                       objectFit: "cover",
-                      display: "block",
-                      opacity: item.status === "uploading" ? 0.5 : 1,
+                      borderRadius: "4px",
+                      border: "1px solid #e0e0e0",
                     }}
                   />
                   {item.status === "uploading" && (
-                    <div
+                    <Box
                       style={{
                         position: "absolute",
                         inset: 0,
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        borderRadius: "4px",
                       }}
                     >
                       <Spinner />
-                    </div>
+                    </Box>
                   )}
-                  {item.status === "done" && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        background: "#4caf50",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        width: 20,
-                        height: 20,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 12,
-                      }}
-                    >
+                  {item.status === "success" && (
+                    <Badge tone="positive" style={{ position: "absolute", top: 4, right: 4 }}>
                       ✓
-                    </div>
+                    </Badge>
                   )}
-                  {item.status === "pending" && !uploading && (
-                    <button
-                      onClick={() => removeFile(i)}
-                      style={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        background: "rgba(0,0,0,0.6)",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: 20,
-                        height: 20,
-                        cursor: "pointer",
-                        fontSize: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                  {item.status === "error" && (
+                    <Badge tone="critical" style={{ position: "absolute", top: 4, right: 4 }}>
                       ✕
-                    </button>
+                    </Badge>
                   )}
-                </div>
+                </Box>
               ))}
-            </div>
-          )}
-
-          {/* Status */}
-          {files.length > 0 && (
-            <Text size={1} muted>
-              {doneCount}/{files.length} photos uploadées
-              {errorCount > 0 &&
-                ` (${errorCount} erreur${errorCount > 1 ? "s" : ""})`}
-            </Text>
-          )}
-
-          {/* Actions */}
-          <Flex gap={3}>
-            <Button
-              text={
-                uploading
-                  ? "Upload en cours..."
-                  : `Uploader ${files.length} photo${files.length !== 1 ? "s" : ""}`
-              }
-              tone="primary"
-              onClick={handleUpload}
-              disabled={!selectedCategory || files.length === 0 || uploading}
-            />
-            {files.length > 0 && !uploading && (
-              <Button text="Réinitialiser" tone="default" onClick={reset} />
-            )}
-          </Flex>
-
-          {/* Success message */}
-          {done && errorCount === 0 && (
-            <Card tone="positive" padding={3} radius={2}>
-              <Text size={1}>
-                {doneCount} photo{doneCount > 1 ? "s" : ""} uploadée
-                {doneCount > 1 ? "s" : ""} avec succès ! Retrouvez-les dans
-                Backoffice → Photos pour les éditer individuellement.
+            </Box>
+          </Box>
+        )}
+        {isUploading && totalPhotos > 0 && (
+          <Box>
+            <Flex justify="space-between" style={{ marginBottom: "8px" }}>
+              <Text size={0} weight="semibold">
+                Progression
               </Text>
-            </Card>
-          )}
-        </Stack>
-      </Card>
+              <Text size={0} muted>
+                {uploadProgress}/{totalPhotos}
+              </Text>
+            </Flex>
+            <div
+              style={{
+                width: "100%",
+                height: "8px",
+                backgroundColor: "#e0e0e0",
+                borderRadius: "4px",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  width: `${progressPercent}%`,
+                  height: "100%",
+                  backgroundColor: "#2276fc",
+                  borderRadius: "4px",
+                  transition: "width 0.3s ease",
+                }}
+              />
+            </div>
+          </Box>
+        )}
+        {uploadProgress > 0 && !isUploading && (
+          <Box>
+            <Badge tone={successCount === totalPhotos ? "positive" : "caution"}>
+              {successCount}/{totalPhotos} photos importées
+            </Badge>
+          </Box>
+        )}
+        <Flex gap={2}>
+          <Button
+            onClick={handleUpload}
+            disabled={isUploading || !selectedCategory || uploadItems.length === 0}
+            tone="primary"
+            text="Importer"
+          />
+          <Button
+            onClick={() => {
+              setUploadItems([]);
+              setUploadProgress(0);
+              setSuccessCount(0);
+            }}
+            disabled={isUploading}
+            mode="ghost"
+            text="Réinitialiser"
+          />
+        </Flex>
+        {uploadItems.some((item) => item.status === "error") && (
+          <Card tone="critical" padding={3}>
+            <Stack space={2}>
+              <Text weight="semibold" size={0}>
+                Erreurs
+              </Text>
+              {uploadItems
+                .filter((item) => item.status === "error")
+                .map((item, idx) => (
+                  <Text key={idx} size={0} muted>
+                    {item.file.name}: {item.error}
+                  </Text>
+                ))}
+            </Stack>
+          </Card>
+        )}
+      </Stack>
     </Card>
   );
-}
+};
 
 export const bulkUploadPlugin = definePlugin({
   name: "bulk-upload",
@@ -348,8 +419,10 @@ export const bulkUploadPlugin = definePlugin({
     {
       name: "bulk-upload",
       title: "Upload en masse",
-      icon: () => <span style={{ fontSize: 20 }}>⬆️</span>,
+      icon: () => React.createElement("span", null, "📤"),
       component: BulkUploadComponent,
     },
   ],
 });
+
+export default BulkUploadComponent;
