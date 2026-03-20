@@ -39,11 +39,37 @@ export async function generateMetadata({
   const titleStr = typeof category.title === "string"
     ? category.title
     : category.title?.fr || category.title?.en || "Category";
+  const ogDesc = desc || `${titleStr} photography by Paul Piccolini`;
+
   return {
     title: titleStr,
-    description: desc || `${titleStr} photography by Paul Piccolini`,
+    description: ogDesc,
     alternates: {
       canonical: `/${slug}`,
+    },
+    openGraph: {
+      title: `${titleStr} | Paul Piccolini Photography`,
+      description: ogDesc,
+      url: `https://paulpiccolini.com/${slug}`,
+      type: "website",
+      ...(category.coverImage && {
+        images: [
+          {
+            url: urlFor(category.coverImage).width(1200).height(630).url(),
+            width: 1200,
+            height: 630,
+            alt: titleStr,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${titleStr} | Paul Piccolini Photography`,
+      description: ogDesc,
+      ...(category.coverImage && {
+        images: [urlFor(category.coverImage).width(1200).height(630).url()],
+      }),
     },
   };
 }
