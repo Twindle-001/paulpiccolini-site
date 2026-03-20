@@ -117,6 +117,12 @@ export default function PrintsPage() {
           <p className="text-sm sm:text-base text-brand-light/70 leading-relaxed">
             {introText}
           </p>
+          <Link
+            href="/contact"
+            className="btn-accent mt-8 inline-block"
+          >
+            {locale === "en" ? "Contact me" : "Me contacter"}
+          </Link>
         </section>
       )}
 
