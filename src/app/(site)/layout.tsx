@@ -3,8 +3,8 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import { JsonLd } from "@/components/JsonLd";
 import { client } from "@/sanity/client";
-import { siteSettingsQuery, categoriesQuery } from "@/sanity/queries";
-import type { SanitySettings, SanityCategory } from "@/sanity/types";
+import { siteSettingsQuery, categoriesQuery, servicesQuery } from "@/sanity/queries";
+import type { SanitySettings, SanityCategory, SanityService } from "@/sanity/types";
 import ImageProtection from "@/components/ImageProtection";
 
 export const revalidate = 60;
@@ -14,9 +14,10 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [settings, categories] = await Promise.all([
+  const [settings, categories, services] = await Promise.all([
     client.fetch<SanitySettings>(siteSettingsQuery),
     client.fetch<SanityCategory[]>(categoriesQuery),
+    client.fetch<SanityService[]>(servicesQuery),
   ]);
 
   // JSON-LD structured data for Photographer/Organization
@@ -39,13 +40,31 @@ export default async function SiteLayout({
       settings?.facebook || "https://facebook.com/paulpiccolini",
     ].filter(Boolean),
     priceRange: "€€",
-    telephone: "",
   };
+
+  // Schema.org Service for photo packages
+  const serviceSchemaList = services.map((s) => ({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: s.name?.fr || "",
+    provider: {
+      "@type": "ProfessionalService",
+      name: "Paul Piccolini Photography",
+    },
+    offers: {
+      "@type": "Offer",
+      price: s.price,
+      priceCurrency: s.currency || "EUR",
+    },
+  }));
 
   return (
     <Providers>
         <ImageProtection />
       <JsonLd data={photographerSchema} />
+      {serviceSchemaList.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
       <Navbar
         siteName={settings?.name}
         logo={settings?.logo}
