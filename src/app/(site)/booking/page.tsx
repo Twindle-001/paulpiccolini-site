@@ -116,15 +116,7 @@ export default function BookingPage() {
     {
       v: "2-couple",
       l: locale === "en" ? "2 people (couple) +50\u20ac" : "2 personnes (couple) +50\u20ac",
-    },
-    {
-      v: "3-5",
-      l: locale === "en" ? "3-5 people" : "3-5 personnes",
-    },
-    {
-      v: "6+",
-      l: locale === "en" ? "6+ people" : "6+ personnes",
-    },
+    }
   ];
 
   const inputCls =
