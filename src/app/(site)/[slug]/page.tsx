@@ -125,7 +125,7 @@ export default async function CategoryPage({
         <section className="bg-brand-dark px-6 pb-20 pt-8 text-center">
           <p className="mx-auto max-w-lg text-sm text-brand-light/60 leading-relaxed">
             <T
-              fr="Envie d\u2019une s\u00e9ance photo portrait ? D\u00e9couvrez mes formules et r\u00e9servez votre cr\u00e9neau."
+              fr="Envie d’une séance photo portrait ? Découvrez mes formules et réservez votre créneau."
               en="Want a portrait photo session? Check out my packages and book your slot."
             />
           </p>
