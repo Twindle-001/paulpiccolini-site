@@ -27,6 +27,11 @@ export default function ServicesPage() {
     "https://cdn.sanity.io/images/a8ul70gd/production/1bf8393bf3501b9c6f0953be57dd9b8115aedc65-7324x4578.jpg?w=600&h=600&fit=crop",
   ];
 
+  // Step name translations for EN
+  const stepTranslations: Record<string, string> = {
+    "Livraison": "Delivery",
+  };
+
   useEffect(() => {
     async function fetchData() {
       const [services, servicesPage] = await Promise.all([
@@ -250,7 +255,7 @@ return (
                       </div>
                     </div>
                     <h3 className="font-heading text-lg text-white mb-2">
-                      {step.iconDescription}
+                      {locale === "en" && stepTranslations[step.iconDescription] ? stepTranslations[step.iconDescription] : step.iconDescription}
                     </h3>
                     <p className="text-sm text-brand-light/60">
                       {localize(step.text, locale)}
