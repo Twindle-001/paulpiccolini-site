@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import SubcategoryInput from "../components/SubcategoryInput";
 
 export default defineType({
   name: "photo",
@@ -38,6 +39,9 @@ export default defineType({
       type: "string",
       description:
         "Ex: monuments, street, landscape... (utilisé pour les filtres dans la galerie)",
+      components: {
+        input: SubcategoryInput,
+      },
     }),
     defineField({
       name: "order",
