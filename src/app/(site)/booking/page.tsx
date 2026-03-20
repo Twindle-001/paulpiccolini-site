@@ -116,7 +116,7 @@ export default function BookingPage() {
     { v: "1", l: locale === "en" ? "1 person" : "1 personne" },
     {
       v: "2-couple",
-      l: locale === "en" ? "2 people (couple) +50\u20ac" : "2 personnes (couple) +50\u20ac",
+      l: locale === "en" ? "2 people (couple)" : "2 personnes (couple)",
     }
   ];
 
