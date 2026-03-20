@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSearchParams } from "next/navigation";
 import { client } from "@/sanity/client";
 import { urlFor, getHotspot } from "@/sanity/image";
 import { contactPageQuery } from "@/sanity/queries";
@@ -18,6 +19,8 @@ export default function ContactPage() {
     null
   );
   const { locale } = useLanguage();
+  const searchParams = useSearchParams();
+  const packName = searchParams.get("pack");
 
   useEffect(() => {
     client.fetch<SanityContactPage>(contactPageQuery).then(setContactData);
@@ -134,7 +137,7 @@ export default function ContactPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Hidden field for Formspree to know the reply-to email */}
-            <input type="hidden" name="_subject" value="Nouveau message depuis paulpiccolini.com" />
+            <input type="hidden" name="_subject" value={packName ? `${locale === "en" ? "Booking request" : "Demande de r\u00e9servation"} – ${packName}` : "Nouveau message depuis paulpiccolini.com"} />
 
             <div className="grid gap-6 md:grid-cols-2">
               <div>
