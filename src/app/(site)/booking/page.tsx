@@ -15,6 +15,7 @@ export default function BookingPage() {
   const [selectedPack, setSelectedPack] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState<FormStatus>("idle");
+  const [showCouple, setShowCouple] = useState(false);
 
   useEffect(() => {
     client.fetch<SanityService[]>(servicesQuery).then((data) => {
@@ -234,6 +235,7 @@ export default function BookingPage() {
                   name="people"
                   required
                   defaultValue=""
+                  onChange={(e) => setShowCouple(e.target.value === "2-couple")}
                   className={selectCls}
                 >
                   <option value="" disabled className="bg-brand-dark">
@@ -245,7 +247,7 @@ export default function BookingPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-2 text-xs text-brand-accent/70">{t.coupleNote}</p>
+                {showCouple && <p className="mt-2 text-xs text-brand-accent/70">{t.coupleNote}</p>}
               </div>
             </div>
 
