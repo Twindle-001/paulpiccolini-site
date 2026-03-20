@@ -32,13 +32,6 @@ export default function ServicesPage() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return <div className="h-screen bg-brand-darker" />;
-  }
-
-  const { services, servicesPage } = data;
-
-  
   // Scroll highlight for pricing cards (mobile)
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -61,6 +54,13 @@ export default function ServicesPage() {
     cards.forEach((card) => observer.observe(card));
     return () => observer.disconnect();
   }, []);
+
+
+  if (isLoading) {
+    return <div className="h-screen bg-brand-darker" />;
+  }
+
+  const { services, servicesPage } = data;
 
 return (
     <>
