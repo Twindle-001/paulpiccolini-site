@@ -46,7 +46,9 @@ export default function ServicesPage() {
 
   // Scroll highlight for pricing cards (mobile)
   useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth >= 768) return;
+    if (isLoading) return;
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+    if (!isTouchDevice) return;
     const cards = document.querySelectorAll(".scroll-highlight-print");
     if (!cards.length) return;
     const observer = new IntersectionObserver(
@@ -59,11 +61,11 @@ export default function ServicesPage() {
           }
         });
       },
-      { threshold: 0.6 }
+      { rootMargin: "-30% 0px -30% 0px", threshold: 0 }
     );
     cards.forEach((card) => observer.observe(card));
     return () => observer.disconnect();
-  }, []);
+  }, [isLoading]);
 
 
   if (isLoading) {
