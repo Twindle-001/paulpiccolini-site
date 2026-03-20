@@ -1,10 +1,10 @@
 "use client";
 
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { useSearchParams } from "next/navigation";
 import { client } from "@/sanity/client";
 import { urlFor, getHotspot } from "@/sanity/image";
 import { contactPageQuery } from "@/sanity/queries";
@@ -19,8 +19,11 @@ export default function ContactPage() {
     null
   );
   const { locale } = useLanguage();
-  const searchParams = useSearchParams();
-  const packName = searchParams.get("pack");
+  const [packName, setPackName] = useState<string | null>(null);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setPackName(params.get("pack"));
+  }, []);
 
   useEffect(() => {
     client.fetch<SanityContactPage>(contactPageQuery).then(setContactData);
