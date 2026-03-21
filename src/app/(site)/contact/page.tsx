@@ -119,36 +119,10 @@ export default function ContactPage() {
       `}</style>
       
       {/* Hero */}
-      <section className={`relative flex items-center justify-center bg-brand-dark overflow-hidden ${contactData?.bannerImage ? "h-[40vh] sm:h-auto" : "py-20 sm:py-28"}`}>
-        {contactData?.bannerImage && (
-          <>
-            <img
-              src={urlFor(contactData.bannerImage).width(1920).height(400).fit("crop").quality(85).url()}
-              alt={heroTitle}
-              className="hidden sm:block w-full h-auto"
-            />
-            <Image
-              src={urlFor(contactData.bannerImageMobile || contactData.bannerImage).width(800).quality(85).url()}
-              alt={heroTitle}
-              fill
-              className="object-cover sm:hidden"
-              style={{ objectPosition: getHotspot(contactData.bannerImageMobile || contactData.bannerImage) }}
-              sizes="100vw"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/50" />
-          </>
-        )}
-        <div className={`${contactData?.bannerImage ? "absolute inset-0" : ""} z-10 flex items-center justify-center`}>
-          <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
-              {heroSub}
-            </p>
-            <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
-              {heroTitle}
-            </h1>
-          </div>
-        </div>
+      <section className="bg-brand-dark pt-32 pb-10 sm:pt-36 sm:pb-14 text-center px-6">
+        <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl tracking-wider text-white">
+          {heroTitle}
+        </h1>
       </section>
 
       {/* Form */}
