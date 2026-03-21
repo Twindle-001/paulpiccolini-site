@@ -27,7 +27,7 @@ export default function ContactPage() {
 
   useEffect(() => {
     client.fetch<SanityContactPage>(contactPageQuery).then(setContactData);
-  }, []);
+  }, [])
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -119,14 +119,14 @@ export default function ContactPage() {
       `}</style>
       
       {/* Hero */}
-      <section className="bg-[#0a0a0a] pt-28 pb-4 sm:pt-32 sm:pb-6 text-center px-6">
+      <section className="b-[#0a0a0a] pt-28 pb-4 sm:pt-32 sm:pb-6 text-center px-6">
         <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl tracking-wider text-white">
           {heroTitle}
         </h1>
       </section>
 
       {/* Form */}
-      <section className="mx-auto max-w-2xl px-6 py-24">
+      <section className="mx-auto max-w-2xl px-6 pt-8 pb-24">
         <p className="mb-12 text-center text-sm leading-relaxed text-brand-light/60">
           {intro}
         </p>
