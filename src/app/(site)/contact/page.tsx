@@ -119,7 +119,7 @@ export default function ContactPage() {
       `}</style>
       
       {/* Hero */}
-      <section className="relative flex h-[40vh] sm:h-auto items-center justify-center bg-brand-dark overflow-hidden">
+      <section className={`relative flex items-center justify-center bg-brand-dark overflow-hidden ${contactData?.bannerImage ? "h-[40vh] sm:h-auto" : "py-20 sm:py-28"}`}>
         {contactData?.bannerImage && (
           <>
             <img
@@ -139,7 +139,7 @@ export default function ContactPage() {
             <div className="absolute inset-0 bg-black/50" />
           </>
         )}
-        <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <div className={`${contactData?.bannerImage ? "absolute inset-0" : ""} z-10 flex items-center justify-center`}>
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
             <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
               {heroSub}
