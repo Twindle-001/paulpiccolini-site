@@ -1,18 +1,19 @@
 "use client";
 
-import { NextStudio } from "next-sanity/studio";
-import { useEffect, useState } from "react";
-import config from "../../../../../sanity.config";
+import React, { useEffect, useState } from "react";
 
 /**
  * Fix: Some browser extensions (e.g. MetaMask SES lockdown) break the
  * native ResizeObserver — the constructor exists but the callback never
- * fires. Sanity’s PaneLayout depends on ResizeObserver to measure its
+ * fires. Sanity's PaneLayout depends on ResizeObserver to measure its
  * container width; without it the layout stays permanently collapsed
  * and the structure panel renders empty.
  *
- * This component detects a broken ResizeObserver on mount and replaces
- * it with a polling-based fallback before rendering NextStudio.
+ * We MUST replace ResizeObserver BEFORE importing NextStudio or any
+ * Sanity modules, because @sanity/ui captures the ResizeObserver
+ * constructor reference at module load time. That's why we use a
+ * dynamic import() for NextStudio — it only loads after our polyfill
+ * is installed.
  */
 
 class JsonResizeObserver {
@@ -74,9 +75,11 @@ class JsonResizeObserver {
 }
 
 export default function StudioPage() {
-  const [ready, setReady] = useState(false);
+  const [StudioComponent, setStudioComponent] =
+    useState<React.ComponentType | null>(null);
 
   useEffect(() => {
+    // Step 1: Detect if ResizeObserver is broken
     let fired = false;
     const el = document.createElement("div");
     el.style.cssText =
@@ -90,11 +93,25 @@ export default function StudioPage() {
     const timer = setTimeout(() => {
       ro.disconnect();
       el.remove();
+
+      // Step 2: Replace ResizeObserver if broken
       if (!fired) {
         (window as unknown as Record<string, unknown>).ResizeObserver =
           JsonResizeObserver;
       }
-      setReady(true);
+
+      // Step 3: NOW dynamically import NextStudio and config
+      // so @sanity/ui captures our working ResizeObserver
+      Promise.all([
+        import("next-sanity/studio"),
+        import("../../../../../sanity.config"),
+      ]).then(([{ NextStudio }, configModule]) => {
+        const config = configModule.default;
+        // Create a wrapper component that renders NextStudio with config
+        setStudioComponent(() => () =>
+          React.createElement(NextStudio, { config })
+        );
+      });
     }, 150);
 
     return () => {
@@ -104,6 +121,9 @@ export default function StudioPage() {
     };
   }, []);
 
-  if (!ready) return <div style={{ height: "100vh", width: "100vw" }} />;
-  return <NextStudio config={config} />;
+  if (!StudioComponent) {
+    return <div style={{ height: "100vh", width: "100vw" }} />;
+  }
+
+  return <StudioComponent />;
 }
