@@ -79,6 +79,13 @@ const BulkUploadComponent = () => {
     fetchSubcategories();
   }, [selectedCategory, client]);
 
+  // Cleanup preview URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      uploadItems.forEach((item) => URL.revokeObjectURL(item.preview));
+    };
+  }, [uploadItems]);
+
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.currentTarget.files;
