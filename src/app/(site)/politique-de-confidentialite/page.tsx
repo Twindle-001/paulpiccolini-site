@@ -16,7 +16,7 @@ const content = {
       {
         title: "Données collectées",
         content: "Lors de l’utilisation du formulaire de contact, les données suivantes peuvent être collectées : prénom, nom, adresse e-mail, numéro de téléphone et le contenu de votre message.",
-        subContent: "Aucune donnée n’est collectée automatiquement lors de la simple navigation sur le site, sauf si un outil d’analyse anonymisé est mis en place ultérieurement (voir section Cookies).",
+        subContent: "Lors de votre navigation, Google Analytics 4 collecte des données anonymisées (pages consultées, durée de visite, type d’appareil, localisation approximative) à des fins d’analyse d’audience. Aucune donnée personnelle identifiante n’est transmise.",
       },
       {
         title: "Finalité du traitement",
@@ -38,12 +38,13 @@ const content = {
         listItems: [
           "Vercel (hébergement du site).",
           "Sanity (gestion de contenu).",
+          "Google Analytics 4 (analyse d’audience anonymisée).",
         ],
         subContent: "Si un service d’envoi d’e-mails est mis en place ultérieurement (type Brevo, Mailchimp), cette section sera mise à jour.",
       },
       {
-        title: "Cookies",
-        content: "Ce site n’utilise actuellement aucun cookie de suivi ou publicitaire. Des cookies strictement nécessaires au fonctionnement du site peuvent être déposés. Si un outil d’analyse d’audience (type Google Analytics ou Plausible) est ajouté ultérieurement, un bandeau de consentement sera mis en place et cette politique sera mise à jour.",
+        title: "Cookies et analyse d’audience",
+        content: "Ce site utilise Google Analytics 4 pour mesurer l’audience de manière anonymisée. Cet outil dépose des cookies permettant de comptabiliser les visites et les pages consultées, sans collecter de données personnelles identifiantes. Les adresses IP sont anonymisées. Vous pouvez désactiver le suivi Google Analytics en installant le module complémentaire de navigateur disponible sur https://tools.google.com/dlpage/gaoptout. Des cookies strictement nécessaires au fonctionnement du site peuvent également être déposés.",
       },
       {
         title: "Vos droits",
@@ -71,7 +72,7 @@ const content = {
       {
         title: "Data Collected",
         content: "When using the contact form, the following data may be collected: first name, last name, email address, phone number and the content of your message.",
-        subContent: "No data is automatically collected during simple browsing of the site, unless an anonymized analytics tool is implemented in the future (see Cookies section).",
+        subContent: "During your browsing, Google Analytics 4 collects anonymized data (pages visited, visit duration, device type, approximate location) for audience analysis purposes. No personally identifiable data is transmitted.",
       },
       {
         title: "Purpose of Processing",
@@ -93,12 +94,13 @@ const content = {
         listItems: [
           "Vercel (site hosting).",
           "Sanity (content management).",
+          "Google Analytics 4 (anonymized audience analysis).",
         ],
         subContent: "If an email sending service is implemented in the future (such as Brevo, Mailchimp), this section will be updated.",
       },
       {
-        title: "Cookies",
-        content: "This site currently does not use any tracking or advertising cookies. Strictly necessary cookies for the operation of the site may be set. If an audience analytics tool (such as Google Analytics or Plausible) is added in the future, a consent banner will be implemented and this policy will be updated.",
+        title: "Cookies & Audience Analytics",
+        content: "This site uses Google Analytics 4 to measure audience in an anonymized manner. This tool sets cookies to count visits and pages viewed, without collecting personally identifiable data. IP addresses are anonymized. You can disable Google Analytics tracking by installing the browser add-on available at https://tools.google.com/dlpage/gaoptout. Strictly necessary cookies for the operation of the site may also be set.",
       },
       {
         title: "Your Rights",

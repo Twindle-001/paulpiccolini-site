@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-CBFRVEJZQF";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -77,12 +80,9 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  // TODO: Remplace par ton vrai code Google Search Console !
-  // Va sur https://search.google.com/search-console → Ajouter une propriété
-  // → Méthode "balise HTML" → Copie le code
-  verification: {
-    google: "google-site-verification-code",
-  },
+  // Validation Google Search Console effectuée via DNS (sc-domain:paulpiccolini.com)
+  // Propriété URL-prefix (https://paulpiccolini.com/) également vérifiée automatiquement
+  // Fichier de vérification : google889f04ac6adef8f1.html
 };
 
 export default function RootLayout({
@@ -92,6 +92,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
+      </head>
       <body>{children}</body>
     </html>
   );
