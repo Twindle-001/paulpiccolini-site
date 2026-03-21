@@ -75,6 +75,11 @@ const deskStructure = (S: any) =>
                           '_type == "photo" && category._ref == $categoryId'
                         )
                         .params({ categoryId })
+                    .defaultOrdering([
+                      { field: "subcategory", direction: "asc" },
+                      { field: "order", direction: "asc" },
+                    ])
+                    .defaultLayout("detail")
                     )
                 ),
             ])
