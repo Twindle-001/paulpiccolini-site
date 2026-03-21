@@ -22,15 +22,22 @@ export default async function SiteLayout({
   const photographerSchema = {
     "@context": "https://schema.org",
     "@type": ["ProfessionalService", "Photographer"],
+    "@id": "https://paulpiccolini.com/#photographer",
     name: "Paul Piccolini Photography",
     url: "https://paulpiccolini.com",
     description:
-      "Photographe professionnel basé à Paris spécialisé dans les portraits, paysages urbains et voyages. Services de shooting photo sur mesure.",
+      "Photographe professionnel basé à Paris spécialisé en portraits artistiques, photographie urbaine et tirages d'art en édition limitée. Shooting photo sur mesure à Paris.",
     image: "https://paulpiccolini.com/og-image.jpg",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Paris",
+      addressRegion: "Île-de-France",
       addressCountry: "FR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 48.8566,
+      longitude: 2.3522,
     },
     sameAs: [
       settings?.instagram || "https://instagram.com/paulpiccolini",
@@ -39,11 +46,33 @@ export default async function SiteLayout({
     ].filter(Boolean),
     priceRange: "€€",
     telephone: "",
+    knowsAbout: [
+      "Portrait Photography",
+      "Street Photography",
+      "Urban Photography",
+      "Travel Photography",
+      "Fine Art Prints",
+    ],
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Paul Piccolini Photography",
+    url: "https://paulpiccolini.com",
+    description:
+      "Site officiel de Paul Piccolini, photographe professionnel à Paris. Galeries photo, shooting portraits et tirages d'art en édition limitée.",
+    publisher: {
+      "@type": "Person",
+      name: "Paul Piccolini",
+    },
+    inLanguage: "fr-FR",
   };
 
   return (
     <Providers>
       <JsonLd data={photographerSchema} />
+      <JsonLd data={websiteSchema} />
       <Navbar
         siteName={settings?.name}
         logo={settings?.logo}

@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Blog Photo Paris — Conseils, Coulisses & Voyages | Paul Piccolini",
   description:
-    "Blog de Paul Piccolini, photographe à Paris. Conseils photo, récits de voyage et coulisses de mes shootings.",
+    "Conseils photo, coulisses de shootings à Paris et récits de voyages photographiques. Le blog de Paul Piccolini, photographe professionnel à Paris.",
+  keywords: [
+    "blog photo Paris",
+    "conseils photographie",
+    "coulisses shooting photo",
+    "blog photographe professionnel",
+    "spots photo Paris",
+    "tutoriel photo",
+  ],
   alternates: {
     canonical: "/blog",
   },
   openGraph: {
-    title: "Blog | Paul Piccolini Photography",
-    description: "Blog photo : conseils, voyages et coulisses.",
+    title: "Blog Photo Paris — Conseils, Coulisses & Voyages | Paul Piccolini",
+    description:
+      "Conseils photo, coulisses de shootings et récits de voyages par Paul Piccolini, photographe à Paris.",
     type: "website",
     url: "https://paulpiccolini.com/blog",
   },

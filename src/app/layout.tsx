@@ -10,19 +10,23 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Paul Piccolini Photography",
+    default:
+      "Paul Piccolini — Photographe à Paris | Portraits & Tirages d'Art",
     template: "%s | Paul Piccolini",
   },
   description:
-    "Photographe professionnel basé à Paris. Portraits, paysages urbains et voyages.",
+    "Photographe professionnel à Paris spécialisé en portraits artistiques, photographie urbaine et tirages d'art en édition limitée. Réservez votre shooting photo ou découvrez mes galeries.",
   keywords: [
     "photographe Paris",
-    "portrait photography",
-    "shooting photo",
-    "photographie urbaine",
+    "photographe portrait Paris",
+    "shooting photo Paris",
+    "photographie urbaine Paris",
     "photographie de voyage",
-    "portraits professionnels",
-    "tirages d'art",
+    "portraits professionnels Paris",
+    "tirage d'art photo",
+    "tirage photo édition limitée",
+    "photographe professionnel Paris",
+    "séance photo Paris",
   ],
   authors: [
     {
@@ -30,6 +34,7 @@ export const metadata: Metadata = {
       url: "https://paulpiccolini.com",
     },
   ],
+  creator: "Paul Piccolini",
   metadataBase: new URL("https://paulpiccolini.com"),
   alternates: {
     canonical: "/",
@@ -39,30 +44,42 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     alternateLocale: "en_US",
     siteName: "Paul Piccolini Photography",
-    title: "Paul Piccolini Photography",
+    title:
+      "Paul Piccolini — Photographe à Paris | Portraits & Tirages d'Art",
     description:
-      "Photographe professionnel basé à Paris. Portraits, paysages urbains et voyages.",
+      "Photographe professionnel à Paris spécialisé en portraits artistiques, photographie urbaine et tirages d'art en édition limitée. Réservez votre shooting photo ou découvrez mes galeries.",
     url: "https://paulpiccolini.com",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Paul Piccolini Photography",
+        alt: "Paul Piccolini — Photographe professionnel à Paris",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Paul Piccolini Photography",
+    title:
+      "Paul Piccolini — Photographe à Paris | Portraits & Tirages d'Art",
     description:
-      "Photographe professionnel basé à Paris. Portraits, paysages urbains et voyages.",
+      "Photographe professionnel à Paris spécialisé en portraits artistiques, photographie urbaine et tirages d'art en édition limitée.",
     images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  // TODO: Remplace par ton vrai code Google Search Console !
+  // Va sur https://search.google.com/search-console → Ajouter une propriété
+  // → Méthode "balise HTML" → Copie le code
   verification: {
     google: "google-site-verification-code",
   },

@@ -21,7 +21,50 @@ export async function generateStaticParams() {
   return categories.map((cat) => ({ slug: cat.slug }));
 }
 
-// Dynamic metadata from Sanity
+// SEO-optimized metadata per category
+const categoryMetaOverrides: Record<
+  string,
+  { title: string; description: string; keywords: string[] }
+> = {
+  paris: {
+    title: "Photos de Paris — Galerie Street Photography",
+    description:
+      "Explorez Paris à travers l'objectif de Paul Piccolini. Galerie de photographies urbaines : monuments, ruelles secrètes, lumières de la ville lumière. Street photography et paysages urbains.",
+    keywords: [
+      "photo Paris",
+      "galerie photo Paris",
+      "street photography Paris",
+      "photographie urbaine Paris",
+      "photos monuments Paris",
+      "Paris de nuit photo",
+    ],
+  },
+  portrait: {
+    title: "Portraits Artistiques — Galerie Photo | Paul Piccolini Photographe Paris",
+    description:
+      "Galerie de portraits artistiques par Paul Piccolini, photographe à Paris. Portraits en lumière naturelle, shootings en extérieur. Découvrez mon style et réservez votre séance.",
+    keywords: [
+      "portrait photographe Paris",
+      "portrait artistique Paris",
+      "photographe portrait professionnel",
+      "shooting portrait Paris",
+      "portrait lumière naturelle",
+    ],
+  },
+  travel: {
+    title: "Photographie de Voyage — Galerie & Récits du Monde",
+    description:
+      "Carnet photographique de voyages à travers le monde par Paul Piccolini. Thaïlande, Australie et bien plus. Découvrez des images authentiques capturées au fil de mes aventures.",
+    keywords: [
+      "photographie de voyage",
+      "photo voyage monde",
+      "photographe voyageur",
+      "carnet photo voyage",
+    ],
+  },
+};
+
+// Dynamic metadata from Sanity, enhanced with SEO overrides
 export async function generateMetadata({
   params,
 }: {
@@ -32,17 +75,37 @@ export async function generateMetadata({
     slug,
   });
   if (!category) return { title: "Not Found" };
-  const desc = typeof category.description === "string"
-    ? category.description
-    : category.description?.fr || category.description?.en || "";
-  const titleStr = typeof category.title === "string"
-    ? category.title
-    : category.title?.fr || category.title?.en || "Category";
+
+  const desc =
+    typeof category.description === "string"
+      ? category.description
+      : category.description?.fr || category.description?.en || "";
+  const titleStr =
+    typeof category.title === "string"
+      ? category.title
+      : category.title?.fr || category.title?.en || "Category";
+
+  // Use SEO override if available, otherwise use Sanity data
+  const override = categoryMetaOverrides[slug];
+
   return {
-    title: titleStr,
-    description: desc || `${titleStr} photography by Paul Piccolini`,
+    title: override?.title || titleStr,
+    description:
+      override?.description ||
+      desc ||
+      `Galerie ${titleStr} — Photographie par Paul Piccolini, photographe professionnel à Paris.`,
+    keywords: override?.keywords,
     alternates: {
       canonical: `/${slug}`,
+    },
+    openGraph: {
+      title: override?.title || `${titleStr} | Paul Piccolini Photography`,
+      description:
+        override?.description ||
+        desc ||
+        `Galerie ${titleStr} par Paul Piccolini`,
+      type: "website",
+      url: `https://paulpiccolini.com/${slug}`,
     },
   };
 }
