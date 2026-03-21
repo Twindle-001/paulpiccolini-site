@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import PhotoGrid from "@/components/PhotoGrid";
 import { LocaleString, T } from "@/components/LocaleText";
 import { client } from "@/sanity/client";
@@ -87,25 +88,42 @@ export async function generateMetadata({
 
   // Use SEO override if available, otherwise use Sanity data
   const override = categoryMetaOverrides[slug];
+  const finalTitle = override?.title || titleStr;
+  const finalDesc =
+    override?.description ||
+    desc ||
+    `Galerie ${titleStr} — Photographie par Paul Piccolini, photographe professionnel à Paris.`;
 
   return {
-    title: override?.title || titleStr,
-    description:
-      override?.description ||
-      desc ||
-      `Galerie ${titleStr} — Photographie par Paul Piccolini, photographe professionnel à Paris.`,
+    title: finalTitle,
+    description: finalDesc,
     keywords: override?.keywords,
     alternates: {
       canonical: `/${slug}`,
     },
     openGraph: {
-      title: override?.title || `${titleStr} | Paul Piccolini Photography`,
-      description:
-        override?.description ||
-        desc ||
-        `Galerie ${titleStr} par Paul Piccolini`,
-      type: "website",
+      title: finalTitle,
+      description: finalDesc,
       url: `https://paulpiccolini.com/${slug}`,
+      type: "website",
+      ...(category.coverImage && {
+        images: [
+          {
+            url: urlFor(category.coverImage).width(1200).height(630).url(),
+            width: 1200,
+            height: 630,
+            alt: titleStr,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: finalTitle,
+      description: finalDesc,
+      ...(category.coverImage && {
+        images: [urlFor(category.coverImage).width(1200).height(630).url()],
+      }),
     },
   };
 }
@@ -158,7 +176,7 @@ export default async function CategoryPage({
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
+            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">Portfolio</p>
           <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
             <LocaleString field={typeof category.title === "string" ? { fr: category.title, en: category.title } : category.title} />
           </h1>
@@ -181,6 +199,21 @@ export default async function CategoryPage({
           </p>
         )}
       </section>
+
+      {/* CTA Portrait → Services */}
+      {slug === "portrait" && (
+        <section className="bg-brand-dark px-6 pb-20 pt-8 text-center">
+          <p className="mx-auto max-w-lg text-sm text-brand-light/60 leading-relaxed">
+            <T
+              fr="Envie d’une séance photo portrait ? Découvrez mes formules et réservez votre créneau."
+              en="Want a portrait photo session? Check out my packages and book your slot."
+            />
+          </p>
+          <Link href="/services" className="btn-accent mt-6 inline-block">
+            <T fr="Voir les offres" en="View packages" />
+          </Link>
+        </section>
+      )}
     </>
   );
 }

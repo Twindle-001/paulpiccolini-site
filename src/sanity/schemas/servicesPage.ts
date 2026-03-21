@@ -1,6 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { createLocaleField } from "./localeFields";
-import { BannerDesktopPreview, BannerMobilePreview } from "../components/BannerPreview";
+import { UnifiedBannerPreview } from "../components/BannerPreview";
 
 export default defineType({
   name: "servicesPage",
@@ -16,19 +16,12 @@ export default defineType({
     }),
     defineField({
       name: "bannerImage",
-      title: "Bannière Desktop",
+      title: "Banniere (Desktop + Mobile)",
       type: "image",
       options: { hotspot: true },
-      description: "Image bannière pour ordinateur (format panoramique recommandé)",
-      components: { input: BannerDesktopPreview },
-    }),
-    defineField({
-      name: "bannerImageMobile",
-      title: "Bannière Mobile",
-      type: "image",
-      options: { hotspot: true },
-      description: "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
-      components: { input: BannerMobilePreview },
+      description:
+        "Image banniere unique pour desktop et mobile. Utilisez le hotspot pour ajuster le cadrage mobile.",
+      components: { input: UnifiedBannerPreview },
     }),
     defineField({
       name: "philosophyItems",
@@ -61,7 +54,7 @@ export default defineType({
           },
         }),
       ],
-      description: "Exemple: Style unique, Équipement, Ville",
+      description: "Exemple: Style unique, Equipement, Ville",
     }),
     createLocaleField(
       "organizationHeading",
@@ -70,7 +63,7 @@ export default defineType({
     ),
     defineField({
       name: "organizationSteps",
-      title: "Étapes du processus (3 étapes)",
+      title: "Etapes du processus (3 etapes)",
       type: "array",
       of: [
         defineField({
@@ -78,11 +71,11 @@ export default defineType({
           fields: [
             defineField({
               name: "iconDescription",
-              title: "Description de l'icône",
+              title: "Description de l'icone",
               type: "string",
               description: "Ex: Discussion, Planning, Photoshoot",
             }),
-            createLocaleField("text", "Texte de l'étape", "text", {
+            createLocaleField("text", "Texte de l'etape", "text", {
               rows: 2,
             }),
             defineField({

@@ -7,6 +7,7 @@ import { urlFor, getHotspot } from "@/sanity/image";
 import { printsQuery, printsPageQuery } from "@/sanity/queries";
 import type { SanityPrint, SanityPrintsPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
+import Link from "next/link";
 import { localize } from "@/lib/localize";
 
 export default function PrintsPage() {
@@ -98,7 +99,7 @@ export default function PrintsPage() {
         )}
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
+            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
               {subheading}
             </p>
             <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
@@ -117,6 +118,12 @@ export default function PrintsPage() {
           <p className="text-sm sm:text-base text-brand-light/70 leading-relaxed">
             {introText}
           </p>
+          <Link
+            href="/contact"
+            className="btn-accent mt-8 inline-block"
+          >
+            {locale === "en" ? "Contact me" : "Me contacter"}
+          </Link>
         </section>
       )}
 
@@ -177,6 +184,9 @@ export default function PrintsPage() {
               ? "Contact me to discuss custom print options or framing services."
               : "Contactez-moi pour discuter des options d'impression personnalisées ou des services d'encadrement.")}
         </p>
+            <Link href="/contact" className="btn-accent mt-8 inline-block">
+              {locale === "en" ? "Contact me" : "Me contacter"}
+            </Link>
       </section>
     </>
   );

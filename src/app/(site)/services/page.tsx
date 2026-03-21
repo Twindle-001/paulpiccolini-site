@@ -20,6 +20,18 @@ export default function ServicesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { locale } = useLanguage();
 
+  // Fallback images for philosophy section (from portfolio assets)
+  const philosophyFallbackImages = [
+    "https://cdn.sanity.io/images/a8ul70gd/production/07a51ae0ff08b9ef45a573295fdf0a413ec62f69-4974x6218.jpg?w=600&h=600&fit=crop",
+    "https://cdn.sanity.io/images/a8ul70gd/production/95b6e205cccad1cb2fe62027b3b685a036dbaa52-5304x7952.jpg?w=600&h=600&fit=crop",
+    "https://cdn.sanity.io/images/a8ul70gd/production/1bf8393bf3501b9c6f0953be57dd9b8115aedc65-7324x4578.jpg?w=600&h=600&fit=crop",
+  ];
+
+  // Step name translations for EN
+  const stepTranslations: Record<string, string> = {
+    "Livraison": "Delivery",
+  };
+
   useEffect(() => {
     async function fetchData() {
       const [services, servicesPage] = await Promise.all([
@@ -32,13 +44,37 @@ export default function ServicesPage() {
     fetchData();
   }, []);
 
+  // Scroll highlight for pricing cards (mobile)
+  useEffect(() => {
+    if (isLoading) return;
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+    if (!isTouchDevice) return;
+    const cards = document.querySelectorAll(".scroll-highlight-print");
+    if (!cards.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          } else {
+            entry.target.classList.remove("in-view");
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -30% 0px", threshold: 0 }
+    );
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [isLoading]);
+
+
   if (isLoading) {
     return <div className="h-screen bg-brand-darker" />;
   }
 
   const { services, servicesPage } = data;
 
-  return (
+return (
     <>
       {/* Hero */}
       <section className="relative flex h-[40vh] sm:h-auto items-center justify-center overflow-hidden">
@@ -65,7 +101,7 @@ export default function ServicesPage() {
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 z-10 flex items-center justify-center">
           <div className="w-full text-center px-6 pt-10 sm:pt-0">
-            <p className="text-xs sm:text-[10px] uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
+            <p className="text-xs sm:text-sm uppercase tracking-menu font-medium text-white/50 mb-1 sm:mb-3">
               {locale === "en" ? "Services" : "Services"}
             </p>
             <h1 className="font-heading text-4xl sm:text-3xl md:text-5xl lg:text-6xl tracking-wider text-white">
@@ -86,21 +122,12 @@ export default function ServicesPage() {
 
       {/* Pricing Cards */}
       <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
           {services.map((plan) => (
             <div
               key={plan._id}
-              className={`relative flex flex-col rounded border p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 ${
-                plan.popular
-                  ? "border-brand-accent bg-brand-dark"
-                  : "border-white/10 bg-brand-dark/50"
-              }`}
+              className="scroll-highlight-print group relative flex flex-col rounded border border-white/10 bg-brand-dark/50 p-6 md:p-8 hover:-translate-y-1.5 hover:border-brand-accent hover:shadow-[0_10px_20px_rgba(201,169,110,0.08)]"
             >
-              {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-accent px-4 py-1 text-[10px] uppercase tracking-wider text-brand-darker font-semibold">
-                  {locale === "en" ? "Best Deal" : "Meilleur choix"}
-                </span>
-              )}
 
               <h3 className="font-heading text-2xl text-white">
                 {localize(plan.name, locale)}
@@ -140,12 +167,8 @@ export default function ServicesPage() {
               </ul>
 
               <Link
-                href="/contact"
-                className={
-                  plan.popular
-                    ? "btn-accent text-center"
-                    : "btn-primary text-center"
-                }
+                href={`/booking?pack=${encodeURIComponent(String(localize(plan.name, locale)))}`}
+                className="btn-primary text-center"
               >
                 {locale === "en" ? "Book now" : "Réserver"}
               </Link>
@@ -160,7 +183,7 @@ export default function ServicesPage() {
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-16 text-center">
               <h2 className="section-heading">
-                {locale === "en" ? "Why Choose Me" : "Pourquoi me choisir"}
+                {locale === "en" ? "My Approach" : "Mon approche"}
               </h2>
             </div>
 
@@ -169,17 +192,22 @@ export default function ServicesPage() {
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
                 .map((item, i) => (
                   <div key={i}>
-                    {item.image && (
-                      <div className="relative aspect-square overflow-hidden rounded mb-6">
-                        <Image
-                          src={urlFor(item.image).width(400).height(400).url()}
-                          alt={String(localize(item.heading, locale) || "")}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                        />
-                      </div>
-                    )}
+                    {(() => {
+                      const imgSrc = item.image
+                        ? urlFor(item.image).width(600).height(600).url()
+                        : philosophyFallbackImages[i];
+                      return imgSrc ? (
+                        <div className="hidden md:block relative aspect-square overflow-hidden rounded mb-6">
+                          <Image
+                            src={imgSrc}
+                            alt={String(localize(item.heading, locale) || "")}
+                            fill
+                            className="object-cover"
+                            sizes="33vw"
+                          />
+                        </div>
+                      ) : null;
+                    })()}
                     <h3 className="font-heading text-xl text-white mb-3">
                       {localize(item.heading, locale)}
                     </h3>
@@ -190,6 +218,18 @@ export default function ServicesPage() {
                 ))}
             </div>
           </div>
+
+                {/* CTA to Portrait Portfolio */}
+                <div className="mt-12 text-center">
+                  <Link
+                    href="/portrait"
+                    className="btn-accent inline-block"
+                  >
+                    {locale === "en"
+                      ? "View my portraits"
+                      : "Voir mes portraits"}
+                  </Link>
+                </div>
         </section>
       )}
 
@@ -206,7 +246,7 @@ export default function ServicesPage() {
               </h2>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
               {servicesPage.organizationSteps
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
                 .map((step, i) => (
@@ -217,7 +257,7 @@ export default function ServicesPage() {
                       </div>
                     </div>
                     <h3 className="font-heading text-lg text-white mb-2">
-                      {step.iconDescription}
+                      {locale === "en" && stepTranslations[step.iconDescription] ? stepTranslations[step.iconDescription] : step.iconDescription}
                     </h3>
                     <p className="text-sm text-brand-light/60">
                       {localize(step.text, locale)}
@@ -242,7 +282,7 @@ export default function ServicesPage() {
               ? "Contact me to discuss your custom project. I'll be happy to find the best solution for your needs."
               : "Contactez-moi pour discuter de votre projet personnalisé. Je serai heureux de trouver la meilleure solution pour vos besoins.")}
         </p>
-        <Link href="/contact" className="btn-accent mt-8 inline-block">
+        <Link href="/booking" className="btn-accent mt-8 inline-block">
           {locale === "en" ? "Get in touch" : "Me contacter"}
         </Link>
       </section>

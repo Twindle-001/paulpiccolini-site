@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import SubcategoryInput from "../components/SubcategoryInput";
 
 export default defineType({
   name: "photo",
@@ -38,6 +39,9 @@ export default defineType({
       type: "string",
       description:
         "Ex: monuments, street, landscape... (utilisé pour les filtres dans la galerie)",
+      components: {
+        input: SubcategoryInput,
+      },
     }),
     defineField({
       name: "order",
@@ -66,12 +70,16 @@ export default defineType({
       alt: "alt",
       catFr: "category.title.fr",
       catEn: "category.title.en",
+      subcategory: "subcategory",
       media: "image",
     },
-    prepare({ photoTitle, alt, catFr, catEn, media }) {
+    prepare({ photoTitle, alt, catFr, catEn, subcategory, media }) {
+      const category = catFr || catEn || "";
+      const sub = subcategory || "";
+      const subtitle = sub ? category + " \u2014 " + sub : category;
       return {
         title: photoTitle || alt || "Sans titre",
-        subtitle: catFr || catEn || "",
+        subtitle,
         media,
       };
     },

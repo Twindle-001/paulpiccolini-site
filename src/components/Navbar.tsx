@@ -37,6 +37,7 @@ export default function Navbar({
     })),
     { label: "SERVICES", href: "/services" },
     { label: "SHOP", href: "/prints" },
+    { label: "BLOG", href: "/blog" },
     { label: "CONTACT", href: "/contact" },
   ];
 
@@ -139,7 +140,7 @@ export default function Navbar({
         {/* Mobile menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-500 ${
-            isOpen ? "max-h-96 pb-6" : "max-h-0"
+            isOpen ? "max-h-[40rem] pb-6" : "max-h-0"
           }`}
         >
           <div className="flex flex-col items-center gap-0 pt-2">

@@ -142,12 +142,6 @@ export default function HomePage() {
             <p className="section-subheading mb-4">
               {locale === "en" ? "About" : "À propos"}
             </p>
-            <h2 className="section-heading mb-8">
-              {localize(homePage?.aboutHeading, locale) ||
-                (locale === "en"
-                  ? "Your Photographer in Paris"
-                  : "Votre Photographe à Paris")}
-            </h2>
             <div className="space-y-4 text-sm leading-relaxed text-brand-light/80">
               {homePage?.aboutText ? (
                 <PortableText

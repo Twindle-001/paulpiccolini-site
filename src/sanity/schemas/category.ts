@@ -1,14 +1,14 @@
 import { defineField, defineType } from "sanity";
 import { createLocaleField } from "./localeFields";
-import { BannerDesktopPreview, BannerMobilePreview } from "../components/BannerPreview";
+import { UnifiedBannerPreview } from "../components/BannerPreview";
 
 export default defineType({
   name: "category",
-  title: "Catégorie",
+  title: "Categorie",
   type: "document",
   fields: [
     createLocaleField("title", "Titre", "string", {
-      description: "Nom de la catégorie en FR et EN (ex: Voyage / Travel)",
+      description: "Nom de la categorie en FR et EN (ex: Voyage / Travel)",
     }),
     defineField({
       name: "slug",
@@ -18,7 +18,7 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     createLocaleField("description", "Description", "text", {
-      description: "Description en français et anglais",
+      description: "Description en francais et anglais",
       rows: 3,
     }),
     defineField({
@@ -27,25 +27,16 @@ export default defineType({
       type: "image",
       options: { hotspot: true },
       description:
-        "Image affichée en hero de la page catégorie et en preview sur la homepage",
+        "Image affichee en hero de la page categorie et en preview sur la homepage",
     }),
     defineField({
       name: "bannerImage",
-      title: "Bannière Desktop",
+      title: "Banniere (Desktop + Mobile)",
       type: "image",
       options: { hotspot: true },
       description:
-        "Image bannière pour ordinateur (format panoramique recommandé). Utilise coverImage si non rempli.",
-      components: { input: BannerDesktopPreview },
-    }),
-    defineField({
-      name: "bannerImageMobile",
-      title: "Bannière Mobile",
-      type: "image",
-      options: { hotspot: true },
-      description:
-        "Image bannière pour téléphone (format portrait ou 3:4 recommandé). Utilise la bannière desktop si non rempli.",
-      components: { input: BannerMobilePreview },
+        "Image banniere unique pour desktop et mobile. Utilisez le hotspot pour ajuster le cadrage mobile. Si vide, coverImage est utilisee.",
+      components: { input: UnifiedBannerPreview },
     }),
     defineField({
       name: "order",
