@@ -22,9 +22,9 @@ const deskStructure = (S: any) =>
             .items([
               S.listItem()
                 .title("Configuration Générale")
-                .icon(() => "⚙️")
+                .icon(() => "⚙️"
                 .child(
-                  S.document()
+                  S.document(
                     .schemaType("siteSettings")
                     .documentId("siteSettings")
                     .title("Configuration Générale")
@@ -159,7 +159,7 @@ export default defineConfig({
       structure: deskStructure,
     }),
     visionTool({ defaultApiVersion: apiVersion }),
-    bulkUploadPlugin,
-    shuffleOrderPlugin,
+    bulkUploadPlugin(),
+    shuffleOrderPlugin(),
   ],
 });
