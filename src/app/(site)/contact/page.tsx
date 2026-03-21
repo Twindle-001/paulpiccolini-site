@@ -119,7 +119,7 @@ export default function ContactPage() {
       `}</style>
       
       {/* Hero */}
-      <section className="bg-brand-dark pt-32 pb-10 sm:pt-36 sm:pb-14 text-center px-6">
+      <section className="bg-[#0a0a0a] pt-28 pb-4 sm:pt-32 sm:pb-6 text-center px-6">
         <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl tracking-wider text-white">
           {heroTitle}
         </h1>
