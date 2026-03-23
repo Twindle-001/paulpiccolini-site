@@ -27,7 +27,7 @@ export default function Navbar({
 
   // Build navigation links dynamically from Sanity categories
   const links = [
-    { label: "HOME", href: "/" },
+    { label: locale === "en" ? "HOME" : "ACCUEIL", href: "/" },
     ...categories.map((cat) => ({
       label: (typeof cat.title === "string"
         ? cat.title
@@ -36,7 +36,7 @@ export default function Navbar({
       href: `/${cat.slug}`,
     })),
     { label: "SERVICES", href: "/services" },
-    { label: "SHOP", href: "/prints" },
+    { label: locale === "en" ? "SHOP" : "BOUTIQUE", href: "/prints" },
     { label: "BLOG", href: "/blog" },
     { label: "CONTACT", href: "/contact" },
   ];
