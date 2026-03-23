@@ -37,7 +37,7 @@ export default function BlogPage() {
             {locale === "en" ? "Blog" : "Blog"}
           </p>
           <h1 className="font-heading text-5xl tracking-wider text-white md:text-6xl">
-            {locale === "en" ? "Articles & Stories" : "Articles et Histoires"}
+            {locale === "en" ? "Articles & Stories" : "Articles"}
           </h1>
         </div>
       </section>
