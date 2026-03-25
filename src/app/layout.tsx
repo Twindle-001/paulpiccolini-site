@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 
-const GA_MEASUREMENT_ID = "G-CBFRVEJZQF";
+const GA_MEASUREMENT_ID = "G-JRHRR0H6Y5";
 
 export const viewport: Viewport = {
   width: "device-width",
