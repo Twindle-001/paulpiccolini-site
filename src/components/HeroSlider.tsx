@@ -86,7 +86,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
   if (slides.length === 0) {
     // Fallback hero when no slides exist yet
     return (
-      <section className="relative flex h-[70vh] md:h-screen w-full items-center justify-center overflow-hidden bg-brand-darker">
+      <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-brand-darker">
         <div className="absolute inset-0 bg-gradient-to-b from-brand-darker via-brand-dark to-brand-darker" />
         <div className="relative z-10 text-center">
           <h1 className="font-heading text-6xl font-light tracking-wider text-white md:text-7xl lg:text-8xl">
@@ -102,7 +102,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
 
   return (
     <section
-      className="relative h-[70vh] md:h-screen w-full overflow-hidden touch-pan-y"
+      className="relative h-screen w-full overflow-hidden touch-pan-y"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -117,7 +117,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         >
           {slide.image ? (
             <Image
-              src={urlFor(slide.image).width(1920).height(1080).url()}
+              src={urlFor(slide.image).width(1920).auto("format").url()}
               alt={String(localize(slide.title, locale) || "Slide")}
               fill
               className="object-cover"
