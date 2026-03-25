@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,26 +8,40 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/studio", "/api/"],
       },
-      // Bloque le scraping par les bots IA pour protéger tes photos
       {
         userAgent: "GPTBot",
-        disallow: "/",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
       },
       {
         userAgent: "ChatGPT-User",
-        disallow: "/",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
       },
       {
         userAgent: "Google-Extended",
-        disallow: "/",
-      },
-      {
-        userAgent: "CCBot",
-        disallow: "/",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
       },
       {
         userAgent: "anthropic-ai",
-        disallow: "/",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
+      },
+      {
+        userAgent: "ClaudeBot",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
+      },
+      {
+        userAgent: "PerplexityBot",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
+      },
+      {
+        userAgent: "CCBot",
+        allow: "/",
+        disallow: ["/studio", "/api/"],
       },
     ],
     sitemap: "https://paulpiccolini.com/sitemap.xml",
