@@ -39,7 +39,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     return () => window.removeEventListener("resize", updateScrollArrows);
   }, [updateScrollArrows]);
 
-  const scrollBy = useCallback((dir: number) => {
+  const doScroll = useCallback((dir: number) => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollBy({ left: dir * 200, behavior: "smooth" });
@@ -48,7 +48,6 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
 
   // Swipe support for lightbox
   const touchStart = useRef<{ x: number; y: number } | null>(null);
-
   const lightboxPrev = useCallback(() => {
     setLightbox((prev) =>
       prev !== null ? (prev > 0 ? prev - 1 : photos.length - 1) : null
@@ -83,10 +82,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
   const validSubcategories = subcategories?.filter(
     (s): s is string => s !== null && s !== undefined && s !== ""
   );
-
-  const hasSubcategories =
-    validSubcategories && validSubcategories.length > 0;
-
+  const hasSubcategories = validSubcategories && validSubcategories.length > 0;
   const filtered =
     activeCategory === "all"
       ? photos
@@ -94,21 +90,23 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
 
   return (
     <>
-      {/* Subcategory tabs — only shown when subcategories exist */}
+      {/* Subcategory tabs with arrow navigation */}
       {hasSubcategories && (
         <div className="relative mb-6 sm:mb-12">
+          {/* Left arrow */}
           {canScrollLeft && (
             <button
-              onClick={() => scrollBy(-1)}
+              onClick={() => doScroll(-1)}
               className="hidden sm:flex absolute left-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-l-lg"
               aria-label="Scroll left"
             >
               <span className="text-2xl text-white/50 hover:text-white transition-colors">‹</span>
             </button>
           )}
+          {/* Right arrow */}
           {canScrollRight && (
             <button
-              onClick={() => scrollBy(1)}
+              onClick={() => doScroll(1)}
               className="hidden sm:flex absolute right-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-l from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-r-lg"
               aria-label="Scroll right"
             >
@@ -147,7 +145,6 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           </div>
         </div>
       )}
-
       {/* Grid — 2-col on mobile, masonry on desktop */}
       <div className="grid grid-cols-2 gap-2 sm:block sm:columns-2 sm:gap-4 lg:columns-3">
         {filtered.map((photo, i) => (
@@ -174,23 +171,15 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
               className="hidden sm:block w-full transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 1024px) 50vw, 33vw"
             />
-            <div
-              className="absolute inset-0 bg-black/0 transition-all duration-500
-                          group-hover:bg-black/20"
-            />
+            <div className="absolute inset-0 bg-black/0 transition-all duration-500 group-hover:bg-black/20" />
             {photo.title && (
-              <div
-                className="absolute bottom-0 left-0 right-0 translate-y-full
-                            bg-gradient-to-t from-black/60 to-transparent p-4
-                            transition-transform duration-500 group-hover:translate-y-0"
-              >
+              <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/60 to-transparent p-4 transition-transform duration-500 group-hover:translate-y-0">
                 <p className="text-sm text-white/90">{photo.title}</p>
               </div>
             )}
           </div>
         ))}
       </div>
-
       {/* Lightbox */}
       {lightbox !== null && (
         <div
@@ -206,7 +195,6 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           >
             &times;
           </button>
-
           {/* Prev/Next */}
           <button
             className="absolute left-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:left-4"
@@ -232,7 +220,6 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           >
             &#8250;
           </button>
-
           <div
             className="relative max-h-[85vh] max-w-[90vw] md:max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
