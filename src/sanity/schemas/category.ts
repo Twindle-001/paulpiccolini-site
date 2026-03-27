@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import SubcategoryOrderInput from "../components/SubcategoryOrderInput";
 import { createLocaleField } from "./localeFields";
 import { UnifiedBannerPreview } from "../components/BannerPreview";
 
@@ -45,6 +46,9 @@ export default defineType({
       of: [{ type: "string" }],
       description:
         "Glissez-déposez pour réorganiser les sous-catégories. Les noms doivent correspondre exactement aux sous-catégories des photos.",
+      components: {
+        input: SubcategoryOrderInput,
+      },
     }),
     defineField({
       name: "order",
