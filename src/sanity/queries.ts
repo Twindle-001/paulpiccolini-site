@@ -107,6 +107,7 @@ export const categoryBySlugQuery = groq`
     coverImage,
     bannerImage,
     bannerImageMobile,
+    subcategoryOrder,
     order
   }
 `;
