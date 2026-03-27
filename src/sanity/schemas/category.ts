@@ -39,6 +39,14 @@ export default defineType({
       components: { input: UnifiedBannerPreview },
     }),
     defineField({
+      name: "subcategoryOrder",
+      title: "Ordre des sous-catégories",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Glissez-déposez pour réorganiser les sous-catégories. Les noms doivent correspondre exactement aux sous-catégories des photos.",
+    }),
+    defineField({
       name: "order",
       title: "Ordre d'affichage",
       type: "number",
