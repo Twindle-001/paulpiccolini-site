@@ -97,20 +97,20 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           {canScrollLeft && (
             <button
               onClick={() => doScroll(-1)}
-              className="hidden sm:flex absolute left-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-l-lg"
+              className="hidden sm:flex absolute left-0 top-0 bottom-0 z-10 items-center pl-1 pr-4 bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/90 to-transparent rounded-l-lg cursor-pointer"
               aria-label="Scroll left"
             >
-              <span className="text-2xl text-white/50 hover:text-white transition-colors">‹</span>
+              <span className="text-4xl text-white/70 hover:text-white transition-colors drop-shadow-lg">‹</span>
             </button>
           )}
           {/* Right arrow */}
           {canScrollRight && (
             <button
               onClick={() => doScroll(1)}
-              className="hidden sm:flex absolute right-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-l from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-r-lg"
+              className="hidden sm:flex absolute right-0 top-0 bottom-0 z-10 items-center pr-1 pl-4 bg-gradient-to-l from-[#1a1a1a] via-[#1a1a1a]/90 to-transparent rounded-r-lg cursor-pointer"
               aria-label="Scroll right"
             >
-              <span className="text-2xl text-white/50 hover:text-white transition-colors">›</span>
+              <span className="text-4xl text-white/70 hover:text-white transition-colors drop-shadow-lg">›</span>
             </button>
           )}
           <div
