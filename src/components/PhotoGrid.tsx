@@ -71,7 +71,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     <>
       {/* Subcategory tabs — only shown when subcategories exist */}
       {hasSubcategories && (
-        <div className="mb-6 sm:mb-12 flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}>
+        <div className="mb-6 sm:mb-12 flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1" style={{ scrollbarWidth: "thin", WebkitOverflowScrolling: "touch" }}>
           <button
             onClick={() => setActiveCategory("all")}
             className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
