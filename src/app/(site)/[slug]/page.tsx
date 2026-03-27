@@ -143,6 +143,22 @@ export default async function CategoryPage({
 
   if (!category) notFound();
 
+  // Sort subcategories by custom order defined in Sanity (category.subcategoryOrder)
+  const orderedSubcategories = (() => {
+    const order = (category as any).subcategoryOrder as string[] | undefined;
+    if (!order || order.length === 0) return subcategories;
+    // Sort: items in order array first (by their position), then the rest alphabetically
+    const valid = subcategories.filter((s): s is string => s !== null);
+    return valid.sort((a, b) => {
+      const idxA = order.indexOf(a);
+      const idxB = order.indexOf(b);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return a.localeCompare(b);
+    });
+  })();
+
   return (
     <>
       {/* Hero */}
@@ -192,7 +208,7 @@ export default async function CategoryPage({
       {/* Gallery */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 pt-8 sm:pt-12 pb-16 sm:pb-24">
         {photos.length > 0 ? (
-          <PhotoGrid photos={photos} subcategories={subcategories} />
+          <PhotoGrid photos={photos} subcategories={orderedSubcategories} />
         ) : (
           <p className="text-center text-brand-muted">
             <T fr="Photos à venir..." en="Photos coming soon..." />
