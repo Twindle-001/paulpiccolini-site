@@ -55,6 +55,32 @@ export default async function SiteLayout({
       "Travel Photography",
       "Fine Art Prints",
     ],
+    potentialAction: [
+      {
+        "@type": "ReserveAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://paulpiccolini.com/booking",
+          actionPlatform: [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform",
+          ],
+        },
+        name: "Réserver un shooting photo",
+      },
+      {
+        "@type": "CommunicateAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: "https://paulpiccolini.com/contact",
+          actionPlatform: [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform",
+          ],
+        },
+        name: "Contacter Paul Piccolini",
+      },
+    ],
   };
 
   const websiteSchema = {

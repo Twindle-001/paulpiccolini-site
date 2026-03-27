@@ -8,7 +8,7 @@ import { urlFor } from "@/sanity/image";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Tirages d'Art Photo Paris — Édition Limitée | Paul Piccolini",
+  title: "Tirages d'Art Photo Paris — Édition Limitée",
   description:
     "Découvrez et acquérez des tirages d'art photographiques en édition limitée. Photos de Paris, voyages et portraits par Paul Piccolini. Impression fine art haute qualité, livraison France et international.",
   keywords: [
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     description:
       "Tirages d'art photographiques en édition limitée par Paul Piccolini. Impression fine art haute qualité.",
     type: "website",
+    images: [{ url: "https://paulpiccolini.com/og-image.jpg", width: 800, height: 800, alt: "Paul Piccolini - Photographe Paris" }],
     url: "https://paulpiccolini.com/prints",
   },
 };

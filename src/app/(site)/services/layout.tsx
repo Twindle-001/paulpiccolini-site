@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Shooting Photo à Paris — Tarifs & Réservation | Paul Piccolini",
+  title: "Shooting Photo à Paris — Tarifs & Réservation",
   description:
     "Réservez votre shooting photo à Paris dès 150€. Portraits dans les lieux les plus emblématiques de la capitale. 5 à 15 photos retouchées, galerie privée en ligne. Livraison sous 72h.",
   keywords: [
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     description:
       "Réservez votre shooting photo à Paris dès 150€. Portraits dans les lieux les plus emblématiques de la capitale.",
     type: "website",
+    images: [{ url: "https://paulpiccolini.com/og-image.jpg", width: 800, height: 800, alt: "Paul Piccolini - Photographe Paris" }],
     url: "https://paulpiccolini.com/services",
   },
 };

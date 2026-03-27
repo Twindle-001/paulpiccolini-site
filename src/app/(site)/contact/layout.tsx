@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Réservation Shooting Photo Paris | Paul Piccolini",
+  title: "Contact — Réservation Shooting Photo Paris",
   description:
     "Contactez Paul Piccolini, photographe professionnel à Paris. Réservation de shooting photo, demande de tirages d'art ou projet sur mesure. Réponse garantie sous 24h.",
   keywords: [
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description:
       "Contactez Paul Piccolini pour un shooting photo à Paris ou un projet sur mesure.",
     type: "website",
+    images: [{ url: "https://paulpiccolini.com/og-image.jpg", width: 800, height: 800, alt: "Paul Piccolini - Photographe Paris" }],
     url: "https://paulpiccolini.com/contact",
   },
 };
