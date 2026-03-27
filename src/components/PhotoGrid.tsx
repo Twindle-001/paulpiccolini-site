@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/image";
 import type { SanityPhoto } from "@/sanity/types";
@@ -20,6 +20,31 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [lightbox, setLightbox] = useState<number | null>(null);
   const { locale } = useLanguage();
+
+  // Subcategory scroll navigation
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollArrows = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 2);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 2);
+  }, []);
+
+  useEffect(() => {
+    updateScrollArrows();
+    window.addEventListener("resize", updateScrollArrows);
+    return () => window.removeEventListener("resize", updateScrollArrows);
+  }, [updateScrollArrows]);
+
+  const scrollBy = useCallback((dir: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * 200, behavior: "smooth" });
+    setTimeout(updateScrollArrows, 350);
+  }, [updateScrollArrows]);
 
   // Swipe support for lightbox
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -71,30 +96,55 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     <>
       {/* Subcategory tabs — only shown when subcategories exist */}
       {hasSubcategories && (
-        <div className="mb-6 sm:mb-12 flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1" style={{ scrollbarWidth: "thin", WebkitOverflowScrolling: "touch" }}>
-          <button
-            onClick={() => setActiveCategory("all")}
-            className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
-              activeCategory === "all"
-                ? "bg-brand-accent/20 text-brand-accent"
-                : "text-brand-muted hover:bg-white/5 hover:text-white"
-            }`}
-          >
-            {locale === "en" ? "All" : "Tout"}
-          </button>
-          {validSubcategories.map((cat) => (
+        <div className="relative mb-6 sm:mb-12">
+          {canScrollLeft && (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => scrollBy(-1)}
+              className="hidden sm:flex absolute left-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-r from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-l-lg"
+              aria-label="Scroll left"
+            >
+              <span className="text-2xl text-white/50 hover:text-white transition-colors">‹</span>
+            </button>
+          )}
+          {canScrollRight && (
+            <button
+              onClick={() => scrollBy(1)}
+              className="hidden sm:flex absolute right-0 top-0 bottom-0 z-10 items-center px-2 bg-gradient-to-l from-[#1a1a1a] via-[#1a1a1a]/80 to-transparent rounded-r-lg"
+              aria-label="Scroll right"
+            >
+              <span className="text-2xl text-white/50 hover:text-white transition-colors">›</span>
+            </button>
+          )}
+          <div
+            ref={scrollRef}
+            onScroll={updateScrollArrows}
+            className="flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+          >
+            <button
+              onClick={() => setActiveCategory("all")}
               className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
-                activeCategory === cat
+                activeCategory === "all"
                   ? "bg-brand-accent/20 text-brand-accent"
                   : "text-brand-muted hover:bg-white/5 hover:text-white"
               }`}
             >
-              {cat}
+              {locale === "en" ? "All" : "Tout"}
             </button>
-          ))}
+            {validSubcategories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`rounded-md px-3 py-2 sm:px-5 sm:py-2.5 text-[10px] sm:text-xs uppercase tracking-menu transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
+                  activeCategory === cat
+                    ? "bg-brand-accent/20 text-brand-accent"
+                    : "text-brand-muted hover:bg-white/5 hover:text-white"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
