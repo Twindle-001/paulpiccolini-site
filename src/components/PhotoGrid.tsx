@@ -81,69 +81,26 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     if (isDragging) handleMouseUp();
   }, [isDragging, handleMouseUp]);
 
-  // Lightbox swipe state
-  const lbTouchStart = useRef<{ x: number; y: number; t: number } | null>(null);
-  const [lbSwipeOffset, setLbSwipeOffset] = useState(0);
-  const [lbAnimating, setLbAnimating] = useState(false);
-  const lbRef = useRef<HTMLDivElement>(null);
-  const lbSwipeOffsetRef = useRef(0); // mirror for native listener
+  // Lightbox scroll-snap: track current slide via native scroll
+  const lbScrollRef = useRef<HTMLDivElement>(null);
 
-  const lbGoTo = useCallback((idx: number) => {
-    setLbAnimating(true);
-    // Animate slide direction
-    const dir = idx > (lightbox ?? 0) ? -1 : 1;
-    setLbSwipeOffset(dir * window.innerWidth);
-    setTimeout(() => {
-      setLightbox(idx);
-      setLbSwipeOffset(0);
-      setLbAnimating(false);
-    }, 250);
-  }, [lightbox]);
-
-  const handleLbTouchStart = useCallback((e: React.TouchEvent) => {
-    if (lbAnimating) return;
-    lbTouchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
-  }, [lbAnimating]);
-
-  // Attach native touchmove with { passive: false } so preventDefault works
+  // Scroll to the correct slide when lightbox opens
   useEffect(() => {
-    const el = lbRef.current;
-    if (!el) return;
-    const onTouchMove = (e: TouchEvent) => {
-      if (!lbTouchStart.current || lbAnimating) return;
-      const dx = e.touches[0].clientX - lbTouchStart.current.x;
-      const dy = e.touches[0].clientY - lbTouchStart.current.y;
-      if (Math.abs(dx) > Math.abs(dy)) {
-        e.preventDefault();
-        lbSwipeOffsetRef.current = dx;
-        setLbSwipeOffset(dx);
-      }
-    };
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
-    return () => el.removeEventListener("touchmove", onTouchMove);
-  }, [lightbox, lbAnimating]);
+    if (lightbox === null || !lbScrollRef.current) return;
+    const el = lbScrollRef.current;
+    // Instant scroll to the selected photo (no animation on open)
+    el.scrollTo({ left: lightbox * el.clientWidth, behavior: "instant" as ScrollBehavior });
+  }, [lightbox === null]); // only on open/close
 
-  const handleLbTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!lbTouchStart.current || lbAnimating) return;
-    const dx = e.changedTouches[0].clientX - lbTouchStart.current.x;
-    const dy = e.changedTouches[0].clientY - lbTouchStart.current.y;
-    const dt = Date.now() - lbTouchStart.current.t;
-    const velocity = Math.abs(dx) / dt;
-    // Threshold: 40px drag or fast flick
-    const shouldSwipe = (Math.abs(dx) > Math.abs(dy)) && (Math.abs(dx) > 40 || velocity > 0.3);
-    if (shouldSwipe && lightbox !== null) {
-      if (dx < 0 && lightbox < filtered.length - 1) {
-        lbGoTo(lightbox + 1);
-      } else if (dx > 0 && lightbox > 0) {
-        lbGoTo(lightbox - 1);
-      } else {
-        setLbSwipeOffset(0);
-      }
-    } else {
-      setLbSwipeOffset(0);
+  // Update lightbox index when user scrolls/swipes
+  const handleLbScroll = useCallback(() => {
+    const el = lbScrollRef.current;
+    if (!el) return;
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx !== lightbox && idx >= 0 && idx < filtered.length) {
+      setLightbox(idx);
     }
-    lbTouchStart.current = null;
-  }, [lbAnimating, lightbox, filtered.length, lbGoTo]);
+  }, [lightbox, filtered.length]);
 
   // Filter out null subcategories
   const validSubcategories = subcategories?.filter(
@@ -251,19 +208,13 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           </div>
         ))}
       </div>
-      {/* Lightbox — full-screen slider */}
+      {/* Lightbox — full-screen scroll-snap slider */}
       {lightbox !== null && (
-        <div
-          ref={lbRef}
-          className="fixed inset-0 z-50 overflow-hidden bg-black"
-          style={{ touchAction: "none" }}
-          onTouchStart={handleLbTouchStart}
-          onTouchEnd={handleLbTouchEnd}
-        >
+        <div className="fixed inset-0 z-50 bg-black">
           {/* Close button */}
           <button
             className="absolute right-4 top-4 p-3 text-2xl text-white/60 hover:text-white z-20 md:right-6 md:top-6"
-            onClick={() => { setLbSwipeOffset(0); setLightbox(null); }}
+            onClick={() => setLightbox(null)}
             aria-label="Close"
           >
             &times;
@@ -272,14 +223,22 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           {/* Desktop arrows */}
           <button
             className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white z-20"
-            onClick={() => lightbox > 0 && lbGoTo(lightbox - 1)}
+            onClick={() => {
+              if (lightbox > 0 && lbScrollRef.current) {
+                lbScrollRef.current.scrollTo({ left: (lightbox - 1) * lbScrollRef.current.clientWidth, behavior: "smooth" });
+              }
+            }}
             aria-label="Previous"
           >
             &#8249;
           </button>
           <button
             className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white z-20"
-            onClick={() => lightbox < filtered.length - 1 && lbGoTo(lightbox + 1)}
+            onClick={() => {
+              if (lightbox < filtered.length - 1 && lbScrollRef.current) {
+                lbScrollRef.current.scrollTo({ left: (lightbox + 1) * lbScrollRef.current.clientWidth, behavior: "smooth" });
+              }
+            }}
             aria-label="Next"
           >
             &#8250;
@@ -290,26 +249,30 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             {lightbox + 1} / {filtered.length}
           </div>
 
-          {/* Slides container — follows finger */}
+          {/* Scroll-snap container — native swipe */}
           <div
-            className="flex h-full items-center"
+            ref={lbScrollRef}
+            onScroll={handleLbScroll}
+            className="lightbox-scroll flex h-full overflow-x-auto overflow-y-hidden"
             style={{
-              transform: `translateX(calc(-${lightbox * 100}vw + ${lbSwipeOffset}px))`,
-              transition: lbSwipeOffset === 0 && !lbAnimating ? "transform 0.3s ease-out" : lbAnimating ? "transform 0.25s ease-out" : "none",
-              width: `${filtered.length * 100}vw`,
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
             }}
           >
             {filtered.map((photo, i) => (
               <div
                 key={photo._id}
-                className="flex h-full w-screen flex-shrink-0 items-center justify-center px-2 md:px-16"
+                className="flex h-full w-screen flex-shrink-0 items-center justify-center"
+                style={{ scrollSnapAlign: "center" }}
               >
                 <Image
                   src={urlFor(photo.image).width(800).quality(75).auto("format").url()}
                   alt={getAlt(photo)}
                   width={800}
                   height={600}
-                  className="max-h-[88vh] w-auto max-w-full object-contain"
+                  className="max-h-[92vh] w-auto max-w-[100vw] object-contain"
                   sizes="100vw"
                   priority={Math.abs(i - lightbox) <= 1}
                 />
@@ -319,7 +282,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
 
           {/* Title overlay */}
           {filtered[lightbox].title && (
-            <div className="absolute bottom-6 left-0 right-0 z-20 text-center">
+            <div className="absolute bottom-6 left-0 right-0 z-20 text-center pointer-events-none">
               <p className="text-sm text-white/70">{filtered[lightbox].title}</p>
             </div>
           )}
