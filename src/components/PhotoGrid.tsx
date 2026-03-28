@@ -25,6 +25,8 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
 
   const updateScrollArrows = useCallback(() => {
     const el = scrollRef.current;
@@ -45,6 +47,39 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     el.scrollBy({ left: dir * 200, behavior: "smooth" });
     setTimeout(updateScrollArrows, 350);
   }, [updateScrollArrows]);
+
+  // Mouse drag-to-scroll on subcategory bar
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setIsDragging(true);
+    dragStart.current = { x: e.pageX, scrollLeft: el.scrollLeft };
+    el.style.cursor = "grabbing";
+    el.style.userSelect = "none";
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !dragStart.current) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const dx = e.pageX - dragStart.current.x;
+    el.scrollLeft = dragStart.current.scrollLeft - dx;
+  }, [isDragging]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+    dragStart.current = null;
+    const el = scrollRef.current;
+    if (el) {
+      el.style.cursor = "grab";
+      el.style.userSelect = "";
+    }
+    updateScrollArrows();
+  }, [updateScrollArrows]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isDragging) handleMouseUp();
+  }, [isDragging, handleMouseUp]);
 
   // Swipe support for lightbox
   const touchStart = useRef<{ x: number; y: number } | null>(null);
@@ -116,8 +151,12 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           <div
             ref={scrollRef}
             onScroll={updateScrollArrows}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
             className="flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch", cursor: "grab" }}
           >
             <button
               onClick={() => setActiveCategory("all")}
