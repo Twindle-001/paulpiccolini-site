@@ -81,16 +81,28 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     if (isDragging) handleMouseUp();
   }, [isDragging, handleMouseUp]);
 
+  // Filter out null subcategories (must be before lightbox hooks that reference filtered)
+  const validSubcategories = subcategories?.filter(
+    (s): s is string => s !== null && s !== undefined && s !== ""
+  );
+  const hasSubcategories = validSubcategories && validSubcategories.length > 0;
+  const filtered =
+    activeCategory === "all"
+      ? photos
+      : photos.filter((p) => p.subcategory === activeCategory);
+
   // Lightbox scroll-snap: track current slide via native scroll
   const lbScrollRef = useRef<HTMLDivElement>(null);
+  const lightboxOpenRef = useRef(false);
 
   // Scroll to the correct slide when lightbox opens
   useEffect(() => {
-    if (lightbox === null || !lbScrollRef.current) return;
+    const justOpened = lightbox !== null && !lightboxOpenRef.current;
+    lightboxOpenRef.current = lightbox !== null;
+    if (!justOpened || !lbScrollRef.current) return;
     const el = lbScrollRef.current;
-    // Instant scroll to the selected photo (no animation on open)
     el.scrollTo({ left: lightbox * el.clientWidth, behavior: "instant" as ScrollBehavior });
-  }, [lightbox === null]); // only on open/close
+  }, [lightbox]);
 
   // Update lightbox index when user scrolls/swipes
   const handleLbScroll = useCallback(() => {
@@ -101,16 +113,6 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
       setLightbox(idx);
     }
   }, [lightbox, filtered.length]);
-
-  // Filter out null subcategories
-  const validSubcategories = subcategories?.filter(
-    (s): s is string => s !== null && s !== undefined && s !== ""
-  );
-  const hasSubcategories = validSubcategories && validSubcategories.length > 0;
-  const filtered =
-    activeCategory === "all"
-      ? photos
-      : photos.filter((p) => p.subcategory === activeCategory);
 
   return (
     <>
