@@ -81,37 +81,59 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     if (isDragging) handleMouseUp();
   }, [isDragging, handleMouseUp]);
 
-  // Swipe support for lightbox
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
-  const lightboxPrev = useCallback(() => {
-    setLightbox((prev) =>
-      prev !== null ? (prev > 0 ? prev - 1 : photos.length - 1) : null
-    );
-  }, [photos.length]);
+  // Lightbox swipe state
+  const lbTouchStart = useRef<{ x: number; y: number; t: number } | null>(null);
+  const [lbSwipeOffset, setLbSwipeOffset] = useState(0);
+  const [lbAnimating, setLbAnimating] = useState(false);
 
-  const lightboxNext = useCallback(() => {
-    setLightbox((prev) =>
-      prev !== null ? (prev < photos.length - 1 ? prev + 1 : 0) : null
-    );
-  }, [photos.length]);
+  const lbGoTo = useCallback((idx: number) => {
+    setLbAnimating(true);
+    // Animate slide direction
+    const dir = idx > (lightbox ?? 0) ? -1 : 1;
+    setLbSwipeOffset(dir * window.innerWidth);
+    setTimeout(() => {
+      setLightbox(idx);
+      setLbSwipeOffset(0);
+      setLbAnimating(false);
+    }, 250);
+  }, [lightbox]);
 
-  const handleLightboxTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-  }, []);
+  const handleLbTouchStart = useCallback((e: React.TouchEvent) => {
+    if (lbAnimating) return;
+    lbTouchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+  }, [lbAnimating]);
 
-  const handleLightboxTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      if (!touchStart.current) return;
-      const dx = e.changedTouches[0].clientX - touchStart.current.x;
-      const dy = e.changedTouches[0].clientY - touchStart.current.y;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-        if (dx < 0) lightboxNext();
-        else lightboxPrev();
+  const handleLbTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!lbTouchStart.current || lbAnimating) return;
+    const dx = e.touches[0].clientX - lbTouchStart.current.x;
+    const dy = e.touches[0].clientY - lbTouchStart.current.y;
+    // Only swipe horizontally
+    if (Math.abs(dx) > Math.abs(dy)) {
+      setLbSwipeOffset(dx);
+    }
+  }, [lbAnimating]);
+
+  const handleLbTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!lbTouchStart.current || lbAnimating) return;
+    const dx = e.changedTouches[0].clientX - lbTouchStart.current.x;
+    const dy = e.changedTouches[0].clientY - lbTouchStart.current.y;
+    const dt = Date.now() - lbTouchStart.current.t;
+    const velocity = Math.abs(dx) / dt;
+    // Threshold: 40px drag or fast flick
+    const shouldSwipe = (Math.abs(dx) > Math.abs(dy)) && (Math.abs(dx) > 40 || velocity > 0.3);
+    if (shouldSwipe && lightbox !== null) {
+      if (dx < 0 && lightbox < filtered.length - 1) {
+        lbGoTo(lightbox + 1);
+      } else if (dx > 0 && lightbox > 0) {
+        lbGoTo(lightbox - 1);
+      } else {
+        setLbSwipeOffset(0);
       }
-      touchStart.current = null;
-    },
-    [lightboxNext, lightboxPrev]
-  );
+    } else {
+      setLbSwipeOffset(0);
+    }
+    lbTouchStart.current = null;
+  }, [lbAnimating, lightbox, filtered.length, lbGoTo]);
 
   // Filter out null subcategories
   const validSubcategories = subcategories?.filter(
@@ -219,64 +241,77 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           </div>
         ))}
       </div>
-      {/* Lightbox — uses the same image URL already cached from the grid */}
+      {/* Lightbox — full-screen slider */}
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
-          onClick={() => setLightbox(null)}
-          onTouchStart={handleLightboxTouchStart}
-          onTouchEnd={handleLightboxTouchEnd}
+          className="fixed inset-0 z-50 bg-black"
+          onTouchStart={handleLbTouchStart}
+          onTouchMove={handleLbTouchMove}
+          onTouchEnd={handleLbTouchEnd}
         >
+          {/* Close button */}
           <button
-            className="absolute right-4 top-4 p-3 text-2xl text-white/60 hover:text-white md:right-6 md:top-6 z-10"
-            onClick={() => setLightbox(null)}
+            className="absolute right-4 top-4 p-3 text-2xl text-white/60 hover:text-white z-20 md:right-6 md:top-6"
+            onClick={() => { setLbSwipeOffset(0); setLightbox(null); }}
             aria-label="Close"
           >
             &times;
           </button>
-          {/* Prev */}
+
+          {/* Desktop arrows */}
           <button
-            className="absolute left-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:left-4 z-10"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightbox(lightbox > 0 ? lightbox - 1 : filtered.length - 1);
-            }}
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white z-20"
+            onClick={() => lightbox > 0 && lbGoTo(lightbox - 1)}
             aria-label="Previous"
           >
             &#8249;
           </button>
-          {/* Next */}
           <button
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:right-4 z-10"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightbox(lightbox < filtered.length - 1 ? lightbox + 1 : 0);
-            }}
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white z-20"
+            onClick={() => lightbox < filtered.length - 1 && lbGoTo(lightbox + 1)}
             aria-label="Next"
           >
             &#8250;
           </button>
-          <div
-            className="relative max-h-[90vh] max-w-[92vw] md:max-h-[92vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Same src as grid → already in browser cache → instant display */}
-            <Image
-              key={`lb-${filtered[lightbox]._id}`}
-              src={urlFor(filtered[lightbox].image).width(800).quality(75).auto("format").url()}
-              alt={getAlt(filtered[lightbox])}
-              width={800}
-              height={600}
-              className="max-h-[90vh] w-auto object-contain md:max-h-[92vh]"
-              sizes="92vw"
-              priority
-            />
-            {filtered[lightbox].title && (
-              <p className="mt-4 text-center text-sm text-white/70">
-                {filtered[lightbox].title}
-              </p>
-            )}
+
+          {/* Slide counter */}
+          <div className="absolute top-5 left-1/2 -translate-x-1/2 z-20 text-xs text-white/40">
+            {lightbox + 1} / {filtered.length}
           </div>
+
+          {/* Slides container — follows finger */}
+          <div
+            className="flex h-full items-center"
+            style={{
+              transform: `translateX(calc(-${lightbox * 100}vw + ${lbSwipeOffset}px))`,
+              transition: lbSwipeOffset === 0 && !lbAnimating ? "transform 0.3s ease-out" : lbAnimating ? "transform 0.25s ease-out" : "none",
+              width: `${filtered.length * 100}vw`,
+            }}
+          >
+            {filtered.map((photo, i) => (
+              <div
+                key={photo._id}
+                className="flex h-full w-screen flex-shrink-0 items-center justify-center px-2 md:px-16"
+              >
+                <Image
+                  src={urlFor(photo.image).width(800).quality(75).auto("format").url()}
+                  alt={getAlt(photo)}
+                  width={800}
+                  height={600}
+                  className="max-h-[88vh] w-auto max-w-full object-contain"
+                  sizes="100vw"
+                  priority={Math.abs(i - lightbox) <= 1}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Title overlay */}
+          {filtered[lightbox].title && (
+            <div className="absolute bottom-6 left-0 right-0 z-20 text-center">
+              <p className="text-sm text-white/70">{filtered[lightbox].title}</p>
+            </div>
+          )}
         </div>
       )}
     </>
