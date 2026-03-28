@@ -56,7 +56,8 @@ function LightboxImage({
         src={buildSrc(photo.image, 800, QUALITY.gallery)}
         alt={getAlt(photo)}
         decoding="sync"
-        className="max-h-[92vh] w-auto max-w-full object-contain"
+        className={`block max-h-[92vh] w-auto max-w-full border-0 object-contain ${hiResLoaded ? "invisible" : ""}`}
+        style={{ transition: "none" }}
       />
       {/* High-res: positioned on top, fades in once loaded */}
       {hiResLoaded && (
@@ -65,8 +66,9 @@ function LightboxImage({
           srcSet={buildSrcSet(photo.image, QUALITY.lightbox, 1920)}
           alt={getAlt(photo)}
           decoding="async"
-          className="absolute inset-0 m-auto max-h-[92vh] w-auto max-w-full object-contain animate-fade-in"
+          className="absolute inset-0 m-auto block max-h-[92vh] w-auto max-w-full border-0 object-contain animate-fade-in"
           sizes="100vw"
+          style={{ outline: "none", boxShadow: "none", transition: "none" }}
         />
       )}
     </div>
