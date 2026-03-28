@@ -282,7 +282,7 @@ return (
               ? "Contact me to discuss your custom project. I'll be happy to find the best solution for your needs."
               : "Contactez-moi pour discuter de votre projet personnalisé. Je serai heureux de trouver la meilleure solution pour vos besoins.")}
         </p>
-        <Link href="/booking" className="btn-accent mt-8 inline-block">
+        <Link href="/contact" className="btn-accent mt-8 inline-block">
           {locale === "en" ? "Get in touch" : "Me contacter"}
         </Link>
       </section>
