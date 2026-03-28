@@ -129,6 +129,7 @@ export default function HomePage() {
                 src={urlFor(homePage.profileImage).width(800).quality(75).auto("format").url()}
                 alt={settings?.name || "Paul Piccolini"}
                 fill
+                loading="lazy"
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
@@ -193,6 +194,7 @@ export default function HomePage() {
                     src={urlFor(cat.coverImage).width(800).height(1067).quality(75).auto("format").url()}
                     alt={typeof cat.title === "string" ? cat.title : (localize(cat.title, locale) as string)}
                     fill
+                    loading="lazy"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   />
@@ -226,6 +228,7 @@ export default function HomePage() {
                 src={urlFor(homePage.servicesImage).width(800).height(450).quality(75).auto("format").url()}
                 alt="Paris Photoshoot"
                 fill
+                loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
@@ -263,6 +266,7 @@ export default function HomePage() {
                   src={urlFor(homePage.servicesOnRequestImage).width(800).height(600).quality(75).auto("format").url()}
                   alt="Services sur demande"
                   fill
+                  loading="lazy"
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
@@ -325,6 +329,7 @@ export default function HomePage() {
                         src={urlFor(print.image).width(600).height(600).quality(75).auto("format").url()}
                         alt={print.title}
                         fill
+                        loading="lazy"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />

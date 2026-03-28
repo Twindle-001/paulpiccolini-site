@@ -122,6 +122,8 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
               fill
               className="object-cover"
               priority={i === 0}
+              fetchPriority={i === 0 ? "high" : "low"}
+              loading={i === 0 ? "eager" : "lazy"}
               sizes="100vw"
             />
           ) : (

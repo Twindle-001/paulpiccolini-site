@@ -109,6 +109,8 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
       <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
