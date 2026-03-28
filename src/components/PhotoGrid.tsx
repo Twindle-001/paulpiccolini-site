@@ -6,10 +6,9 @@ import { urlFor } from "@/sanity/image";
 import type { SanityPhoto } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
 
-/** Get lightbox URL — smaller on mobile */
-function getLightboxUrl(photo: SanityPhoto, isMobile: boolean) {
-  const w = isMobile ? 1000 : 1600;
-  return urlFor(photo.image).width(w).quality(isMobile ? 75 : 80).auto("format").url();
+/** Get lightbox URL — full quality on all devices */
+function getLightboxUrl(photo: SanityPhoto) {
+  return urlFor(photo.image).width(1600).quality(85).auto("format").url();
 }
 
 /** Get thumbnail URL (already cached from grid) */
@@ -259,28 +258,28 @@ function LightboxOverlay({
   onTouchEnd: (e: React.TouchEvent) => void;
 }) {
   const [hdLoaded, setHdLoaded] = useState(false);
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   const photo = filtered[lightbox];
   const thumbSrc = getThumbUrl(photo);
-  const hdSrc = getLightboxUrl(photo, isMobile);
+  const hdSrc = getLightboxUrl(photo);
 
   // Reset HD loaded state when switching photos
   useEffect(() => {
     setHdLoaded(false);
   }, [lightbox]);
 
-  // Preload adjacent images
+  // Preload adjacent images (prev, next, and next+1)
   useEffect(() => {
     const preloadIndexes = [
       (lightbox + 1) % filtered.length,
+      (lightbox + 2) % filtered.length,
       (lightbox - 1 + filtered.length) % filtered.length,
     ];
     preloadIndexes.forEach((idx) => {
       const img = new window.Image();
-      img.src = getLightboxUrl(filtered[idx], isMobile);
+      img.src = getLightboxUrl(filtered[idx]);
     });
-  }, [lightbox, filtered, isMobile]);
+  }, [lightbox, filtered]);
 
   return (
     <div
