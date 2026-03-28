@@ -50,24 +50,22 @@ function LightboxImage({
   }, [photo._id]);
 
   return (
-    <div className="relative flex items-center justify-center max-h-[92vh] max-w-full">
-      {/* Low-res: the gallery thumbnail already cached by the browser — shows instantly */}
+    <div className="relative flex items-center justify-center">
+      {/* Low-res: the gallery thumbnail already cached by the browser — always visible as base layer */}
       <img
         src={buildSrc(photo.image, 800, QUALITY.gallery)}
         alt={getAlt(photo)}
         decoding="sync"
-        className={`max-h-[92vh] w-auto max-w-full object-contain transition-opacity duration-300 ${
-          hiResLoaded ? "opacity-0 absolute inset-0 h-full w-full" : "opacity-100"
-        }`}
+        className="max-h-[92vh] w-auto max-w-full object-contain"
       />
-      {/* High-res: fades in once loaded */}
+      {/* High-res: positioned on top, fades in once loaded */}
       {hiResLoaded && (
         <img
           src={buildSrc(photo.image, 1200, QUALITY.lightbox)}
           srcSet={buildSrcSet(photo.image, QUALITY.lightbox, 1920)}
           alt={getAlt(photo)}
           decoding="async"
-          className="max-h-[92vh] w-auto max-w-full object-contain animate-fade-in"
+          className="absolute inset-0 m-auto max-h-[92vh] w-auto max-w-full object-contain animate-fade-in"
           sizes="100vw"
         />
       )}
