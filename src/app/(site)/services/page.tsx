@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor, getHotspot } from "@/sanity/image";
+import { urlFor, getHotspot, buildSrc, buildSrcSet, QUALITY } from "@/sanity/image";
 import { servicesQuery, servicesPageQuery } from "@/sanity/queries";
 import type { SanityService, SanityServicesPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -81,18 +81,23 @@ return (
         {servicesPage?.bannerImage ? (
           <>
             <img
-              src={urlFor(servicesPage.bannerImage).width(1920).height(400).fit("crop").quality(85).url()}
+              src={urlFor(servicesPage.bannerImage).width(1920).height(400).fit("crop").quality(QUALITY.banner).auto("format").url()}
+              srcSet={[1080, 1200, 1920, 2048].map(w =>
+                `${urlFor(servicesPage.bannerImage).width(w).height(Math.round(400 * w / 1920)).fit("crop").quality(QUALITY.banner).auto("format").url()} ${w}w`
+              ).join(", ")}
               alt="Services"
+              sizes="100vw"
+              decoding="async"
               className="hidden sm:block w-full h-auto"
             />
-            <Image
-              src={urlFor(servicesPage.bannerImageMobile || servicesPage.bannerImage).width(800).quality(85).url()}
+            <img
+              src={buildSrc(servicesPage.bannerImageMobile || servicesPage.bannerImage, 800, QUALITY.banner)}
+              srcSet={buildSrcSet(servicesPage.bannerImageMobile || servicesPage.bannerImage, QUALITY.banner, 828)}
               alt="Services"
-              fill
-              className="object-cover sm:hidden"
-              style={{ objectPosition: getHotspot(servicesPage.bannerImageMobile || servicesPage.bannerImage) }}
-              priority
               sizes="100vw"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover sm:hidden"
+              style={{ objectPosition: getHotspot(servicesPage.bannerImageMobile || servicesPage.bannerImage) }}
             />
           </>
         ) : (
@@ -194,7 +199,7 @@ return (
                   <div key={i}>
                     {(() => {
                       const imgSrc = item.image
-                        ? urlFor(item.image).width(600).height(600).quality(75).auto("format").url()
+                        ? buildSrc(item.image, 600, QUALITY.portfolio)
                         : philosophyFallbackImages[i];
                       return imgSrc ? (
                         <div className="hidden md:block relative aspect-square overflow-hidden rounded mb-6">

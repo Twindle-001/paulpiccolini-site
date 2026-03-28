@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, buildSrc, buildSrcSet, QUALITY } from "@/sanity/image";
 import { blogPostsQuery } from "@/sanity/queries";
 import type { SanityBlogPost } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -62,14 +62,13 @@ export default function BlogPage() {
               >
                 {post.coverImage && (
                   <div className="relative aspect-video overflow-hidden bg-brand-darker">
-                    <Image
-                      src={urlFor(post.coverImage)
-                        .width(600)
-                        .height(400)
-                        .url()}
+                    <img
+                      src={buildSrc(post.coverImage, 600, QUALITY.portfolio)}
+                      srcSet={buildSrcSet(post.coverImage, QUALITY.portfolio, 1200)}
                       alt={String(localize(post.title, locale) || "Article")}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>

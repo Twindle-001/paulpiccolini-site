@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "@/sanity/image";
+import { urlFor, buildSrcSet, buildSrc, QUALITY } from "@/sanity/image";
 import type { SanityHeroSlide } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
 import { localize } from "@/lib/localize";
@@ -116,15 +116,16 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
           }`}
         >
           {slide.image ? (
-            <Image
-              src={urlFor(slide.image).width(1920).quality(75).auto("format").url()}
+            <img
+              src={buildSrc(slide.image, 1920, QUALITY.hero)}
+              srcSet={buildSrcSet(slide.image, QUALITY.hero)}
               alt={String(localize(slide.title, locale) || "Slide")}
-              fill
-              className="object-cover"
-              priority={i === 0}
-              fetchPriority={i === 0 ? "high" : "low"}
-              loading={i === 0 ? "eager" : "lazy"}
               sizes="100vw"
+              // @ts-expect-error — fetchpriority is a valid HTML attribute, TS types lag behind
+              fetchpriority={i === 0 ? "high" : "low"}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             <div className="absolute inset-0 bg-brand-dark" />

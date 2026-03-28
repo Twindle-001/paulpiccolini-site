@@ -4,7 +4,7 @@ import Link from "next/link";
 import PhotoGrid from "@/components/PhotoGrid";
 import { LocaleString, T } from "@/components/LocaleText";
 import { client } from "@/sanity/client";
-import { urlFor, getHotspot } from "@/sanity/image";
+import { urlFor, getHotspot, buildSrc, buildSrcSet, QUALITY } from "@/sanity/image";
 import {
   categoryBySlugQuery,
   photosByCategoryQuery,
@@ -172,19 +172,24 @@ export default async function CategoryPage({
             <>
               {/* Desktop: fixed crop, scales proportionally — cadrage ne change jamais */}
               <img
-                src={urlFor(desktopImg).width(1920).height(400).fit("crop").quality(85).url()}
+                src={urlFor(desktopImg).width(1920).height(400).fit("crop").quality(QUALITY.banner).auto("format").url()}
+                srcSet={[1080, 1200, 1920, 2048].map(w =>
+                  `${urlFor(desktopImg).width(w).height(Math.round(400 * w / 1920)).fit("crop").quality(QUALITY.banner).auto("format").url()} ${w}w`
+                ).join(", ")}
                 alt={altText}
+                sizes="100vw"
+                decoding="async"
                 className="hidden sm:block w-full h-auto"
               />
               {/* Mobile: fills 40vh container with hotspot positioning */}
-              <Image
-                src={urlFor(mobileImg).width(800).quality(85).url()}
+              <img
+                src={buildSrc(mobileImg, 800, QUALITY.banner)}
+                srcSet={buildSrcSet(mobileImg, QUALITY.banner, 828)}
                 alt={altText}
-                fill
-                className="object-cover sm:hidden"
-                style={{ objectPosition: getHotspot(mobileImg) }}
-                priority
                 sizes="100vw"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover sm:hidden"
+                style={{ objectPosition: getHotspot(mobileImg) }}
               />
             </>
           );

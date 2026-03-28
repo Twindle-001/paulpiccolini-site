@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PortableText } from "next-sanity";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, buildSrc, buildSrcSet, QUALITY } from "@/sanity/image";
 import { blogPostBySlugQuery } from "@/sanity/queries";
 import type { SanityBlogPost } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -56,12 +56,12 @@ export default function BlogPostContent({ slug }: BlogPostContentProps) {
       {/* Hero with cover image */}
       {post.coverImage && (
         <section className="relative h-[50vh] overflow-hidden">
-          <Image
-            src={urlFor(post.coverImage).width(1920).height(1080).quality(75).auto("format").url()}
-            alt={localize(post.title, locale) || "Article"}
-            fill
-            className="object-cover"
-            priority
+          <img
+            src={buildSrc(post.coverImage, 1920, QUALITY.hero)}
+            srcSet={buildSrcSet(post.coverImage, QUALITY.hero)}
+            alt={String(localize(post.title, locale) || "Article")}
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-black/60" />

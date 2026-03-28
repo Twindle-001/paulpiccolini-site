@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { urlFor } from "@/sanity/image";
+import { urlFor, buildSrcSet, buildSrc, QUALITY } from "@/sanity/image";
 import type { SanityPhoto } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -185,19 +185,22 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           >
             {/* Mobile: fixed aspect ratio | Desktop: natural proportions */}
             <div className="relative aspect-[3/4] sm:hidden">
-              <Image
-                src={urlFor(photo.image).width(800).height(1067).quality(75).auto("format").url()}
+              <img
+                src={buildSrc(photo.image, 640, QUALITY.gallery)}
+                srcSet={buildSrcSet(photo.image, QUALITY.gallery, 828)}
                 alt={getAlt(photo)}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="50vw"
               />
             </div>
-            <Image
-              src={urlFor(photo.image).width(800).quality(75).auto("format").url()}
+            <img
+              src={buildSrc(photo.image, 800, QUALITY.gallery)}
+              srcSet={buildSrcSet(photo.image, QUALITY.gallery, 1200)}
               alt={getAlt(photo)}
-              width={800}
-              height={600}
+              loading="lazy"
+              decoding="async"
               className="hidden sm:block w-full transition-transform duration-700 group-hover:scale-105"
               sizes="(max-width: 1024px) 50vw, 33vw"
             />
@@ -269,14 +272,14 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
                 className="flex h-full w-screen flex-shrink-0 items-center justify-center px-4 md:px-16"
                 style={{ scrollSnapAlign: "center" }}
               >
-                <Image
-                  src={urlFor(photo.image).width(800).quality(75).auto("format").url()}
+                <img
+                  src={buildSrc(photo.image, 1920, QUALITY.lightbox)}
+                  srcSet={buildSrcSet(photo.image, QUALITY.lightbox)}
                   alt={getAlt(photo)}
-                  width={800}
-                  height={600}
+                  loading={Math.abs(i - lightbox) <= 1 ? "eager" : "lazy"}
+                  decoding="async"
                   className="max-h-[92vh] w-auto max-w-full object-contain"
                   sizes="100vw"
-                  priority={Math.abs(i - lightbox) <= 1}
                 />
               </div>
             ))}

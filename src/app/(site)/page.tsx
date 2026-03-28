@@ -6,7 +6,7 @@ import { PortableText } from "next-sanity";
 import { useEffect, useState } from "react";
 import HeroSlider from "@/components/HeroSlider";
 import { client } from "@/sanity/client";
-import { urlFor } from "@/sanity/image";
+import { urlFor, buildSrcSet, buildSrc, QUALITY } from "@/sanity/image";
 import {
   siteSettingsQuery,
   heroSlidesQuery,
@@ -125,12 +125,13 @@ export default function HomePage() {
           {/* Portrait image */}
           <div className="relative aspect-square overflow-hidden">
             {homePage?.profileImage ? (
-              <Image
-                src={urlFor(homePage.profileImage).width(800).quality(75).auto("format").url()}
+              <img
+                src={buildSrc(homePage.profileImage, 800, QUALITY.profile)}
+                srcSet={buildSrcSet(homePage.profileImage, QUALITY.profile, 1200)}
                 alt={settings?.name || "Paul Piccolini"}
-                fill
                 loading="lazy"
-                className="object-cover"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
@@ -190,12 +191,13 @@ export default function HomePage() {
                 style={{ animationDelay: `${i * 150}ms` }}
               >
                 {cat.coverImage ? (
-                  <Image
-                    src={urlFor(cat.coverImage).width(800).height(1067).quality(75).auto("format").url()}
+                  <img
+                    src={buildSrc(cat.coverImage, 800, QUALITY.portfolio)}
+                    srcSet={buildSrcSet(cat.coverImage, QUALITY.portfolio, 1200)}
                     alt={typeof cat.title === "string" ? cat.title : (localize(cat.title, locale) as string)}
-                    fill
                     loading="lazy"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   />
                 ) : (
@@ -224,12 +226,13 @@ export default function HomePage() {
           {/* Photoshoot */}
           <div className="group relative aspect-video overflow-hidden">
             {homePage?.servicesImage ? (
-              <Image
-                src={urlFor(homePage.servicesImage).width(800).height(450).quality(75).auto("format").url()}
+              <img
+                src={buildSrc(homePage.servicesImage, 800, QUALITY.portfolio)}
+                srcSet={buildSrcSet(homePage.servicesImage, QUALITY.portfolio, 1200)}
                 alt="Paris Photoshoot"
-                fill
                 loading="lazy"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
@@ -262,12 +265,13 @@ export default function HomePage() {
           <div className="relative flex flex-col justify-center overflow-hidden rounded border border-white/5 bg-brand-dark p-10">
             {homePage?.servicesOnRequestImage && (
               <>
-                <Image
-                  src={urlFor(homePage.servicesOnRequestImage).width(800).height(600).quality(75).auto("format").url()}
+                <img
+                  src={buildSrc(homePage.servicesOnRequestImage, 800, QUALITY.portfolio)}
+                  srcSet={buildSrcSet(homePage.servicesOnRequestImage, QUALITY.portfolio, 1200)}
                   alt="Services sur demande"
-                  fill
                   loading="lazy"
-                  className="object-cover"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-black/60" />
@@ -325,12 +329,13 @@ export default function HomePage() {
                 >
                   {print.image && (
                     <div className="relative aspect-square overflow-hidden bg-brand-darker">
-                      <Image
-                        src={urlFor(print.image).width(600).height(600).quality(75).auto("format").url()}
+                      <img
+                        src={buildSrc(print.image, 600, QUALITY.print)}
+                        srcSet={buildSrcSet(print.image, QUALITY.print, 1200)}
                         alt={print.title}
-                        fill
                         loading="lazy"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>

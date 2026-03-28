@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/client";
-import { urlFor, getHotspot } from "@/sanity/image";
+import { urlFor, getHotspot, buildSrc, buildSrcSet, QUALITY } from "@/sanity/image";
 import { printsQuery, printsPageQuery } from "@/sanity/queries";
 import type { SanityPrint, SanityPrintsPage } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -79,18 +79,23 @@ export default function PrintsPage() {
         {pageData?.bannerImage ? (
           <>
             <img
-              src={urlFor(pageData.bannerImage).width(1920).height(400).fit("crop").quality(85).url()}
+              src={urlFor(pageData.bannerImage).width(1920).height(400).fit("crop").quality(QUALITY.banner).auto("format").url()}
+              srcSet={[1080, 1200, 1920, 2048].map(w =>
+                `${urlFor(pageData.bannerImage).width(w).height(Math.round(400 * w / 1920)).fit("crop").quality(QUALITY.banner).auto("format").url()} ${w}w`
+              ).join(", ")}
               alt={String(heading)}
+              sizes="100vw"
+              decoding="async"
               className="hidden sm:block w-full h-auto"
             />
-            <Image
-              src={urlFor(pageData.bannerImageMobile || pageData.bannerImage).width(800).quality(85).url()}
+            <img
+              src={buildSrc(pageData.bannerImageMobile || pageData.bannerImage, 800, QUALITY.banner)}
+              srcSet={buildSrcSet(pageData.bannerImageMobile || pageData.bannerImage, QUALITY.banner, 828)}
               alt={String(heading)}
-              fill
-              className="object-cover sm:hidden"
-              style={{ objectPosition: getHotspot(pageData.bannerImageMobile || pageData.bannerImage) }}
-              priority
               sizes="100vw"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover sm:hidden"
+              style={{ objectPosition: getHotspot(pageData.bannerImageMobile || pageData.bannerImage) }}
             />
             <div className="absolute inset-0 bg-black/60" />
           </>
@@ -140,11 +145,13 @@ export default function PrintsPage() {
             >
               {print.image && (
                 <div className="relative aspect-square overflow-hidden bg-brand-darker">
-                  <Image
-                    src={urlFor(print.image).width(600).height(600).quality(75).auto("format").url()}
+                  <img
+                    src={buildSrc(print.image, 600, QUALITY.print)}
+                    srcSet={buildSrcSet(print.image, QUALITY.print, 1200)}
                     alt={print.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
