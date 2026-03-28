@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    unoptimized: false,
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
