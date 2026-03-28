@@ -85,6 +85,8 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
   const lbTouchStart = useRef<{ x: number; y: number; t: number } | null>(null);
   const [lbSwipeOffset, setLbSwipeOffset] = useState(0);
   const [lbAnimating, setLbAnimating] = useState(false);
+  const lbRef = useRef<HTMLDivElement>(null);
+  const lbSwipeOffsetRef = useRef(0); // mirror for native listener
 
   const lbGoTo = useCallback((idx: number) => {
     setLbAnimating(true);
@@ -103,15 +105,23 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     lbTouchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
   }, [lbAnimating]);
 
-  const handleLbTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!lbTouchStart.current || lbAnimating) return;
-    const dx = e.touches[0].clientX - lbTouchStart.current.x;
-    const dy = e.touches[0].clientY - lbTouchStart.current.y;
-    // Only swipe horizontally
-    if (Math.abs(dx) > Math.abs(dy)) {
-      setLbSwipeOffset(dx);
-    }
-  }, [lbAnimating]);
+  // Attach native touchmove with { passive: false } so preventDefault works
+  useEffect(() => {
+    const el = lbRef.current;
+    if (!el) return;
+    const onTouchMove = (e: TouchEvent) => {
+      if (!lbTouchStart.current || lbAnimating) return;
+      const dx = e.touches[0].clientX - lbTouchStart.current.x;
+      const dy = e.touches[0].clientY - lbTouchStart.current.y;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        e.preventDefault();
+        lbSwipeOffsetRef.current = dx;
+        setLbSwipeOffset(dx);
+      }
+    };
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMove);
+  }, [lightbox, lbAnimating]);
 
   const handleLbTouchEnd = useCallback((e: React.TouchEvent) => {
     if (!lbTouchStart.current || lbAnimating) return;
@@ -244,9 +254,10 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
       {/* Lightbox — full-screen slider */}
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black"
+          ref={lbRef}
+          className="fixed inset-0 z-50 overflow-hidden bg-black"
+          style={{ touchAction: "none" }}
           onTouchStart={handleLbTouchStart}
-          onTouchMove={handleLbTouchMove}
           onTouchEnd={handleLbTouchEnd}
         >
           {/* Close button */}
