@@ -126,7 +126,7 @@ export default function HomePage() {
           <div className="relative aspect-square overflow-hidden">
             {homePage?.profileImage ? (
               <Image
-                src={urlFor(homePage.profileImage).width(800).url()}
+                src={urlFor(homePage.profileImage).width(800).quality(75).auto("format").url()}
                 alt={settings?.name || "Paul Piccolini"}
                 fill
                 className="object-cover"
@@ -190,7 +190,7 @@ export default function HomePage() {
               >
                 {cat.coverImage ? (
                   <Image
-                    src={urlFor(cat.coverImage).width(800).height(1067).url()}
+                    src={urlFor(cat.coverImage).width(800).height(1067).quality(75).auto("format").url()}
                     alt={typeof cat.title === "string" ? cat.title : (localize(cat.title, locale) as string)}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -223,7 +223,7 @@ export default function HomePage() {
           <div className="group relative aspect-video overflow-hidden">
             {homePage?.servicesImage ? (
               <Image
-                src={urlFor(homePage.servicesImage).width(800).height(450).url()}
+                src={urlFor(homePage.servicesImage).width(800).height(450).quality(75).auto("format").url()}
                 alt="Paris Photoshoot"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -260,7 +260,7 @@ export default function HomePage() {
             {homePage?.servicesOnRequestImage && (
               <>
                 <Image
-                  src={urlFor(homePage.servicesOnRequestImage).width(800).height(600).url()}
+                  src={urlFor(homePage.servicesOnRequestImage).width(800).height(600).quality(75).auto("format").url()}
                   alt="Services sur demande"
                   fill
                   className="object-cover"
@@ -322,7 +322,7 @@ export default function HomePage() {
                   {print.image && (
                     <div className="relative aspect-square overflow-hidden bg-brand-darker">
                       <Image
-                        src={urlFor(print.image).width(600).height(600).url()}
+                        src={urlFor(print.image).width(600).height(600).quality(75).auto("format").url()}
                         alt={print.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"

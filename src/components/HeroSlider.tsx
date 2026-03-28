@@ -117,7 +117,7 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
         >
           {slide.image ? (
             <Image
-              src={urlFor(slide.image).width(1920).auto("format").url()}
+              src={urlFor(slide.image).width(1920).quality(75).auto("format").url()}
               alt={String(localize(slide.title, locale) || "Slide")}
               fill
               className="object-cover"

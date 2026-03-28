@@ -57,7 +57,7 @@ export default function BlogPostContent({ slug }: BlogPostContentProps) {
       {post.coverImage && (
         <section className="relative h-[50vh] overflow-hidden">
           <Image
-            src={urlFor(post.coverImage).width(1920).height(1080).url()}
+            src={urlFor(post.coverImage).width(1920).height(1080).quality(75).auto("format").url()}
             alt={localize(post.title, locale) || "Article"}
             fill
             className="object-cover"

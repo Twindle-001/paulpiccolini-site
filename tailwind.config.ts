@@ -18,8 +18,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ['"Playfair Display"', "Georgia", "serif"],
-        body: ['"Inter"', '"Open Sans"', "sans-serif"],
+        heading: ["var(--font-playfair)", '"Playfair Display"', "Georgia", "serif"],
+        body: ["var(--font-inter)", '"Inter"', '"Open Sans"', "sans-serif"],
       },
       letterSpacing: {
         menu: "0.15em",

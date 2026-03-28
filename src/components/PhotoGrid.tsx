@@ -195,7 +195,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             {/* Mobile: fixed aspect ratio | Desktop: natural proportions */}
             <div className="relative aspect-[3/4] sm:hidden">
               <Image
-                src={urlFor(photo.image).width(800).height(1067).url()}
+                src={urlFor(photo.image).width(800).height(1067).quality(75).auto("format").url()}
                 alt={getAlt(photo)}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -203,7 +203,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
               />
             </div>
             <Image
-              src={urlFor(photo.image).width(800).url()}
+              src={urlFor(photo.image).width(800).quality(75).auto("format").url()}
               alt={getAlt(photo)}
               width={800}
               height={600}
@@ -264,7 +264,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={urlFor(filtered[lightbox].image).width(1600).url()}
+              src={urlFor(filtered[lightbox].image).width(1600).quality(80).auto("format").url()}
               alt={getAlt(filtered[lightbox])}
               width={1600}
               height={1200}

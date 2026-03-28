@@ -141,7 +141,7 @@ export default function PrintsPage() {
               {print.image && (
                 <div className="relative aspect-square overflow-hidden bg-brand-darker">
                   <Image
-                    src={urlFor(print.image).width(600).height(600).url()}
+                    src={urlFor(print.image).width(600).height(600).quality(75).auto("format").url()}
                     alt={print.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"

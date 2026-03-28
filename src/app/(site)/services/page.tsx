@@ -194,7 +194,7 @@ return (
                   <div key={i}>
                     {(() => {
                       const imgSrc = item.image
-                        ? urlFor(item.image).width(600).height(600).url()
+                        ? urlFor(item.image).width(600).height(600).quality(75).auto("format").url()
                         : philosophyFallbackImages[i];
                       return imgSrc ? (
                         <div className="hidden md:block relative aspect-square overflow-hidden rounded mb-6">
