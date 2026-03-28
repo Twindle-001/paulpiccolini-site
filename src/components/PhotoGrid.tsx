@@ -1,20 +1,10 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect, useMemo } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/image";
 import type { SanityPhoto } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
-
-/** Get lightbox URL — full quality on all devices */
-function getLightboxUrl(photo: SanityPhoto) {
-  return urlFor(photo.image).width(1600).quality(85).auto("format").url();
-}
-
-/** Get thumbnail URL (already cached from grid) */
-function getThumbUrl(photo: SanityPhoto) {
-  return urlFor(photo.image).width(800).quality(75).auto("format").url();
-}
 
 interface PhotoGridProps {
   photos: SanityPhoto[];
@@ -229,138 +219,66 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
           </div>
         ))}
       </div>
-      {/* Lightbox */}
+      {/* Lightbox — uses the same image URL already cached from the grid */}
       {lightbox !== null && (
-        <LightboxOverlay
-          filtered={filtered}
-          lightbox={lightbox}
-          setLightbox={setLightbox}
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+          onClick={() => setLightbox(null)}
           onTouchStart={handleLightboxTouchStart}
           onTouchEnd={handleLightboxTouchEnd}
-        />
+        >
+          <button
+            className="absolute right-4 top-4 p-3 text-2xl text-white/60 hover:text-white md:right-6 md:top-6 z-10"
+            onClick={() => setLightbox(null)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          {/* Prev */}
+          <button
+            className="absolute left-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:left-4 z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox(lightbox > 0 ? lightbox - 1 : filtered.length - 1);
+            }}
+            aria-label="Previous"
+          >
+            &#8249;
+          </button>
+          {/* Next */}
+          <button
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:right-4 z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightbox(lightbox < filtered.length - 1 ? lightbox + 1 : 0);
+            }}
+            aria-label="Next"
+          >
+            &#8250;
+          </button>
+          <div
+            className="relative max-h-[90vh] max-w-[92vw] md:max-h-[92vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Same src as grid → already in browser cache → instant display */}
+            <Image
+              key={`lb-${filtered[lightbox]._id}`}
+              src={urlFor(filtered[lightbox].image).width(800).quality(75).auto("format").url()}
+              alt={getAlt(filtered[lightbox])}
+              width={800}
+              height={600}
+              className="max-h-[90vh] w-auto object-contain md:max-h-[92vh]"
+              sizes="92vw"
+              priority
+            />
+            {filtered[lightbox].title && (
+              <p className="mt-4 text-center text-sm text-white/70">
+                {filtered[lightbox].title}
+              </p>
+            )}
+          </div>
+        </div>
       )}
     </>
-  );
-}
-
-/** Lightbox with progressive loading: shows cached thumbnail instantly, loads HD on top */
-function LightboxOverlay({
-  filtered,
-  lightbox,
-  setLightbox,
-  onTouchStart,
-  onTouchEnd,
-}: {
-  filtered: SanityPhoto[];
-  lightbox: number;
-  setLightbox: (v: number | null) => void;
-  onTouchStart: (e: React.TouchEvent) => void;
-  onTouchEnd: (e: React.TouchEvent) => void;
-}) {
-  const [hdLoaded, setHdLoaded] = useState(false);
-
-  const photo = filtered[lightbox];
-  const thumbSrc = getThumbUrl(photo);
-  const hdSrc = getLightboxUrl(photo);
-
-  // Reset HD loaded state when switching photos
-  useEffect(() => {
-    setHdLoaded(false);
-  }, [lightbox]);
-
-  // Preload adjacent images (prev, next, and next+1)
-  useEffect(() => {
-    const preloadIndexes = [
-      (lightbox + 1) % filtered.length,
-      (lightbox + 2) % filtered.length,
-      (lightbox - 1 + filtered.length) % filtered.length,
-    ];
-    preloadIndexes.forEach((idx) => {
-      const img = new window.Image();
-      img.src = getLightboxUrl(filtered[idx]);
-    });
-  }, [lightbox, filtered]);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
-      onClick={() => setLightbox(null)}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
-      <button
-        className="absolute right-4 top-4 p-3 text-2xl text-white/60 hover:text-white md:right-6 md:top-6 z-10"
-        onClick={() => setLightbox(null)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
-      {/* Prev */}
-      <button
-        className="absolute left-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:left-4 z-10"
-        onClick={(e) => {
-          e.stopPropagation();
-          setLightbox(lightbox > 0 ? lightbox - 1 : filtered.length - 1);
-        }}
-        aria-label="Previous"
-      >
-        &#8249;
-      </button>
-      {/* Next */}
-      <button
-        className="absolute right-2 top-1/2 -translate-y-1/2 p-4 text-3xl text-white/40 hover:text-white md:right-4 z-10"
-        onClick={(e) => {
-          e.stopPropagation();
-          setLightbox(lightbox < filtered.length - 1 ? lightbox + 1 : 0);
-        }}
-        aria-label="Next"
-      >
-        &#8250;
-      </button>
-      <div
-        className="relative max-h-[85vh] max-w-[90vw] md:max-h-[90vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Loading spinner — visible until HD loads */}
-        {!hdLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-            <div className="w-8 h-8 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
-          </div>
-        )}
-        {/* Thumbnail (already in browser cache — displays instantly) */}
-        <Image
-          key={`thumb-${lightbox}`}
-          src={thumbSrc}
-          alt={getAlt(photo)}
-          width={800}
-          height={600}
-          className={`max-h-[85vh] w-auto object-contain md:max-h-[90vh] transition-opacity duration-300 ${
-            hdLoaded ? "opacity-0 absolute inset-0" : "opacity-100"
-          }`}
-          sizes="90vw"
-          priority
-        />
-        {/* HD image (loads on top, fades in when ready) */}
-        <Image
-          key={`hd-${lightbox}`}
-          src={hdSrc}
-          alt={getAlt(photo)}
-          width={1600}
-          height={1200}
-          className={`max-h-[85vh] w-auto object-contain md:max-h-[90vh] transition-opacity duration-300 ${
-            hdLoaded ? "opacity-100" : "opacity-0 absolute inset-0"
-          }`}
-          sizes="90vw"
-          onLoad={() => setHdLoaded(true)}
-          priority
-        />
-        {/* Title */}
-        {photo.title && (
-          <p className="mt-4 text-center text-sm text-white/70">
-            {photo.title}
-          </p>
-        )}
-      </div>
-    </div>
   );
 }
