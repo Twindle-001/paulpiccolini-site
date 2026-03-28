@@ -146,7 +146,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
-            className="flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1"
+            className="flex flex-nowrap justify-center overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch", cursor: "grab" }}
           >
             <button
@@ -266,7 +266,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             {filtered.map((photo, i) => (
               <div
                 key={photo._id}
-                className="flex h-full w-screen flex-shrink-0 items-center justify-center"
+                className="flex h-full w-screen flex-shrink-0 items-center justify-center px-4 md:px-16"
                 style={{ scrollSnapAlign: "center" }}
               >
                 <Image
@@ -274,7 +274,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
                   alt={getAlt(photo)}
                   width={800}
                   height={600}
-                  className="max-h-[92vh] w-auto max-w-[100vw] object-contain"
+                  className="max-h-[92vh] w-auto max-w-full object-contain"
                   sizes="100vw"
                   priority={Math.abs(i - lightbox) <= 1}
                 />
