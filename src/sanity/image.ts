@@ -34,7 +34,7 @@ export const QUALITY = {
   portfolio: 78,  // Portfolio cards — balanced
   print: 88,      // Art prints for sale — premium quality
   gallery: 78,    // Photo grid items — balanced
-  lightbox: 85,   // Lightbox full view — high quality
+  lightbox: 80,   // Lightbox full view — progressive upgrade, balanced quality/speed
   thumbnail: 65,  // Small thumbnails, avatars — low weight
   profile: 80,    // About section profile image
 } as const;

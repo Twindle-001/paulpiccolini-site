@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import Image from "next/image";
 import { urlFor, buildSrcSet, buildSrc, QUALITY } from "@/sanity/image";
 import type { SanityPhoto } from "@/sanity/types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -14,6 +13,66 @@ interface PhotoGridProps {
 /** Returns the SEO alt text (for the HTML alt attribute) */
 function getAlt(photo: SanityPhoto): string {
   return photo.alt || photo.title || "Photo";
+}
+
+/**
+ * Progressive lightbox image: instantly shows the already-cached gallery
+ * thumbnail (640–800px), then upgrades to full resolution in the background.
+ * This makes the lightbox feel instant while still delivering sharp images.
+ */
+function LightboxImage({
+  photo,
+  isNear,
+  isActive,
+}: {
+  photo: SanityPhoto;
+  isNear: boolean;
+  isActive: boolean;
+}) {
+  const [hiResLoaded, setHiResLoaded] = useState(false);
+  const hiResRef = useRef<HTMLImageElement | null>(null);
+
+  // Preload full-res image in background when this slide is nearby
+  useEffect(() => {
+    if (!isNear || hiResLoaded) return;
+    const img = new window.Image();
+    img.src = buildSrc(photo.image, 1200, QUALITY.lightbox);
+    img.onload = () => setHiResLoaded(true);
+    hiResRef.current = img;
+    return () => {
+      img.onload = null;
+    };
+  }, [isNear, hiResLoaded, photo.image]);
+
+  // Reset state when photo changes (e.g. filter switch)
+  useEffect(() => {
+    setHiResLoaded(false);
+  }, [photo._id]);
+
+  return (
+    <div className="relative flex items-center justify-center max-h-[92vh] max-w-full">
+      {/* Low-res: the gallery thumbnail already cached by the browser — shows instantly */}
+      <img
+        src={buildSrc(photo.image, 800, QUALITY.gallery)}
+        alt={getAlt(photo)}
+        decoding="sync"
+        className={`max-h-[92vh] w-auto max-w-full object-contain transition-opacity duration-300 ${
+          hiResLoaded ? "opacity-0 absolute inset-0 h-full w-full" : "opacity-100"
+        }`}
+      />
+      {/* High-res: fades in once loaded */}
+      {hiResLoaded && (
+        <img
+          src={buildSrc(photo.image, 1200, QUALITY.lightbox)}
+          srcSet={buildSrcSet(photo.image, QUALITY.lightbox, 1920)}
+          alt={getAlt(photo)}
+          decoding="async"
+          className="max-h-[92vh] w-auto max-w-full object-contain animate-fade-in"
+          sizes="100vw"
+        />
+      )}
+    </div>
+  );
 }
 
 export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
@@ -272,14 +331,10 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
                 className="flex h-full w-screen flex-shrink-0 items-center justify-center px-4 md:px-16"
                 style={{ scrollSnapAlign: "center" }}
               >
-                <img
-                  src={buildSrc(photo.image, 1920, QUALITY.lightbox)}
-                  srcSet={buildSrcSet(photo.image, QUALITY.lightbox)}
-                  alt={getAlt(photo)}
-                  loading={Math.abs(i - lightbox) <= 1 ? "eager" : "lazy"}
-                  decoding="async"
-                  className="max-h-[92vh] w-auto max-w-full object-contain"
-                  sizes="100vw"
+                <LightboxImage
+                  photo={photo}
+                  isNear={Math.abs(i - (lightbox ?? 0)) <= 1}
+                  isActive={i === lightbox}
                 />
               </div>
             ))}
