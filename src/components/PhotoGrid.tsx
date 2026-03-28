@@ -146,7 +146,7 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseLeave}
-            className="flex flex-nowrap justify-center overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1"
+            className={`flex flex-nowrap overflow-x-auto gap-1 rounded-lg border border-white/10 bg-brand-dark/50 p-1 ${canScrollRight || canScrollLeft ? "" : "justify-center"}`}
             style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch", cursor: "grab" }}
           >
             <button
