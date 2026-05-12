@@ -82,6 +82,11 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/home-2",
+        destination: "/",
+        permanent: true,
+      },
       // Catch remaining /en/ old WPML paths
       {
         source: "/en/:path*",
