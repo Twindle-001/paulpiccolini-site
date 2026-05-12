@@ -3,8 +3,9 @@ import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import { JsonLd } from "@/components/JsonLd";
 import { client } from "@/sanity/client";
-import { siteSettingsQuery, categoriesQuery, servicesQuery } from "@/sanity/queries";
-import type { SanitySettings, SanityCategory, SanityService } from "@/sanity/types";
+import { urlFor } from "@/sanity/image";
+import { siteSettingsQuery, categoriesQuery, servicesQuery, heroSlidesQuery } from "@/sanity/queries";
+import type { SanitySettings, SanityCategory, SanityService, SanityHeroSlide } from "@/sanity/types";
 import ImageProtection from "@/components/ImageProtection";
 
 export const revalidate = 60;
@@ -14,11 +15,21 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [settings, categories, services] = await Promise.all([
+  const [settings, categories, services, heroSlides] = await Promise.all([
     client.fetch<SanitySettings>(siteSettingsQuery),
     client.fetch<SanityCategory[]>(categoriesQuery),
     client.fetch<SanityService[]>(servicesQuery),
+    client.fetch<SanityHeroSlide[]>(heroSlidesQuery),
   ]);
+
+  // Preload the first hero slide image to improve LCP on homepage
+  const firstSlideImage = heroSlides?.[0]?.image;
+  const heroPreloadUrl = firstSlideImage
+    ? urlFor(firstSlideImage).width(1920).quality(82).auto("format").fit("max").url()
+    : null;
+  const heroPreloadMobileUrl = firstSlideImage
+    ? urlFor(firstSlideImage).width(828).quality(82).auto("format").fit("max").url()
+    : null;
 
   // JSON-LD structured data for Photographer/Organization
   const photographerSchema = {
@@ -115,7 +126,28 @@ export default async function SiteLayout({
 
   return (
     <Providers>
-        <ImageProtection />
+      {/* Preload hero image to reduce LCP — starts download before client JS runs */}
+      {heroPreloadMobileUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreloadMobileUrl}
+          media="(max-width: 768px)"
+          // @ts-expect-error — fetchpriority is valid but TS types lag behind
+          fetchpriority="high"
+        />
+      )}
+      {heroPreloadUrl && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreloadUrl}
+          media="(min-width: 769px)"
+          // @ts-expect-error — fetchpriority is valid but TS types lag behind
+          fetchpriority="high"
+        />
+      )}
+      <ImageProtection />
       <JsonLd data={photographerSchema} />
       <JsonLd data={websiteSchema} />
       {serviceSchemaList.map((schema, i) => (

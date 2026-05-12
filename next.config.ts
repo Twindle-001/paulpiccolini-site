@@ -46,10 +46,51 @@ const nextConfig: NextConfig = {
         destination: "/",
         permanent: true,
       },
+      // Old WordPress product/page URLs (404 in Search Console)
+      {
+        source: "/produit/:slug*",
+        destination: "/prints",
+        permanent: true,
+      },
+      {
+        source: "/conditions-generales-de-vente",
+        destination: "/cgv",
+        permanent: true,
+      },
+      {
+        source: "/conditions-generales-de-vente/",
+        destination: "/cgv",
+        permanent: true,
+      },
+      {
+        source: "/portfolio",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/portfolio/",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/en/home-2",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/en/home-2/",
+        destination: "/",
+        permanent: true,
+      },
+      // Catch remaining /en/ old WPML paths
+      {
+        source: "/en/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
     ];
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -57,6 +98,11 @@ const nextConfig: NextConfig = {
         pathname: "/images/**",
       },
     ],
+    // Sanity CDN handles format negotiation (AVIF/WebP) via auto=format,
+    // but enabling Next.js optimization helps with any next/image usage
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   typescript: {
     // Build will succeed even with TS errors (fix later)

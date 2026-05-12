@@ -10,69 +10,50 @@ interface PhotoGridProps {
   subcategories?: (string | null)[];
 }
 
+/** Camera filename pattern — matches DSC_xxxx, A7Rxxxxx, IMG_xxxx, etc. */
+const CAMERA_FILENAME_RE = /^(DSC|A7R|IMG|DSCF|_DSC|P\d|GOPR|DJI)[_ ]?\d/i;
+
 /** Returns the SEO alt text (for the HTML alt attribute) */
 function getAlt(photo: SanityPhoto): string {
-  return photo.alt || photo.title || "Photo";
+  // Prefer explicit alt text from Sanity
+  if (photo.alt) return photo.alt;
+
+  // If the title looks like a real title (not a camera filename), use it
+  if (
+    photo.title &&
+    !CAMERA_FILENAME_RE.test(photo.title) &&
+    !photo.title.includes("Modifier")
+  ) {
+    return photo.title;
+  }
+
+  // Generate descriptive alt text from category context
+  const category = photo.categoryTitle || photo.subcategory || "";
+  if (category) {
+    return `${category} photographique par Paul Piccolini - ${photo.subcategory || "Paris"}`;
+  }
+
+  return "Photographie par Paul Piccolini — Photographe Paris";
 }
 
 /**
- * Progressive lightbox image: instantly shows the already-cached gallery
- * thumbnail (640–800px), then upgrades to full resolution in the background.
- * This makes the lightbox feel instant while still delivering sharp images.
+ * Preload adjacent lightbox images so swiping feels instant.
+ * Uses the browser cache: creates an Image() that fetches in the background.
  */
-function LightboxImage({
-  photo,
-  isNear,
-  isActive,
-}: {
-  photo: SanityPhoto;
-  isNear: boolean;
-  isActive: boolean;
-}) {
-  const [hiResLoaded, setHiResLoaded] = useState(false);
-  const hiResRef = useRef<HTMLImageElement | null>(null);
-
-  // Preload full-res image in background when this slide is nearby
+function usePreloadAdjacent(
+  photos: SanityPhoto[],
+  currentIndex: number | null
+) {
   useEffect(() => {
-    if (!isNear || hiResLoaded) return;
-    const img = new window.Image();
-    img.src = buildSrc(photo.image, 1200, QUALITY.lightbox);
-    img.onload = () => setHiResLoaded(true);
-    hiResRef.current = img;
-    return () => {
-      img.onload = null;
-    };
-  }, [isNear, hiResLoaded, photo.image]);
-
-  // Reset state when photo changes (e.g. filter switch)
-  useEffect(() => {
-    setHiResLoaded(false);
-  }, [photo._id]);
-
-  return (
-    <div className="relative flex items-center justify-center">
-      {/* Low-res: the gallery thumbnail already cached by the browser — always visible as base layer */}
-      <img
-        src={buildSrc(photo.image, 800, QUALITY.gallery)}
-        alt={getAlt(photo)}
-        decoding="sync"
-        className={`block max-h-[92vh] w-auto max-w-full border-0 object-contain ${hiResLoaded ? "invisible" : ""}`}
-        style={{ transition: "none" }}
-      />
-      {/* High-res: positioned on top, fades in once loaded */}
-      {hiResLoaded && (
-        <img
-          src={buildSrc(photo.image, 1200, QUALITY.lightbox)}
-          srcSet={buildSrcSet(photo.image, QUALITY.lightbox, 1920)}
-          alt={getAlt(photo)}
-          decoding="async"
-          className="absolute inset-0 m-auto block max-h-[92vh] w-auto max-w-full border-0 object-contain animate-fade-in"
-          sizes="100vw"
-          style={{ outline: "none", boxShadow: "none", transition: "none" }}
-        />
-      )}
-    </div>
-  );
+    if (currentIndex === null) return;
+    const toPreload = [currentIndex - 1, currentIndex + 1].filter(
+      (i) => i >= 0 && i < photos.length
+    );
+    toPreload.forEach((i) => {
+      const img = new window.Image();
+      img.src = buildSrc(photos[i].image, 1080, QUALITY.lightbox);
+    });
+  }, [currentIndex, photos]);
 }
 
 export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
@@ -149,6 +130,9 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
     activeCategory === "all"
       ? photos
       : photos.filter((p) => p.subcategory === activeCategory);
+
+  // Preload adjacent lightbox images for instant swiping
+  usePreloadAdjacent(filtered, lightbox);
 
   // Lightbox scroll-snap: track current slide via native scroll
   const lbScrollRef = useRef<HTMLDivElement>(null);
@@ -331,10 +315,15 @@ export default function PhotoGrid({ photos, subcategories }: PhotoGridProps) {
                 className="flex h-full w-screen flex-shrink-0 items-center justify-center px-4 md:px-16"
                 style={{ scrollSnapAlign: "center" }}
               >
-                <LightboxImage
-                  photo={photo}
-                  isNear={Math.abs(i - (lightbox ?? 0)) <= 1}
-                  isActive={i === lightbox}
+                <img
+                  src={buildSrc(photo.image, 1080, QUALITY.lightbox)}
+                  srcSet={buildSrcSet(photo.image, QUALITY.lightbox, 1920)}
+                  alt={getAlt(photo)}
+                  loading={Math.abs(i - (lightbox ?? 0)) <= 1 ? "eager" : "lazy"}
+                  decoding={i === lightbox ? "sync" : "async"}
+                  className="max-h-[92vh] w-auto max-w-full object-contain"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 80vw"
+                  style={{ transition: "none" }}
                 />
               </div>
             ))}
