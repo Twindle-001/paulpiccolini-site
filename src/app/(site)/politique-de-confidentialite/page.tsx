@@ -10,7 +10,6 @@ const content = {
       {
         title: "Responsable du traitement",
         content: "Paul Piccolini — Entrepreneur individuel",
-        address: "73 avenue des Ternes, 75017 Paris",
         email: "paul.piccolini@gmail.com",
       },
       {
@@ -66,7 +65,6 @@ const content = {
       {
         title: "Data Controller",
         content: "Paul Piccolini — Sole Proprietor",
-        address: "73 avenue des Ternes, 75017 Paris",
         email: "paul.piccolini@gmail.com",
       },
       {
@@ -137,10 +135,9 @@ export default function PolitiquePage() {
               {section.title}
             </h2>
 
-            {section.address ? (
+            {section.email ? (
               <p>
                 {section.content}<br />
-                {section.address}<br />
                 {section.email}
               </p>
             ) : (
